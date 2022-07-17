@@ -50,8 +50,7 @@ public interface Rejector { // NOSONAR
 	 * @param rejector type
 	 * @return A new instance of Rejector or <code>null</code> in case of exception
 	 */
-	@SuppressWarnings("null")
-	static AbstractRejector createRejector(RejectorType rejector) {
+	static AbstractRejector createRejector(final RejectorType rejector) {
 		final String className = rejector.getName();
 
 		// By default, we use file rejection
@@ -80,7 +79,7 @@ public interface Rejector { // NOSONAR
 	 * @param rejectors The rejectors types
 	 * @return The list of {@link AbstractRejector} instances
 	 */
-	static List<AbstractRejector> createRejector(List<RejectorType> rejectors) {
+	static List<AbstractRejector> createRejector(final List<RejectorType> rejectors) {
 		final List<AbstractRejector> result = new ArrayList<>();
 		for (final RejectorType rejector : rejectors) {
 			final AbstractRejector rej = createRejector(rejector);

@@ -44,7 +44,7 @@ public class GedSpoolUtil {
 		 * @param codsoc Codsoc
 		 * @param numero Numedi
 		 */
-		SpoolPkBean(int codsoc, int numero) {
+		SpoolPkBean(final int codsoc, final int numero) {
 			mCodsoc = codsoc;
 			mNumero = numero;
 		}
@@ -69,7 +69,7 @@ public class GedSpoolUtil {
 		 * @param filename The filename to decode
 		 * @return The bean
 		 */
-		public static SpoolPkBean getBean(String filename) {
+		public static SpoolPkBean getBean(final String filename) {
 			// By default, -1 is not a consistent value
 			final SpoolPkBean result = new SpoolPkBean(-1, -1);
 			if (filename != null && filename.startsWith("SOC") && filename.length() > 3) {
@@ -88,7 +88,7 @@ public class GedSpoolUtil {
 					try {
 						result.mCodsoc = Integer.parseInt(x[0]);
 						result.mNumero = Integer.parseInt(x[1]);
-					} catch (final NumberFormatException e) { // NOSONAR
+					} catch (@SuppressWarnings("unused") final NumberFormatException e) { // NOSONAR
 						LOGGER.error("getBean() : cannot decode spool file name {}", filename);
 					}
 				}

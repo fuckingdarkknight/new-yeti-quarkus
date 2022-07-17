@@ -35,17 +35,17 @@ public class AlignmentTypeDeserializer extends AbstractTypeDeserializer<Alignmen
 	 *
 	 * @param ea Appender for errors
 	 */
-	public AlignmentTypeDeserializer(ErrorAppender ea) {
+	public AlignmentTypeDeserializer(final ErrorAppender ea) {
 		super(ea);
 	}
 
 	@Override
-	public AlignmentType deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+	public AlignmentType deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
 		final String s = p.getText();
 
 		try {
 			return AlignmentType.valueOf(s.toUpperCase());
-		} catch (final IllegalArgumentException e) { // NOSONAR
+		} catch (@SuppressWarnings("unused") final IllegalArgumentException e) { // NOSONAR
 			addError(LOGGER, p, AlignmentType.class, s);
 		}
 

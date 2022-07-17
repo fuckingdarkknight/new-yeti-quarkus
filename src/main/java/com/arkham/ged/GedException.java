@@ -26,14 +26,16 @@ import com.arkham.ged.message.GedMessage;
  * @since 10 févr. 2015
  */
 public class GedException extends Exception {
-	private static final Logger LOGGER = LoggerFactory.getLogger(GedException.class);
+    private static final long serialVersionUID = 1L;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(GedException.class);
 
 	/**
 	 * {@link GedException} constructor.
 	 *
 	 * @param cause Root cause
 	 */
-	public GedException(Throwable cause) {
+	public GedException(final Throwable cause) {
 		super(cause);
 	}
 
@@ -43,7 +45,7 @@ public class GedException extends Exception {
 	 * @param message Message
 	 * @param params Parameters array
 	 */
-	public GedException(GedMessage message, Object... params) {
+	public GedException(final GedMessage message, final Object... params) {
 		super(tr(message, params));
 		traceException(message);
 	}
@@ -55,7 +57,7 @@ public class GedException extends Exception {
 	 * @param message Message
 	 * @param params Parameters array
 	 */
-	public GedException(Throwable cause, GedMessage message, Object... params) {
+	public GedException(final Throwable cause, final GedMessage message, final Object... params) {
 		super(tr(message, params), cause);
 		traceException(message);
 	}
@@ -67,7 +69,7 @@ public class GedException extends Exception {
 	 * @param params Parameters' list
 	 * @return i18n message
 	 */
-	private static String tr(GedMessage message, Object... params) {
+	private static String tr(final GedMessage message, final Object... params) {
 		String label = message.getLabel();
 
 		if (params != null && params.length > 0) {
@@ -84,7 +86,7 @@ public class GedException extends Exception {
 	 * @param params List of parameters
 	 * @return Substituted message
 	 */
-	private static String substituteParams(String message, Object[] params) {
+	private static String substituteParams(final String message, final Object[] params) {
 		final StringBuilder sb = new StringBuilder(message.length() * 3 / 2);
 		int paramCount = 0;
 		final char joker = '@';
@@ -103,7 +105,7 @@ public class GedException extends Exception {
 		return sb.toString();
 	}
 
-	private void traceException(GedMessage message) {
+	private void traceException(final GedMessage message) {
 		if (!message.isTrace()) {
 			return;
 		}

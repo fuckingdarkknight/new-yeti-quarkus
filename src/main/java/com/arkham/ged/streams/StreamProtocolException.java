@@ -21,13 +21,15 @@ import com.arkham.ged.message.GedMessage;
  * @since 23 nov. 2017
  */
 public class StreamProtocolException extends GedException {
-	/**
+    private static final long serialVersionUID = 1L;
+
+    /**
 	 * Constructor StreamProtocolException
 	 *
 	 * @param message The message to translate with parameters
 	 * @param params Parameters
 	 */
-	public StreamProtocolException(GedMessage message, Object[] params) {
+	public StreamProtocolException(final GedMessage message, final Object[] params) {
 		super(message, params);
 	}
 
@@ -38,7 +40,7 @@ public class StreamProtocolException extends GedException {
 	 * @param message The message to translate with parameters
 	 * @param params Parameters
 	 */
-	public StreamProtocolException(Throwable cause, GedMessage message, Object... params) {
+	public StreamProtocolException(final Throwable cause, final GedMessage message, final Object... params) {
 		super(cause, message, params);
 	}
 
@@ -47,7 +49,7 @@ public class StreamProtocolException extends GedException {
 	 *
 	 * @param cause The cause exception
 	 */
-	public StreamProtocolException(Throwable cause) {
+	public StreamProtocolException(final Throwable cause) {
 		super(cause);
 	}
 }

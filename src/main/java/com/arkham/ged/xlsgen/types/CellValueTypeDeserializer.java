@@ -35,17 +35,17 @@ public class CellValueTypeDeserializer extends AbstractTypeDeserializer<CellValu
 	 *
 	 * @param ea Appender for errors
 	 */
-	public CellValueTypeDeserializer(ErrorAppender ea) {
+	public CellValueTypeDeserializer(final ErrorAppender ea) {
 		super(ea);
 	}
 
 	@Override
-	public CellValueType deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+	public CellValueType deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
 		final String s = p.getText();
 
 		try {
 			return CellValueType.valueOf(s.toUpperCase());
-		} catch (final IllegalArgumentException e) { // NOSONAR
+		} catch (@SuppressWarnings("unused") final IllegalArgumentException e) { // NOSONAR
 			addError(LOGGER, p, CellValueType.class, s);
 		}
 

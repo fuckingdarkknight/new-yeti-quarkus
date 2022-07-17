@@ -66,4 +66,36 @@
 			<inheritance:implements>com.arkham.ged.annotation.EnumDefaultType</inheritance:implements>
 		</jaxb:bindings>
 	</jaxb:bindings>
+    <jaxb:bindings schemaLocation="../xsd/parameters.xsd" node="/xsd:schema">
+        <jaxb:bindings node="xsd:complexType[@name='DocumentLink']">
+            <!-- <annox:annotateClass>@java.lang.SuppressWarnings({"unchecked","rawtypes"})</annox:annotateClass> -->
+            <annox:annotateClass>@io.quarkus.runtime.annotations.RegisterForReflection</annox:annotateClass>
+            <!-- <annox:annotate>@java.lang.SuppressWarnings({"unchecked","rawtypes"})</annox:annotate> -->
+        </jaxb:bindings>
+    </jaxb:bindings>
+    <jaxb:bindings schemaLocation="../xsd/ged.xsd" node="/xsd:schema">
+        <jaxb:bindings node="xsd:complexType[@name='AbstractScanDef']"><annox:annotateClass>@io.quarkus.runtime.annotations.RegisterForReflection</annox:annotateClass></jaxb:bindings>
+        <jaxb:bindings node="xsd:complexType[@name='ActionType']"><annox:annotateClass>@io.quarkus.runtime.annotations.RegisterForReflection</annox:annotateClass></jaxb:bindings>
+        <jaxb:bindings node="xsd:complexType[@name='BatchType']"><annox:annotateClass>@io.quarkus.runtime.annotations.RegisterForReflection</annox:annotateClass></jaxb:bindings>
+        <jaxb:bindings node="xsd:complexType[@name='BrokerType']"><annox:annotateClass>@io.quarkus.runtime.annotations.RegisterForReflection</annox:annotateClass></jaxb:bindings>
+        <jaxb:bindings node="xsd:complexType[@name='DatasourceType']"><annox:annotateClass>@io.quarkus.runtime.annotations.RegisterForReflection</annox:annotateClass></jaxb:bindings>
+        <jaxb:bindings node="xsd:complexType[@name='FileKeyProviderRefType']"><annox:annotateClass>@io.quarkus.runtime.annotations.RegisterForReflection</annox:annotateClass></jaxb:bindings>
+        <jaxb:bindings node="xsd:complexType[@name='FileKeyProviderType']"><annox:annotateClass>@io.quarkus.runtime.annotations.RegisterForReflection</annox:annotateClass></jaxb:bindings>
+        <jaxb:bindings node="xsd:complexType[@name='IndexerType']"><annox:annotateClass>@io.quarkus.runtime.annotations.RegisterForReflection</annox:annotateClass></jaxb:bindings>
+        <jaxb:bindings node="xsd:complexType[@name='InputScanFileDef']"><annox:annotateClass>@io.quarkus.runtime.annotations.RegisterForReflection</annox:annotateClass></jaxb:bindings>
+        <jaxb:bindings node="xsd:complexType[@name='JmsType']"><annox:annotateClass>@io.quarkus.runtime.annotations.RegisterForReflection</annox:annotateClass></jaxb:bindings>
+        <jaxb:bindings node="xsd:complexType[@name='MediaMappingType']"><annox:annotateClass>@io.quarkus.runtime.annotations.RegisterForReflection</annox:annotateClass></jaxb:bindings>
+        <jaxb:bindings node="xsd:complexType[@name='MediaType']"><annox:annotateClass>@io.quarkus.runtime.annotations.RegisterForReflection</annox:annotateClass></jaxb:bindings>
+        <!-- <jaxb:bindings node="xsd:simpleType[@name='OnErrorType']"><annox:annotateClass>@io.quarkus.runtime.annotations.RegisterForReflection</annox:annotateClass></jaxb:bindings> -->
+        <jaxb:bindings node="xsd:complexType[@name='OptionalParameterType']"><annox:annotateClass>@io.quarkus.runtime.annotations.RegisterForReflection</annox:annotateClass></jaxb:bindings>
+        <jaxb:bindings node="xsd:complexType[@name='OutputScanFileDef']"><annox:annotateClass>@io.quarkus.runtime.annotations.RegisterForReflection</annox:annotateClass></jaxb:bindings>
+        <!-- <jaxb:bindings node="xsd:simpleType[@name='PhysicalStorageType']"><annox:annotateClass>@io.quarkus.runtime.annotations.RegisterForReflection</annox:annotateClass></jaxb:bindings> -->
+        <jaxb:bindings node="xsd:complexType[@name='RejectorType']"><annox:annotateClass>@io.quarkus.runtime.annotations.RegisterForReflection</annox:annotateClass></jaxb:bindings>
+        <!-- <jaxb:bindings node="xsd:element[@name='Root']"><annox:annotateClass>@io.quarkus.runtime.annotations.RegisterForReflection</annox:annotateClass></jaxb:bindings>
+        <jaxb:bindings node="xsd:element[@name='Internal']"><annox:annotateClass>@io.quarkus.runtime.annotations.RegisterForReflection</annox:annotateClass></jaxb:bindings> -->
+        <jaxb:bindings node="xsd:complexType[@name='ScanFileDef']"><annox:annotateClass>@io.quarkus.runtime.annotations.RegisterForReflection</annox:annotateClass></jaxb:bindings>
+        <jaxb:bindings node="xsd:complexType[@name='SocketType']"><annox:annotateClass>@io.quarkus.runtime.annotations.RegisterForReflection</annox:annotateClass></jaxb:bindings>
+        <jaxb:bindings node="xsd:complexType[@name='StorageType']"><annox:annotateClass>@io.quarkus.runtime.annotations.RegisterForReflection</annox:annotateClass></jaxb:bindings>
+        <jaxb:bindings node="xsd:complexType[@name='UploadType']"><annox:annotateClass>@io.quarkus.runtime.annotations.RegisterForReflection</annox:annotateClass></jaxb:bindings>
+    </jaxb:bindings>
 </jaxb:bindings>

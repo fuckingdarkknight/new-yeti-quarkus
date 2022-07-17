@@ -58,7 +58,7 @@ public class SocketRelayJob implements IDestroyable {
 	 *
 	 * @param pa The properties adapter
 	 */
-	public SocketRelayJob(PropertiesAdapter pa) {
+	public SocketRelayJob(final PropertiesAdapter pa) {
 		mPa = pa;
 		mSockets = new ArrayList<>();
 
@@ -109,7 +109,7 @@ public class SocketRelayJob implements IDestroyable {
 		return result.toArray(new InetAddress[result.size()]);
 	}
 
-	private static boolean isAddressValid(String mask, InetAddress ia) {
+	private static boolean isAddressValid(final String mask, final InetAddress ia) {
 		// IPv4=4 bytes, IPv6 else : just consider IPv4
 		final boolean ipv4 = ia.getAddress().length == 4;
 		if (!ipv4) {
@@ -131,7 +131,7 @@ public class SocketRelayJob implements IDestroyable {
 		return result;
 	}
 
-	private static boolean isAddressValid(String network, String address) {
+	private static boolean isAddressValid(final String network, final String address) {
 		final IPAddressString one = new IPAddressString(network);
 
 		// Invalid mask, just log
@@ -146,7 +146,7 @@ public class SocketRelayJob implements IDestroyable {
 		return one.contains(two);
 	}
 
-	private void initInner(InetAddress ia) throws SocketRelayException {
+	private void initInner(final InetAddress ia) throws SocketRelayException {
 		try {
 			final SocketType st = mPa.getSocket();
 
@@ -166,7 +166,7 @@ public class SocketRelayJob implements IDestroyable {
 							socket.setTcpNoDelay(true);
 							new SocketMessageHandler(socket).start();
 						}
-					} catch (final SocketException e) { // NOSONAR
+					} catch (@SuppressWarnings("unused") final SocketException e) { // NOSONAR
 						// Don't mind the bollocks to rethrow the exception, this occurs when the socket is closing
 						LOGGER.info("run() : socket handler is stopped");
 					} catch (final IOException e) {
@@ -201,7 +201,7 @@ public class SocketRelayJob implements IDestroyable {
 	private class SocketMessageHandler extends Thread {
 		private final Socket mSocket;
 
-		private SocketMessageHandler(Socket socket) {
+		private SocketMessageHandler(final Socket socket) {
 			mSocket = socket;
 
 			LOGGER.info("SocketMessageHandler() : received message from {}", socket);
@@ -228,7 +228,7 @@ public class SocketRelayJob implements IDestroyable {
 			}
 		}
 
-		private void relayMessage(String msg) {
+		private void relayMessage(final String msg) {
 			if ("".equals(msg)) {
 				LOGGER.warn("relayMessage() : empty message, cannot be processed");
 				return;
@@ -248,7 +248,7 @@ public class SocketRelayJob implements IDestroyable {
 			}
 		}
 
-		private JSONObject getJson(String message) throws IOException {
+		private JSONObject getJson(final String message) throws IOException {
 			final String m = GedUtil.convertYamlToJson(message);
 
 			return new JSONObject(m);

@@ -35,17 +35,17 @@ public class VerticalAlignmentTypeDeserializer extends AbstractTypeDeserializer<
 	 *
 	 * @param ea Appender for errors
 	 */
-	public VerticalAlignmentTypeDeserializer(ErrorAppender ea) {
+	public VerticalAlignmentTypeDeserializer(final ErrorAppender ea) {
 		super(ea);
 	}
 
 	@Override
-	public VerticalAlignmentType deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+	public VerticalAlignmentType deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
 		final String s = p.getText();
 
 		try {
 			return VerticalAlignmentType.valueOf(s.toUpperCase());
-		} catch (final IllegalArgumentException e) { // NOSONAR
+		} catch (@SuppressWarnings("unused") final IllegalArgumentException e) { // NOSONAR
 			addError(LOGGER, p, VerticalAlignmentType.class, s);
 		}
 

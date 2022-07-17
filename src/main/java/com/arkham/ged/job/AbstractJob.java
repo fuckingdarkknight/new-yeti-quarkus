@@ -52,7 +52,7 @@ public abstract class AbstractJob<T extends ScanFileDef> extends Job implements 
 	 * @param pa Needed to get file extensions/typmed mappings
 	 * @param sfd The directory definition to scan
 	 */
-	public AbstractJob(String name, PropertiesAdapter pa, T sfd) {
+	public AbstractJob(final String name, final PropertiesAdapter pa, final T sfd) {
 		super(name);
 
 		mPA = pa;
@@ -78,7 +78,6 @@ public abstract class AbstractJob<T extends ScanFileDef> extends Job implements 
 		GedUtil.initMDC();
 	}
 
-	@SuppressWarnings("null")
 	@Override
 	protected boolean shouldExecute() {
 		if (getSFD() != null && getSFD().isActive()) {
@@ -134,7 +133,7 @@ public abstract class AbstractJob<T extends ScanFileDef> extends Job implements 
 	 */
 	protected abstract AbstractExecutor<T> createExecutorInstance(Connection con) throws ExecutorException;
 
-	private static String createExceptionMessage(String value) {
+	private static String createExceptionMessage(final String value) {
 		return "Cannot instantiate the class=" + value + " please consult log for further informations";
 	}
 
@@ -171,7 +170,7 @@ public abstract class AbstractJob<T extends ScanFileDef> extends Job implements 
 	 *
 	 * @param con The databse connection
 	 */
-	protected final void releaseConnection(Connection con) {
+	protected final void releaseConnection(final Connection con) {
 		if (con != null) {
 			try {
 				getDCM().releaseConnection(con);
@@ -196,7 +195,7 @@ public abstract class AbstractJob<T extends ScanFileDef> extends Job implements 
 		 *
 		 * @param job
 		 */
-		protected InterruptedJobListener(AbstractJob<T> job) {
+		protected InterruptedJobListener(final AbstractJob<T> job) {
 			mJob = job;
 		}
 
@@ -206,7 +205,7 @@ public abstract class AbstractJob<T extends ScanFileDef> extends Job implements 
 		}
 
 		@Override
-		public void eventFired(BasicEvent<Job, JOB_EVENT> event) {
+		public void eventFired(final BasicEvent<Job, JOB_EVENT> event) {
 			if (event.getType() == JOB_EVENT.INTERRUPTED) {
 				LOGGER.info("eventFired() : stopping Job={}", mJob.getName());
 			}

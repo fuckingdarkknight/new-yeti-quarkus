@@ -41,12 +41,12 @@ public class RenameFileExecutor extends ImportFileExecutor {
 	 * @param sfd Scan definition
 	 * @throws ExecutorException Generic exception
 	 */
-	public RenameFileExecutor(Connection connection, PropertiesAdapter pa, InputScanFileDef sfd) throws ExecutorException {
+	public RenameFileExecutor(final Connection connection, final PropertiesAdapter pa, final InputScanFileDef sfd) throws ExecutorException {
 		super(connection, pa, sfd);
 	}
 
 	@Override
-	protected File beforeProcessFile(File file) throws IOException {
+	protected File beforeProcessFile(final File file) throws IOException {
 		try {
 			// On renomme le fichier ... si ça fonctionne, c'est qu'on peut traiter. Dans le cas contraire, on a un lock
 			// posé par l'OS, ce n'est pas un cas d'erreur : le fichier est en train d'être écrit par un autre process
@@ -58,7 +58,7 @@ public class RenameFileExecutor extends ImportFileExecutor {
 			}
 
 			LOGGER.info("  * file cannot be renamed (usually locked by another process)={}", file.getCanonicalPath());
-		} catch (final SecurityException e) { // NOSONAR
+		} catch (@SuppressWarnings("unused") final SecurityException e) { // NOSONAR
 			// Peut se produire si on ne peut pas renommer le fichier pour des problèmes de droits (RW ...).
 			LOGGER.error("beforeProcessFile(File) : file={} unable to rename because of RW rights on this file", file.getName());
 		}
@@ -67,12 +67,12 @@ public class RenameFileExecutor extends ImportFileExecutor {
 	}
 
 	@Override
-	protected void beforeIntegrate(File file, FileKey fk) throws ExecutorException {
+	protected void beforeIntegrate(final File file, final FileKey fk) throws ExecutorException {
 		// Nothing to do
 	}
 
 	@Override
-	protected void afterIntegrate(File file, List<DocumentLinkBean> bean) throws ExecutorException {
+	protected void afterIntegrate(final File file, final List<DocumentLinkBean> bean) throws ExecutorException {
 		// Nothing to do
 	}
 }

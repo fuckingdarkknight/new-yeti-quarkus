@@ -55,7 +55,7 @@ class PoiTypeConverter {
 
 		private byte mV;
 
-		U_STYLE(byte v) { // NOSONAR : yo sonar, I can't remove this constructor, it's a joke !!!
+		U_STYLE(final byte v) { // NOSONAR : yo sonar, I can't remove this constructor, it's a joke !!!
 			mV = v;
 		}
 
@@ -77,11 +77,11 @@ class PoiTypeConverter {
 	 * @param bst border style
 	 * @return POI border style
 	 */
-	static BorderStyle convert(BorderStyleType bst) {
+	static BorderStyle convert(final BorderStyleType bst) {
 		if (bst != null) {
 			try {
 				return BorderStyle.valueOf(bst.toString());
-			} catch (final IllegalArgumentException e) { // NOSONAR : not a blocking problem
+			} catch (@SuppressWarnings("unused") final IllegalArgumentException e) { // NOSONAR : not a blocking problem
 				LOGGER.info("convert() : bad border style \"{}\", accepted values are {}", bst, Arrays.deepToString(BorderStyle.values()));
 			}
 		}
@@ -95,11 +95,11 @@ class PoiTypeConverter {
 	 * @param ft fill type
 	 * @return POI fill pattern type
 	 */
-	static FillPatternType convert(FillType ft) {
+	static FillPatternType convert(final FillType ft) {
 		if (ft != null) {
 			try {
 				return FillPatternType.valueOf(ft.toString());
-			} catch (final IllegalArgumentException e) { // NOSONAR : not a blocking problem
+			} catch (@SuppressWarnings("unused") final IllegalArgumentException e) { // NOSONAR : not a blocking problem
 				LOGGER.info("convert() : bad fill pattern \"{}\", accepted values are {}", ft, Arrays.deepToString(FillPatternType.values()));
 			}
 		}
@@ -113,11 +113,11 @@ class PoiTypeConverter {
 	 * @param at alignment type
 	 * @return POI alignment
 	 */
-	static HorizontalAlignment convert(AlignmentType at) {
+	static HorizontalAlignment convert(final AlignmentType at) {
 		if (at != null) {
 			try {
 				return HorizontalAlignment.valueOf(at.toString());
-			} catch (final IllegalArgumentException e) { // NOSONAR : not a blocking problem
+			} catch (@SuppressWarnings("unused") final IllegalArgumentException e) { // NOSONAR : not a blocking problem
 				LOGGER.info("convert() : bad horizontal alignment value \"{}\", accepted values are {}", at, Arrays.deepToString(HorizontalAlignment.values()));
 			}
 		}
@@ -131,11 +131,11 @@ class PoiTypeConverter {
 	 * @param at alignment type
 	 * @return POI alignment
 	 */
-	static VerticalAlignment convert(VerticalAlignmentType at) {
+	static VerticalAlignment convert(final VerticalAlignmentType at) {
 		if (at != null) {
 			try {
 				return VerticalAlignment.valueOf(at.toString());
-			} catch (final IllegalArgumentException e) { // NOSONAR : not a blocking problem
+			} catch (@SuppressWarnings("unused") final IllegalArgumentException e) { // NOSONAR : not a blocking problem
 				LOGGER.info("convert() : bad vertical alignment value \"{}\", accepted values are {}", at, Arrays.deepToString(VerticalAlignment.values()));
 			}
 		}
@@ -149,11 +149,11 @@ class PoiTypeConverter {
 	 * @param ut alignment type
 	 * @return POI underline inner value
 	 */
-	static byte convert(UnderlineType ut) {
+	static byte convert(final UnderlineType ut) {
 		if (ut != null) {
 			try {
 				return U_STYLE.valueOf(ut.toString()).getValue();
-			} catch (final IllegalArgumentException e) { // NOSONAR : not a blocking problem
+			} catch (@SuppressWarnings("unused") final IllegalArgumentException e) { // NOSONAR : not a blocking problem
 				LOGGER.info("convert() : bad underline value \"{}\", accepted values are {}", ut, Arrays.deepToString(U_STYLE.values()));
 			}
 		}

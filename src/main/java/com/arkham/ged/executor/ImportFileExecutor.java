@@ -58,7 +58,7 @@ public abstract class ImportFileExecutor extends AbstractScanFileExecutor<InputS
 	 * @param sfd The scan definition
 	 * @throws ExecutorException Generic exception
 	 */
-	public ImportFileExecutor(Connection connection, PropertiesAdapter pa, InputScanFileDef sfd) throws ExecutorException {
+	public ImportFileExecutor(final Connection connection, final PropertiesAdapter pa, final InputScanFileDef sfd) throws ExecutorException {
 		super(connection, pa, sfd);
 	}
 
@@ -70,7 +70,7 @@ public abstract class ImportFileExecutor extends AbstractScanFileExecutor<InputS
 	protected abstract File beforeProcessFile(File file) throws IOException;
 
 	@Override
-	public void execute(File fileRef) {
+	public void execute(final File fileRef) {
 		File file = fileRef;
 		File integrate = null;
 		FileKey fk = null;
@@ -120,7 +120,7 @@ public abstract class ImportFileExecutor extends AbstractScanFileExecutor<InputS
 			}
 		} catch (final FileKeyProviderException e) { // NOSONAR
 			LOGGER.error("execute() : file={}\r\n{}", file.getName(), e);
-		} catch (final FileNotFoundException e) { // NOSONAR
+		} catch (@SuppressWarnings("unused") final FileNotFoundException e) { // NOSONAR
 			// Le fichier a déjà été traité par une autre instance, ce n'est pas une erreur
 			LOGGER.error("execute() : file={} already processed by a tier", file.getName());
 		} catch (final IOException e) { // NOSONAR
@@ -148,12 +148,12 @@ public abstract class ImportFileExecutor extends AbstractScanFileExecutor<InputS
 	}
 
 	@Override
-	protected void beforeExecute(File[] files) {
+	protected void beforeExecute(final File[] files) {
 		// Nothing to do
 	}
 
 	@Override
-	protected void afterExecute(File[] files) {
+	protected void afterExecute(final File[] files) {
 		// Nothing to do
 	}
 
@@ -184,7 +184,8 @@ public abstract class ImportFileExecutor extends AbstractScanFileExecutor<InputS
 	 * @see #beforeIntegrate(File, FileKey)
 	 * @see #afterIntegrate(File, List)
 	 */
-	protected void integrate(File sourceFile, File integrate, FileKey fk) throws ExecutorException {
+	@SuppressWarnings("resource")
+    protected void integrate(final File sourceFile, final File integrate, final FileKey fk) throws ExecutorException {
 		if (integrate.exists()) {
 			LoggerMDC.putMDC(MDC_KEY.FILENAME, fk.getFilename());
 			LoggerMDC.putMDC(MDC_KEY.FILESIZE, integrate.length());
@@ -256,7 +257,7 @@ public abstract class ImportFileExecutor extends AbstractScanFileExecutor<InputS
 	 * @param integrate The integrated file, that could be the same than <code>sourceFile</code> (in case of direct integration, without .ref)
 	 * @param fk The file key
 	 */
-	protected void renameOrDeleteFile(File sourceFile, File integrate, FileKey fk) throws IOException {
+	protected void renameOrDeleteFile(final File sourceFile, final File integrate, final FileKey fk) throws IOException {
 		if (fk != null) {
 			String fileRefRename = getSFD().getFileRefRename();
 			if (fileRefRename != null && fileRefRename.trim().length() == 0) {

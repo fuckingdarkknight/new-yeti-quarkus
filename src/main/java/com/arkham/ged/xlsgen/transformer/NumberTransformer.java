@@ -22,7 +22,7 @@ package com.arkham.ged.xlsgen.transformer;
  */
 public class NumberTransformer implements ITransformer<String> {
 	@Override
-	public Object transform(String value) {
+	public Object transform(final String value) {
 		if (value == null) {
 			return 0.0d;
 		}
@@ -31,7 +31,7 @@ public class NumberTransformer implements ITransformer<String> {
 		if (s.length() > 0) {
 			try {
 				return Double.valueOf(s);
-			} catch (final NumberFormatException e) { // NOSONAR
+			} catch (@SuppressWarnings("unused") final NumberFormatException e) { // NOSONAR
 				// Will return default value
 			}
 		}

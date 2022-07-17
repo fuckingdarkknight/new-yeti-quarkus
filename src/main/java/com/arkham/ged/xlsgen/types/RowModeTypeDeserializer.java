@@ -35,17 +35,17 @@ public class RowModeTypeDeserializer extends AbstractTypeDeserializer<RowModeTyp
 	 *
 	 * @param ea Appender for errors
 	 */
-	public RowModeTypeDeserializer(ErrorAppender ea) {
+	public RowModeTypeDeserializer(final ErrorAppender ea) {
 		super(ea);
 	}
 
 	@Override
-	public RowModeType deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+	public RowModeType deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
 		final String s = p.getText();
 
 		try {
 			return RowModeType.valueOf(s.toUpperCase());
-		} catch (final IllegalArgumentException e) { // NOSONAR
+		} catch (@SuppressWarnings("unused") final IllegalArgumentException e) { // NOSONAR
 			addError(LOGGER, p, RowModeType.class, s);
 		}
 

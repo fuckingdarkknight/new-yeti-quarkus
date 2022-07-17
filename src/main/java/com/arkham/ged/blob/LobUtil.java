@@ -46,7 +46,7 @@ public final class LobUtil {
 	 * @return The real (CODSOC_PHY) codsoc or <code>-1</code> if any unexpected error occurs or if the MEV row cannot be found
 	 * @throws DocumentLinkException if an exception is raised while querying MEV table
 	 */
-	public static int getCodsocPhy(Connection con, int codsoc, String codent, String segment) throws DocumentLinkException {
+	public static int getCodsocPhy(final Connection con, final int codsoc, final String codent, final String segment) throws DocumentLinkException {
 		if (codsoc < 0) {
 			return -1;
 		}
@@ -97,7 +97,7 @@ public final class LobUtil {
 	 * @throws DocumentLinkException if an exception is raised while querying MEV table
 	 * @see #getCodsocPhy(Connection, int, String, String)
 	 */
-	public static int getCodsocPhy(Connection con, DocumentLinkBean bean) throws DocumentLinkException {
+	public static int getCodsocPhy(final Connection con, final DocumentLinkBean bean) throws DocumentLinkException {
 		return getCodsocPhy(con, bean.getEntity(), IDocumentLinkConstants.TABLE_NAME, getSegment(bean.getEnttyp(), bean.getKeydoc()));
 	}
 
@@ -109,7 +109,7 @@ public final class LobUtil {
 	 * @throws DocumentLinkException if an exception is raised while querying MEV table
 	 * @see #getCodsocPhy(Connection, int, String, String)
 	 */
-	static void adaptCodsocPhy(Connection con, DocumentLinkBean bean) throws DocumentLinkException {
+	static void adaptCodsocPhy(final Connection con, final DocumentLinkBean bean) throws DocumentLinkException {
 		if (bean.getCodsocPhy() == -1) {
 			final int codsocPhy = getCodsocPhy(con, bean);
 
@@ -124,7 +124,7 @@ public final class LobUtil {
 	 * @param nomcle The nomcle should not be <code>null</code>
 	 * @return The segment that is a composite if typtie="TIE"
 	 */
-	static String getSegment(String typtie, String nomcle) {
+	static String getSegment(final String typtie, final String nomcle) {
 		if ("TIE".equals(typtie)) {
 			return typtie + nomcle.substring(0, 3);
 		}
@@ -137,11 +137,11 @@ public final class LobUtil {
 	 *
 	 * @param con The connection
 	 */
-	public static void rollbackSilently(Connection con) {
+	public static void rollbackSilently(final Connection con) {
 		if (con != null) {
 			try {
 				con.rollback();
-			} catch (final SQLException e) { // NOSONAR
+			} catch (@SuppressWarnings("unused") final SQLException e) { // NOSONAR
 				// Not a problem in this case
 			}
 		}

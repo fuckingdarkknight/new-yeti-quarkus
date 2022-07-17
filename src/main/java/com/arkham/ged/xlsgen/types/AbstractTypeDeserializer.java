@@ -57,7 +57,7 @@ public class AbstractTypeDeserializer<E extends EnumDefaultType> extends JsonDes
 	 *
 	 * @param ea Appender for errors
 	 */
-	public AbstractTypeDeserializer(ErrorAppender ea) {
+	public AbstractTypeDeserializer(final ErrorAppender ea) {
 		mErrorAppender = ea;
 	}
 
@@ -69,7 +69,7 @@ public class AbstractTypeDeserializer<E extends EnumDefaultType> extends JsonDes
 	 * @param e The enum type
 	 * @param value The value that can't be parsed
 	 */
-	protected void addError(Logger log, JsonParser p, Class<E> e, String value) {
+	protected void addError(final Logger log, final JsonParser p, final Class<E> e, final String value) {
 		final String m = TR.translate(MESSAGE, value, e, p.getCurrentLocation().getLineNr(), p.getCurrentLocation().getColumnNr());
 
 		log.warn(m);
@@ -83,7 +83,7 @@ public class AbstractTypeDeserializer<E extends EnumDefaultType> extends JsonDes
 	 * @deprecated
 	 */
 	@Deprecated
-	protected String getDefaultValue(Class<E> c) {
+	protected String getDefaultValue(final Class<E> c) {
 		final EnumDefault[] def = c.getAnnotationsByType(EnumDefault.class);
 		if (def.length > 0) {
 			return def[0].value();
@@ -93,7 +93,7 @@ public class AbstractTypeDeserializer<E extends EnumDefaultType> extends JsonDes
 	}
 
 	@Override
-	public E deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+	public E deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
 		final String superType = getClass().getGenericSuperclass().getTypeName();
 		Class<E> clazz = mCache.get(superType);
 		if (clazz == null) {
@@ -105,7 +105,7 @@ public class AbstractTypeDeserializer<E extends EnumDefaultType> extends JsonDes
 					clazz = (Class<E>) Class.forName(type);
 
 					mCache.put(superType, clazz);
-				} catch (final ClassNotFoundException e) { // NOSONAR
+				} catch (@SuppressWarnings("unused") final ClassNotFoundException e) { // NOSONAR
 					addError(LOGGER, p, (Class<E>) getClass(), p.getText());
 				}
 			} else {
@@ -117,8 +117,7 @@ public class AbstractTypeDeserializer<E extends EnumDefaultType> extends JsonDes
 		return getWithDefault(clazz, p.getText().toUpperCase(), p);
 	}
 
-	@SuppressWarnings("null")
-	protected E getWithDefault(@NonNull final Class<E> clazz, String value, JsonParser p) {
+	protected E getWithDefault(@NonNull final Class<E> clazz, final String value, final JsonParser p) {
 		if (clazz.isEnum()) {
 			try {
 				final E o = getValue(clazz, value, p);
@@ -131,7 +130,7 @@ public class AbstractTypeDeserializer<E extends EnumDefaultType> extends JsonDes
 						}
 					}
 				}
-			} catch (IllegalArgumentException | IllegalAccessException | SecurityException e) { // NOSONAR
+			} catch (@SuppressWarnings("unused") IllegalArgumentException | IllegalAccessException | SecurityException e) { // NOSONAR
 				addError(LOGGER, p, clazz, value);
 			}
 		}
@@ -139,14 +138,13 @@ public class AbstractTypeDeserializer<E extends EnumDefaultType> extends JsonDes
 		return null;
 	}
 
-	@SuppressWarnings("null")
-	private final E getValue(@NonNull final Class<E> clazz, String value, JsonParser p) {
+	private final E getValue(@NonNull final Class<E> clazz, final String value, final JsonParser p) {
 		try {
 			final Method m = clazz.getMethod("valueOf", String.class);
 			final Object o = m.invoke(clazz, value);
 
 			return (E) o;
-		} catch (final IllegalArgumentException | IllegalAccessException | SecurityException | NoSuchMethodException | InvocationTargetException e) { // NOSONAR
+		} catch (@SuppressWarnings("unused") final IllegalArgumentException | IllegalAccessException | SecurityException | NoSuchMethodException | InvocationTargetException e) { // NOSONAR
 			// Let's continue with default value but trace the error
 			addError(LOGGER, p, clazz, value);
 		}

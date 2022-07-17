@@ -66,7 +66,7 @@ public final class FileKey {
 	 * @param updateMode
 	 * @param prop
 	 */
-	public FileKey(int codsoc, String typtie, String nomcle, String lib256, String typmed, String codlan, String utimod, String filename, String updateMode, FlatProp prop) {
+	public FileKey(final int codsoc, final String typtie, final String nomcle, final String lib256, final String typmed, final String codlan, final String utimod, final String filename, final String updateMode, final FlatProp prop) {
 		initInner();
 
 		setEntity(codsoc);
@@ -97,7 +97,7 @@ public final class FileKey {
 	 * @param nomcle
 	 * @param filename
 	 */
-	public FileKey(int codsoc, String typtie, String nomcle, String filename) {
+	public FileKey(final int codsoc, final String typtie, final String nomcle, final String filename) {
 		initInner();
 
 		setEntity(codsoc);
@@ -132,7 +132,7 @@ public final class FileKey {
 	}
 
 	// Abstract accessors
-	void setAttribute(String key, Object value) {
+	void setAttribute(final String key, final Object value) {
 		mAttrs.put(key, value);
 	}
 
@@ -142,7 +142,7 @@ public final class FileKey {
 	 * @param param Attribute name
 	 * @return The value for attribute param
 	 */
-	public Object getAttribute(String param) {
+	public Object getAttribute(final String param) {
 		return mAttrs.get(param);
 	}
 
@@ -152,25 +152,25 @@ public final class FileKey {
 	 * @param param Attribute name
 	 * @return true if the param is defined as an attribute
 	 */
-	public boolean isAttribute(String param) {
+	public boolean isAttribute(final String param) {
 		return mAttrs.containsKey(param);
 	}
 
 	// -- Beans accessors privates --------------------------------------------
 
-	private void setEntity(int codsoc) {
+	private void setEntity(final int codsoc) {
 		setAttribute(CODSOC, codsoc);
 	}
 
-	private void setTyptie(String typtie) {
+	private void setTyptie(final String typtie) {
 		setAttribute(TYPTIE, typtie);
 	}
 
-	public void setNomcle(String nomcle) {
+	public void setNomcle(final String nomcle) {
 		setAttribute(NOMCLE, nomcle);
 	}
 
-	private void setCoddoc(String coddoc) {
+	private void setCoddoc(final String coddoc) {
 		setAttribute(CODDOC, coddoc);
 	}
 
@@ -179,51 +179,51 @@ public final class FileKey {
 	 *
 	 * @param filename The filename
 	 */
-	public void setFilename(String filename) {
+	public void setFilename(final String filename) {
 		setAttribute(FILENAME, filename);
 	}
 
-	private void setUtimod(String uticod) {
+	private void setUtimod(final String uticod) {
 		setAttribute(UTIMOD, uticod);
 	}
 
-	private void setLib256(String lib256) {
+	private void setLib256(final String lib256) {
 		setAttribute(LIB256, lib256);
 	}
 
-	private void setTypmed(String typmed) {
+	private void setTypmed(final String typmed) {
 		setAttribute(TYPMED, typmed);
 	}
 
-	private void setCodlan(String codlan) {
+	private void setCodlan(final String codlan) {
 		setAttribute(CODLAN, codlan);
 	}
 
-	private void setRefFile(boolean refFile) {
+	private void setRefFile(final boolean refFile) {
 		setAttribute(REFFILE, refFile);
 	}
 
-	private void setUpdateMode(String updateMode) {
+	private void setUpdateMode(final String updateMode) {
 		setAttribute(UPDATE_MODE, updateMode);
 	}
 
-	private void setDatmod(String datmod) {
+	private void setDatmod(final String datmod) {
 		setAttribute(DATMOD, datmod);
 	}
 
-	private void setTimearc(String timeArc) {
+	private void setTimearc(final String timeArc) {
 		setAttribute(TIMEARC, timeArc);
 	}
 
-	private void setAbsolute(String absolute) {
+	private void setAbsolute(final String absolute) {
 		setAttribute(ABSOLUTE, Boolean.valueOf(absolute));
 	}
 
-	private void setCatdoc(String catdoc) {
+	private void setCatdoc(final String catdoc) {
 		setAttribute(CATDOC, catdoc);
 	}
 
-	private void setNumord(String numord) {
+	private void setNumord(final String numord) {
 		if (numord == null) {
 			setAttribute(NUMORD, 0);
 			return;
@@ -231,7 +231,7 @@ public final class FileKey {
 
 		try {
 			setAttribute(NUMORD, Integer.valueOf(numord));
-		} catch (final NumberFormatException e) {
+		} catch (@SuppressWarnings("unused") final NumberFormatException e) {
 			setAttribute(NUMORD, 0);
 		}
 	}
@@ -356,7 +356,7 @@ public final class FileKey {
 	/**
 	 * @param jsonObject set a optional JSON object
 	 */
-	public void setJsonObject(JSONObject jsonObject) {
+	public void setJsonObject(final JSONObject jsonObject) {
 		mJsonObject = jsonObject;
 	}
 

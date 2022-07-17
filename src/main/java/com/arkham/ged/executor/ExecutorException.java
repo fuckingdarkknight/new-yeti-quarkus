@@ -19,13 +19,15 @@ import com.arkham.ged.message.GedMessage;
  * @since 10 févr. 2015
  */
 public class ExecutorException extends GedException {
-	/**
+    private static final long serialVersionUID = 1L;
+
+    /**
 	 * {@link ExecutorException} constructor.
 	 *
 	 * @param message Message
 	 * @param params Parameters array
 	 */
-	public ExecutorException(GedMessage message, Object... params) {
+	public ExecutorException(final GedMessage message, final Object... params) {
 		super(message, params);
 	}
 
@@ -36,7 +38,7 @@ public class ExecutorException extends GedException {
 	 * @param message Message
 	 * @param params Parameters array
 	 */
-	public ExecutorException(Throwable cause, GedMessage message, Object... params) {
+	public ExecutorException(final Throwable cause, final GedMessage message, final Object... params) {
 		super(cause, message, params);
 	}
 
@@ -45,7 +47,7 @@ public class ExecutorException extends GedException {
 	 *
 	 * @param cause Root cause
 	 */
-	public ExecutorException(Throwable cause) {
+	public ExecutorException(final Throwable cause) {
 		super(cause);
 	}
 

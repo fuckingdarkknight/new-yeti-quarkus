@@ -145,13 +145,13 @@ public final class GedProperties implements PropertiesAdapter {
 
 	private boolean mActive = true;
 
-	private final BasicListenerManager<String, GLOBAL_EVENTS, PropertiesException> mListenerManager = new BasicListenerManager();
+	private final BasicListenerManager<String, GLOBAL_EVENTS, PropertiesException> mListenerManager = new BasicListenerManager<>();
 
 	private GedProperties() {
 		// private visibility because of singleton pattern
 	}
 
-	private void $initGlobalProperties$(String xmlFilename) throws IOException {
+	private void $initGlobalProperties$(final String xmlFilename) throws IOException {
 		// System parameters
 		LOGGER.info("$initGlobalProperties$() : adding System.getProperties as provider");
 		PropertiesProvider.addProvider(new SystemPropertiesProvider());
@@ -176,7 +176,7 @@ public final class GedProperties implements PropertiesAdapter {
 		return mInstance;
 	}
 
-	private static String computeFilename(String filename) {
+	private static String computeFilename(final String filename) {
 		String workingFilename;
 		if (filename == null) {
 			workingFilename = DEFAULT_FILENAME;
@@ -187,7 +187,7 @@ public final class GedProperties implements PropertiesAdapter {
 		return workingFilename;
 	}
 
-	private void computeBasedir(String basedir) {
+	private void computeBasedir(final String basedir) {
 		if (basedir == null) {
 			mBasedir = System.getProperty("user.dir");
 		} else {
@@ -198,7 +198,7 @@ public final class GedProperties implements PropertiesAdapter {
 	}
 
 	@SuppressWarnings("resource")
-	private InputStream getPropertiesStream(String filename) throws IOException, PropertiesException {
+	private InputStream getPropertiesStream(final String filename) throws IOException, PropertiesException {
 		InputStream result;
 		final Path file = Paths.get(mBasedir, filename);
 		if (file.toFile().exists()) {
@@ -224,7 +224,7 @@ public final class GedProperties implements PropertiesAdapter {
 	 * @throws PropertiesException If any exception occurs while warming-up the application
 	 */
 	@SuppressWarnings("resource")
-	public void init(String basedir, String filename) throws PropertiesException {
+	public void init(final String basedir, final String filename) throws PropertiesException {
 		InputStream is = null;
 		try {
 			// ged.properties.xml : file name
@@ -247,6 +247,7 @@ public final class GedProperties implements PropertiesAdapter {
 			}
 
 			final String contextPackage = com.arkham.ged.properties.Root.class.getPackage().getName();
+			LOGGER.info("init() : unmarshalling configuration={}", contextPackage);
 			final Root root = (Root) JaxbAdapter.unmarshall(is, contextPackage);
 
 			// First, internal optional values
@@ -375,17 +376,17 @@ public final class GedProperties implements PropertiesAdapter {
 	}
 
 	@Override
-	public IndexerFlatType getIndexerType(String name) {
+	public IndexerFlatType getIndexerType(final String name) {
 		return mIndexerMap.get(name);
 	}
 
 	@Override
-	public FileKeyProviderType getFKPType(String name) {
+	public FileKeyProviderType getFKPType(final String name) {
 		return mFkpMap.get(name);
 	}
 
 	@Override
-	public String getMatchingTypmed(String filename) {
+	public String getMatchingTypmed(final String filename) {
 		String ext = GedUtil.getFileExtension(filename);
 		if (ext != null) {
 			ext = ext.toLowerCase();
@@ -475,7 +476,7 @@ public final class GedProperties implements PropertiesAdapter {
 	 * @param defaultValue Default value if not set
 	 * @return The value of the optional parameter or defaultValue
 	 */
-	public String getInternalOptionalValue(String name, String defaultValue) {
+	public String getInternalOptionalValue(final String name, final String defaultValue) {
 		if (mInternal == null) {
 			return defaultValue;
 		}
@@ -496,7 +497,7 @@ public final class GedProperties implements PropertiesAdapter {
 	 * @param name The parameter name
 	 * @return The OPT if set in properties or <code>null</code> if not
 	 */
-	public static OptionalParameterType getOptionalParameters(List<OptionalParameterType> optl, String name) {
+	public static OptionalParameterType getOptionalParameters(final List<OptionalParameterType> optl, final String name) {
 		if (name == null || optl == null) {
 			return null;
 		}
@@ -517,13 +518,13 @@ public final class GedProperties implements PropertiesAdapter {
 	 * @param optl Optional parameters context
 	 * @return The maximum file size (in bytes) that can be integrated
 	 */
-	public static int getMaxSize(List<OptionalParameterType> optl) {
+	public static int getMaxSize(final List<OptionalParameterType> optl) {
 		int result = GedProperties.DEFAULT_INTEGRATE_MAX_SIZE;
 		final OptionalParameterType maxSizeOpt = getOptionalParameters(optl, GedProperties.PARAM_INTEGRATE_MAX_SIZE);
 		if (maxSizeOpt != null) {
 			try {
 				result = GedUtil.convertNumberInBytes(maxSizeOpt.getValue());
-			} catch (final NumberFormatException e) {
+			} catch (@SuppressWarnings("unused") final NumberFormatException e) {
 				LOGGER.error("getMaxSize() : the maxSize parameter value is invalid, should be an integer. Value set is \"{}\"", maxSizeOpt.getValue());
 			}
 		}
@@ -537,7 +538,7 @@ public final class GedProperties implements PropertiesAdapter {
 	 * @param pt The translator
 	 * @param optl The optional parameters
 	 */
-	public static void translate(Translator pt, List<OptionalParameterType> optl) {
+	public static void translate(final Translator pt, final List<OptionalParameterType> optl) {
 		if (pt != null && optl != null) {
 			for (final OptionalParameterType opt : optl) {
 				opt.setValue(pt.translate(opt.getValue()));
@@ -545,7 +546,7 @@ public final class GedProperties implements PropertiesAdapter {
 		}
 	}
 
-	private static void checkStorageBaseDir(File baseDir) throws PropertiesException {
+	private static void checkStorageBaseDir(final File baseDir) throws PropertiesException {
 		try {
 			// filename should be unique ... but I think that there's no need to generate a real UID for this !
 			// Netherless : I do it !
@@ -579,7 +580,7 @@ public final class GedProperties implements PropertiesAdapter {
 	}
 
 	@Override
-	public OptionalParameterType getOptionalParameter(List<OptionalParameterType> optl, String key) {
+	public OptionalParameterType getOptionalParameter(final List<OptionalParameterType> optl, final String key) {
 		if (key == null) {
 			return null;
 		}
@@ -594,7 +595,7 @@ public final class GedProperties implements PropertiesAdapter {
 	}
 
 	@Override
-	public boolean isOptionalParameterActive(OptionalParameterType opt, File file) {
+	public boolean isOptionalParameterActive(final OptionalParameterType opt, final File file) {
 		if (opt != null) {
 			// If an expression is set, we have to test it
 			final String expression = opt.getExpression();
@@ -618,7 +619,7 @@ public final class GedProperties implements PropertiesAdapter {
 	}
 
 	@Override
-	public void activate(boolean value) {
+	public void activate(final boolean value) {
 		mActive = value;
 
 		LOGGER.warn("activate() : change value of active to value={}", value);
@@ -630,12 +631,12 @@ public final class GedProperties implements PropertiesAdapter {
 	}
 
 	@Override
-	public void registerListener(BasicListener<String, GLOBAL_EVENTS, PropertiesException> listener) {
+	public void registerListener(final BasicListener<String, GLOBAL_EVENTS, PropertiesException> listener) {
 		mListenerManager.registerListener(listener);
 	}
 
 	@Override
-	public void fireEvent(BasicEvent<String, GLOBAL_EVENTS> event) {
+	public void fireEvent(final BasicEvent<String, GLOBAL_EVENTS> event) {
 		try {
 			LOGGER.info("fireEvent() : event={} source={}", event.getType(), event.getSource());
 

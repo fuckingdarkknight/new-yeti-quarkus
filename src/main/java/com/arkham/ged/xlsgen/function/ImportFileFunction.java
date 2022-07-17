@@ -52,7 +52,7 @@ public class ImportFileFunction extends Function {
 	}
 
 	@Override
-	public Object invoke(Object... params) throws FunctionExecutionException {
+	public Object invoke(final Object... params) throws FunctionExecutionException {
 		final String filename = (String) params[0];
 		final Path path = Paths.get(filename.trim());
 
@@ -65,18 +65,18 @@ public class ImportFileFunction extends Function {
 			final byte[] b = Files.readAllBytes(path);
 
 			return new String(b, getCharset(charset));
-		} catch (final IOException e) { // NOSONAR : not blocking at all
+		} catch (@SuppressWarnings("unused") final IOException e) { // NOSONAR : not blocking at all
 			LOGGER.debug("invoke() : file \"{}\" not found", filename);
 		}
 
 		return DEFAULT_RESULT;
 	}
 
-	private static Charset getCharset(String charset) {
+	private static Charset getCharset(final String charset) {
 		if (charset != null) {
 			try {
 				return Charset.forName(charset);
-			} catch (IllegalCharsetNameException | UnsupportedCharsetException e) { // NOSONAR : au moins on sera prévenu dans le log qu'on demande n'importe quoi. Mais avec un peu de bol, le charset par défaut de la
+			} catch (@SuppressWarnings("unused") IllegalCharsetNameException | UnsupportedCharsetException e) { // NOSONAR : au moins on sera prévenu dans le log qu'on demande n'importe quoi. Mais avec un peu de bol, le charset par défaut de la
 				// plateforme résoud le souci.
 				LOGGER.warn("getCharset() : invalid charset {}", charset);
 			}

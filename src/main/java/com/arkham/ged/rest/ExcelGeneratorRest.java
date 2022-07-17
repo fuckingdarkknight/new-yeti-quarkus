@@ -18,7 +18,6 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.file.Files;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -26,12 +25,17 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
+import org.eclipse.microprofile.metrics.MetricUnits;
+import org.eclipse.microprofile.metrics.annotation.Counted;
+import org.eclipse.microprofile.metrics.annotation.Timed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.arkham.ged.util.GedUtil;
 import com.arkham.ged.xlsgen.ExcelGenerator;
 import com.arkham.ged.xlsgen.XlsgenException;
+
+import io.vertx.core.http.HttpServerRequest;
 
 /**
  * REST service for YAML => Excel transformation
@@ -42,112 +46,123 @@ import com.arkham.ged.xlsgen.XlsgenException;
  */
 @Path("/excel")
 public class ExcelGeneratorRest {
-	private static final Logger LOGGER = LoggerFactory.getLogger(ExcelGeneratorRest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExcelGeneratorRest.class);
 
-	/**
-	 * YAML content types are not clearly defined by W3C. Match text
-	 */
-	protected static final String CT_YAML_1 = "text/yaml";
-	protected static final String CT_YAML_2 = "text/x-yaml";
-	protected static final String CT_YAML_3 = "application/yaml";
-	protected static final String CT_YAML_4 = "application/x-yaml";
+    /**
+     * YAML content types are not clearly defined by W3C. Match text
+     */
+    protected static final String CT_YAML_1 = "text/yaml";
+    protected static final String CT_YAML_2 = "text/x-yaml";
+    protected static final String CT_YAML_3 = "application/yaml";
+    protected static final String CT_YAML_4 = "application/x-yaml";
 
-	private static final String GENERIC_MESSAGE_EXCEPTION = "generate() : {}";
+    private static final String GENERIC_MESSAGE_EXCEPTION = "generate() : {}";
 
-	/**
-	 * REST service for YAML => Excel transformation
-	 *
-	 * @param req The context request
-	 * @param message The JSON message to unserialize
-	 * @return The JSON message serialized
-	 */
-	@POST
-	@Produces(MediaType.APPLICATION_OCTET_STREAM)
-	@Consumes({ CT_YAML_1, CT_YAML_2, CT_YAML_3, CT_YAML_4 })
-	@Path("/file")
-	public byte[] generate(@Context HttpServletRequest req, String message) {
-		try {
-			// Assume UTF-8 if not specified
-			String cs = req.getCharacterEncoding();
-			if (cs == null) {
-				cs = "UTF-8";
-			}
+    /**
+     * REST service for YAML => Excel transformation
+     *
+     * @param req The context request
+     * @param message The JSON message to unserialize
+     * @return The JSON message serialized
+     */
+    @POST
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    @Consumes({ CT_YAML_1, CT_YAML_2, CT_YAML_3, CT_YAML_4 })
+    @Path("/file")
+    @Counted(name = "performedChecks", description = "How many primality checks have been performed.")
+    @Timed(name = "checksTimer", description = "A measure of how long it takes to perform the primality test.", unit = MetricUnits.MILLISECONDS)
+    public byte[] generate(@Context final HttpServerRequest req, final String message) {
+        try {
+            // Assume UTF-8 if not specified
+            final String cs = parseCharset(req.getHeader("Content-Type"));
 
-			final java.nio.file.Path temp = Files.createTempFile("yeti_", ".yaml");
-			try (Writer w = new OutputStreamWriter(Files.newOutputStream(temp), cs)) {
-				w.write(message);
-			}
+            final java.nio.file.Path temp = Files.createTempFile("yeti_", ".yaml");
+            try (Writer w = new OutputStreamWriter(Files.newOutputStream(temp), cs)) {
+                w.write(message);
+            }
 
-			final ExcelGenerator eg = new ExcelGenerator(temp, cs);
-			final File result = eg.generate(null);
+            final ExcelGenerator eg = new ExcelGenerator(temp, cs);
+            final File result = eg.generate(null);
 
-			try (InputStream is = Files.newInputStream(result.toPath()); ByteArrayOutputStream baos = new ByteArrayOutputStream((int) result.length())) {
-				GedUtil.copyIs2Os(is, baos, 8192);
+            try (InputStream is = Files.newInputStream(result.toPath()); ByteArrayOutputStream baos = new ByteArrayOutputStream((int) result.length())) {
+                GedUtil.copyIs2Os(is, baos, 8192);
 
-				return baos.toByteArray();
-			} finally {
-				// Clean temporary files
-				deleteFile(result);
-				Files.delete(temp);
-			}
-		} catch (final IOException | XlsgenException e) {
-			LOGGER.error(GENERIC_MESSAGE_EXCEPTION, e);
-		}
+                return baos.toByteArray();
+            } finally {
+                // Clean temporary files
+                deleteFile(result);
+                Files.delete(temp);
+            }
+        } catch (final IOException | XlsgenException e) {
+            LOGGER.error(GENERIC_MESSAGE_EXCEPTION, e);
+        }
 
-		return new byte[] {};
-	}
+        return new byte[] {};
+    }
 
-	@POST
-	@Produces(MediaType.APPLICATION_OCTET_STREAM)
-	@Consumes({ CT_YAML_1, CT_YAML_2, CT_YAML_3, CT_YAML_4 })
-	@Path("/direct")
-	public byte[] generateDirect(String message) {
-		try {
-			final ExcelGenerator eg = new ExcelGenerator(message);
-			final File result = eg.generate(null);
+    @POST
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    @Consumes({ CT_YAML_1, CT_YAML_2, CT_YAML_3, CT_YAML_4 })
+    @Path("/direct")
+    @Counted(name = "performedChecks", description = "How many primality checks have been performed.")
+    @Timed(name = "checksTimer", description = "A measure of how long it takes to perform the primality test.", unit = MetricUnits.MILLISECONDS)
+    public byte[] generateDirect(final String message) {
+        try {
+            final ExcelGenerator eg = new ExcelGenerator(message);
+            final File result = eg.generate(null);
 
-			try (InputStream is = Files.newInputStream(result.toPath()); ByteArrayOutputStream baos = new ByteArrayOutputStream((int) result.length())) {
-				GedUtil.copyIs2Os(is, baos, 8192);
+            try (InputStream is = Files.newInputStream(result.toPath()); ByteArrayOutputStream baos = new ByteArrayOutputStream((int) result.length())) {
+                GedUtil.copyIs2Os(is, baos, 8192);
 
-				return baos.toByteArray();
-			} finally {
-				// Clean temporary files
-				deleteFile(result);
-			}
-		} catch (final IOException | XlsgenException e) {
-			LOGGER.error(GENERIC_MESSAGE_EXCEPTION, e);
-		}
+                return baos.toByteArray();
+            } finally {
+                // Clean temporary files
+                deleteFile(result);
+            }
+        } catch (final IOException | XlsgenException e) {
+            LOGGER.error(GENERIC_MESSAGE_EXCEPTION, e);
+        }
 
-		return new byte[] {};
-	}
+        return new byte[] {};
+    }
 
-	@SuppressWarnings("static-method")
-	@POST
-	@Produces(MediaType.APPLICATION_OCTET_STREAM)
-	@Consumes({ CT_YAML_1, CT_YAML_2, CT_YAML_3, CT_YAML_4 })
-	@Path("/stream")
-	public InputStream generateDirectStream(String message) {
-		try {
-			final ExcelGenerator eg = new ExcelGenerator(message);
-			final File result = eg.generate(null);
+    @SuppressWarnings("static-method")
+    @POST
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    @Consumes({ CT_YAML_1, CT_YAML_2, CT_YAML_3, CT_YAML_4 })
+    @Path("/stream")
+    @Counted(name = "performedChecks", description = "How many primality checks have been performed.")
+    @Timed(name = "checksTimer", description = "A measure of how long it takes to perform the primality test.", unit = MetricUnits.MILLISECONDS)
+    public InputStream generateDirectStream(final String message) {
+        try {
+            final ExcelGenerator eg = new ExcelGenerator(message);
+            final File result = eg.generate(null);
 
-			return Files.newInputStream(result.toPath());
-		} catch (final IOException | XlsgenException e) {
-			LOGGER.error(GENERIC_MESSAGE_EXCEPTION, e);
-		}
+            return Files.newInputStream(result.toPath());
+        } catch (final IOException | XlsgenException e) {
+            LOGGER.error(GENERIC_MESSAGE_EXCEPTION, e);
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	/**
-	 * Delete the file and log something if it's not possible for any reason
-	 *
-	 * @param file The file to delete
-	 */
-	@SuppressWarnings("static-method")
-	protected void deleteFile(File file) {
-		if (!file.delete()) {
-			LOGGER.warn("deleteFile() : cannot delete file {}", file);
-		}
-	}
+    /**
+     * Delete the file and log something if it's not possible for any reason
+     *
+     * @param file The file to delete
+     */
+    @SuppressWarnings("static-method")
+    protected void deleteFile(final File file) {
+        if (!file.delete()) {
+            LOGGER.warn("deleteFile() : cannot delete file {}", file);
+        }
+    }
+
+    private static String parseCharset(final String ct) {
+        if (ct != null && ct.indexOf('=') > 0) {
+            return ct.substring(ct.indexOf('=')).trim();
+        }
+
+        return "UTF-8";
+    }
 }

@@ -41,3 +41,6 @@ dependency-reduced-pom.xml
 *.log
 *.xls
 standalone/*.jar
+ged-standalone.properties
+ged-standalone.xml
+ged.xsd

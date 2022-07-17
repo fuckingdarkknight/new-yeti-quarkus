@@ -21,12 +21,14 @@ import com.arkham.ged.message.GedMessage;
  * @since 19 juil. 2018
  */
 public class XlsgenException extends GedException {
-	/**
+    private static final long serialVersionUID = 1L;
+
+    /**
 	 * Constructor XlsgenException
 	 *
 	 * @param cause The root cause
 	 */
-	public XlsgenException(Throwable cause) {
+	public XlsgenException(final Throwable cause) {
 		super(cause);
 	}
 
@@ -36,7 +38,7 @@ public class XlsgenException extends GedException {
 	 * @param message Message
 	 * @param params Parameters array
 	 */
-	public XlsgenException(GedMessage message, Object... params) {
+	public XlsgenException(final GedMessage message, final Object... params) {
 		super(message, params);
 	}
 }

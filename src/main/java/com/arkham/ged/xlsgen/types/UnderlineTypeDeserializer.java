@@ -35,17 +35,17 @@ public class UnderlineTypeDeserializer extends AbstractTypeDeserializer<Underlin
 	 *
 	 * @param ea Appender for errors
 	 */
-	public UnderlineTypeDeserializer(ErrorAppender ea) {
+	public UnderlineTypeDeserializer(final ErrorAppender ea) {
 		super(ea);
 	}
 
 	@Override
-	public UnderlineType deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+	public UnderlineType deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
 		final String s = p.getText();
 
 		try {
 			return UnderlineType.valueOf(s.toUpperCase());
-		} catch (final IllegalArgumentException e) { // NOSONAR
+		} catch (@SuppressWarnings("unused") final IllegalArgumentException e) { // NOSONAR
 			addError(LOGGER, p, UnderlineType.class, s);
 		}
 

@@ -35,17 +35,17 @@ public class ModeBehaviorTypeDeserializer extends AbstractTypeDeserializer<ModeB
 	 *
 	 * @param ea Appender for errors
 	 */
-	public ModeBehaviorTypeDeserializer(ErrorAppender ea) {
+	public ModeBehaviorTypeDeserializer(final ErrorAppender ea) {
 		super(ea);
 	}
 
 	@Override
-	public ModeBehaviorType deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+	public ModeBehaviorType deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
 		final String s = p.getText();
 
 		try {
 			return ModeBehaviorType.valueOf(s.toUpperCase());
-		} catch (final IllegalArgumentException e) { // NOSONAR
+		} catch (@SuppressWarnings("unused") final IllegalArgumentException e) { // NOSONAR
 			addError(LOGGER, p, ModeBehaviorType.class, s);
 		}
 

@@ -58,10 +58,11 @@ public class ExcelUtil {
 	 * @param rowspan Rowspan for comment
 	 */
 	@SuppressWarnings("static-method")
-	public void setComment(Cell cell, String message, String author, int colspan, int rowspan) {
+	public void setComment(final Cell cell, final String message, final String author, final int colspan, final int rowspan) {
 		if (cell.getCellComment() == null) {
 			final Drawing drawing = cell.getSheet().createDrawingPatriarch();
-			final CreationHelper factory = cell.getSheet().getWorkbook().getCreationHelper();
+			@SuppressWarnings("resource")
+            final CreationHelper factory = cell.getSheet().getWorkbook().getCreationHelper();
 
 			// When the comment box is visible, have it show in a 1x3 space
 			final ClientAnchor anchor = factory.createClientAnchor();
@@ -93,7 +94,7 @@ public class ExcelUtil {
 	 * @param o The value of any type
 	 */
 	@SuppressWarnings("static-method")
-	public void setCellValue(Cell cell, Object o) {
+	public void setCellValue(final Cell cell, final Object o) {
 		if (o instanceof String) {
 			cell.setCellValue(((String) o).trim());
 		} else if (o instanceof Boolean) {
@@ -124,7 +125,7 @@ public class ExcelUtil {
 	 * @return The row created or just selected if ever present in sheet
 	 */
 	@SuppressWarnings("static-method")
-	public Row getRow(Sheet sheet, int index) {
+	public Row getRow(final Sheet sheet, final int index) {
 		Row res = sheet.getRow(index);
 		if (res == null) {
 			res = sheet.createRow(index);
@@ -141,7 +142,7 @@ public class ExcelUtil {
 	 * @return The cell created or just selected if ever present in sheet
 	 */
 	@SuppressWarnings("static-method")
-	public Cell getCell(Row row, int col) {
+	public Cell getCell(final Row row, final int col) {
 		Cell res = row.getCell(col);
 		try {
 			if (res == null) {
@@ -163,7 +164,7 @@ public class ExcelUtil {
 	 * @param cs The cell style to copy
 	 * @return A new cell style
 	 */
-	static CellStyle cloneStyle(Workbook wb, CellStyle cs) {
+	static CellStyle cloneStyle(final Workbook wb, final CellStyle cs) {
 		final CellStyle r = wb.createCellStyle();
 
 		r.setAlignment(cs.getAlignment());
@@ -197,7 +198,7 @@ public class ExcelUtil {
 	 * @return The sheet
 	 */
 	@SuppressWarnings("static-method")
-	public Sheet getSheet(Workbook wb, String id) {
+	public Sheet getSheet(final Workbook wb, final String id) {
 		// Numeric value : index of sheet in workbook
 		Sheet sheet = null;
 		final int index = GedUtil.getInt(id, -1);
@@ -208,7 +209,7 @@ public class ExcelUtil {
 			} else { // Numeric value, so get by index
 				sheet = wb.getSheetAt(index);
 			}
-		} catch (final IllegalArgumentException e) { // NOSONAR
+		} catch (@SuppressWarnings("unused") final IllegalArgumentException e) { // NOSONAR
 			// Behavior has changed with 4.0 : before null was returned, now it's an exception.
 			// In all case, we just have to create the unexisting sheet.
 		}
@@ -229,7 +230,7 @@ public class ExcelUtil {
 	 * @param from The index from
 	 * @param to The index to
 	 */
-	public static void copyRow(Workbook workbook, Sheet worksheet, int from, int to) {
+	public static void copyRow(final Workbook workbook, final Sheet worksheet, final int from, final int to) {
 		// Don't cry Penelope, nothing to do if row indexes are the same
 		if (from == to) {
 			return;
@@ -267,7 +268,7 @@ public class ExcelUtil {
 		copyAnyMergedRegions(worksheet, sourceRow, newRow);
 	}
 
-	private static void copyCellFormula(Workbook workbook, Sheet sheet, Cell sourceCell, Cell targetCell) {
+	private static void copyCellFormula(final Workbook workbook, final Sheet sheet, final Cell sourceCell, final Cell targetCell) {
 		final CellType cellType = sourceCell.getCellType();
 		if (cellType == CellType.FORMULA && sourceCell.getCellFormula() != null) {
 			final HSSFEvaluationWorkbook formulaParsingWorkbook = HSSFEvaluationWorkbook.create((HSSFWorkbook) workbook);
@@ -280,28 +281,28 @@ public class ExcelUtil {
 		}
 	}
 
-	private static void copyCellComment(Cell oldCell, Cell newCell) {
+	private static void copyCellComment(final Cell oldCell, final Cell newCell) {
 		if (newCell.getCellComment() != null) {
 			newCell.setCellComment(oldCell.getCellComment());
 		}
 	}
 
-	private static void copyCellHyperlink(Cell oldCell, Cell newCell) {
+	private static void copyCellHyperlink(final Cell oldCell, final Cell newCell) {
 		if (oldCell.getHyperlink() != null) {
 			newCell.setHyperlink(oldCell.getHyperlink());
 		}
 	}
 
-	private static void copyCellDataTypeAndValue(Cell oldCell, Cell newCell) {
+	private static void copyCellDataTypeAndValue(final Cell oldCell, final Cell newCell) {
 		setCellDataType(oldCell, newCell);
 		setCellDataValue(oldCell, newCell);
 	}
 
-	private static void setCellDataType(Cell oldCell, Cell newCell) {
+	private static void setCellDataType(final Cell oldCell, final Cell newCell) {
 		newCell.setCellType(oldCell.getCellType());
 	}
 
-	private static void setCellDataValue(Cell oldCell, Cell newCell) {
+	private static void setCellDataValue(final Cell oldCell, final Cell newCell) {
 		switch (oldCell.getCellType()) {
 			case BLANK:
 				newCell.setCellValue(oldCell.getStringCellValue());
@@ -326,17 +327,17 @@ public class ExcelUtil {
 		}
 	}
 
-	private static boolean alreadyExists(Row newRow) {
+	private static boolean alreadyExists(final Row newRow) {
 		return newRow != null;
 	}
 
-	private static void copyAnyMergedRegions(Sheet worksheet, Row sourceRow, Row newRow) {
+	private static void copyAnyMergedRegions(final Sheet worksheet, final Row sourceRow, final Row newRow) {
 		for (int i = 0; i < worksheet.getNumMergedRegions(); i++) {
 			copyMergeRegion(worksheet, sourceRow, newRow, worksheet.getMergedRegion(i));
 		}
 	}
 
-	private static void copyMergeRegion(Sheet worksheet, Row sourceRow, Row newRow, CellRangeAddress mergedRegion) {
+	private static void copyMergeRegion(final Sheet worksheet, final Row sourceRow, final Row newRow, final CellRangeAddress mergedRegion) {
 		final CellRangeAddress range = mergedRegion;
 		if (range.getFirstRow() == sourceRow.getRowNum()) {
 			final int lastRow = newRow.getRowNum() + range.getLastRow() - range.getFirstRow();
@@ -354,7 +355,7 @@ public class ExcelUtil {
 	 * @return The value cast
 	 */
 	@SuppressWarnings("static-method")
-	public Object cast(Class clazz, ITransformer transformer, Object value) {
+	public Object cast(final Class clazz, final ITransformer<Object> transformer, final Object value) {
 		if (value == null || value instanceof String && ((String) value).trim().length() == 0) {
 			if (clazz == double.class) {
 				return 0.0D;
@@ -385,7 +386,7 @@ public class ExcelUtil {
 		return value;
 	}
 
-	private static int castToInt(String value) {
+	private static int castToInt(final String value) {
 		final double result = Double.parseDouble(value);
 
 		return (int) result;

@@ -60,7 +60,7 @@ public final class ExcelStyleBuilder {
 	 * @param re The root JAXB
 	 * @param wb The current workbook used to create new styles
 	 */
-	public ExcelStyleBuilder(RootExcel re, Workbook wb) {
+	public ExcelStyleBuilder(final RootExcel re, final Workbook wb) {
 		mRe = re;
 		mWb = wb;
 
@@ -77,7 +77,7 @@ public final class ExcelStyleBuilder {
 	 * @param style The predefined style
 	 * @return The POI cell style
 	 */
-	public CellStyle getCellStyle(String style) {
+	public CellStyle getCellStyle(final String style) {
 		if (style != null) {
 			return mCellStyles.get(style);
 		}
@@ -104,7 +104,7 @@ public final class ExcelStyleBuilder {
 						mColorTypes.put(ct.getName(), ct);
 
 						LOGGER.info("createColors() : color added \"{}\" for index={}", ct.getName(), ct.getIndex());
-					} catch (final IllegalArgumentException e) { // NOSONAR : not a blocking problem
+					} catch (@SuppressWarnings("unused") final IllegalArgumentException e) { // NOSONAR : not a blocking problem
 						LOGGER.error("createColors() : bad color name \"{}\"", ct.getColor());
 					}
 				} else {
@@ -152,7 +152,7 @@ public final class ExcelStyleBuilder {
 		}
 	}
 
-	private short getColorIndex(String color) {
+	private short getColorIndex(final String color) {
 		if (color != null && !"".equals(color.trim())) {
 			final ColorType ct = mColorTypes.get(color);
 			if (ct != null) {
@@ -170,7 +170,7 @@ public final class ExcelStyleBuilder {
 		return -1;
 	}
 
-	private void adoptFormat(StyleType st, CellStyle cs) {
+	private void adoptFormat(final StyleType st, final CellStyle cs) {
 		if (st.getFormat() != null) {
 			final FormatType ft = mDataFormats.get(st.getFormat());
 			if (ft != null) {
@@ -197,7 +197,7 @@ public final class ExcelStyleBuilder {
 		}
 	}
 
-	private void adoptFont(StyleType st, CellStyle cs) {
+	private void adoptFont(final StyleType st, final CellStyle cs) {
 		if (st.getFont() != null) {
 			final FontType ft = mFontTypes.get(st.getFont());
 			if (ft != null) {
@@ -232,7 +232,7 @@ public final class ExcelStyleBuilder {
 		}
 	}
 
-	private void adoptBorder(StyleType st, CellStyle cs) {
+	private void adoptBorder(final StyleType st, final CellStyle cs) {
 		if (st.getBorder() != null) {
 			final BorderType bt = mBorderTypes.get(st.getBorder());
 			if (bt != null) {

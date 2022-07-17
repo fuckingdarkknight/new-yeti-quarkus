@@ -24,7 +24,7 @@ import com.arkham.common.jdbc.DatabaseConnectionManagerException;
  * @since 28 janv. 2020
  */
 public class DatabaseConnectionManagerProxy extends DatabaseConnectionManager {
-	public DatabaseConnectionManagerProxy(DatabaseConnectionDefinition dcd) throws DatabaseConnectionManagerException {
+	public DatabaseConnectionManagerProxy(final DatabaseConnectionDefinition dcd) throws DatabaseConnectionManagerException {
 		super(dcd);
 	}
 
@@ -41,8 +41,9 @@ public class DatabaseConnectionManagerProxy extends DatabaseConnectionManager {
 		return super.getConnection();
 	}
 
-	@Override
-	public void releaseConnection(Connection con) throws DatabaseConnectionManagerException {
+	@SuppressWarnings("resource")
+    @Override
+	public void releaseConnection(final Connection con) throws DatabaseConnectionManagerException {
 		// Connection have to be released only if it has been created
 		if (con instanceof ConnectionProxy) {
 			final ConnectionProxy cp = (ConnectionProxy) con;

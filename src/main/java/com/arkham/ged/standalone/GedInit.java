@@ -72,7 +72,7 @@ public final class GedInit {
 	 *
 	 * @param basedir
 	 */
-	private static void initInner(String basedir) {
+	private static void initInner(final String basedir) {
 		// Initialize an optional MimeTypeProvider
 		InputStream is = null;
 		try { // NOSONAR
@@ -108,7 +108,7 @@ public final class GedInit {
 	 * @return The scheduler or <code>null</code> if there's no directory to scan
 	 * @throws PropertiesException Package exception while init
 	 */
-	public static GedStateHolder init(String basedir, String filename, PropertiesProvider pp, final Logger logger) throws PropertiesException {
+	public static GedStateHolder init(final String basedir, final String filename, final PropertiesProvider pp, final Logger logger) throws PropertiesException {
 		final GedProperties p = GedProperties.getInstance();
 		p.init(basedir, filename);
 
@@ -163,7 +163,8 @@ public final class GedInit {
 		return result;
 	}
 
-	private static void poke() {
+	@SuppressWarnings("resource")
+    private static void poke() {
 		final ExecutorService executor = Executors.newSingleThreadExecutor();
 		executor.submit(() -> {
 			try {
@@ -174,7 +175,7 @@ public final class GedInit {
 
 				executor.shutdown();
 				executor.awaitTermination(5, TimeUnit.SECONDS);
-			} catch (final Exception e) { // NOSONAR
+			} catch (@SuppressWarnings("unused") final Exception e) { // NOSONAR
 				//
 			}
 		});

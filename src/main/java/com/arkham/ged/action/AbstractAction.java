@@ -48,7 +48,7 @@ public abstract class AbstractAction<T extends AbstractScanDef, D> {
 	 *
 	 * @param action
 	 */
-	void init(ActionType action) {
+	void init(final ActionType action) {
 		mAt = action;
 	}
 
@@ -65,7 +65,7 @@ public abstract class AbstractAction<T extends AbstractScanDef, D> {
 	 * @param defaultValue The default value
 	 * @return The string value of the action parameter or <code>null</code> if no parameter was found else default value
 	 */
-	protected String getParamStringValue(PropertiesAdapter pa, String key, String defaultValue) {
+	protected String getParamStringValue(final PropertiesAdapter pa, final String key, final String defaultValue) {
 		String result = defaultValue;
 		final OptionalParameterType opt = pa.getOptionalParameter(mAt.getParam(), key);
 		if (opt != null) {
@@ -84,7 +84,7 @@ public abstract class AbstractAction<T extends AbstractScanDef, D> {
 	 * @param defaultValue The default value
 	 * @return The int value of the action parameter else default value
 	 */
-	protected int getParamIntValue(PropertiesAdapter pa, String key, int defaultValue) {
+	protected int getParamIntValue(final PropertiesAdapter pa, final String key, final int defaultValue) {
 		return GedUtil.getInt(getParamStringValue(pa, key, String.valueOf(defaultValue)), defaultValue);
 	}
 
@@ -94,7 +94,7 @@ public abstract class AbstractAction<T extends AbstractScanDef, D> {
 	 * @param defaultValue The default value
 	 * @return The boolean value of the action parameter else default value
 	 */
-	protected boolean getParamBoolValue(PropertiesAdapter pa, String key, boolean defaultValue) {
+	protected boolean getParamBoolValue(final PropertiesAdapter pa, final String key, final boolean defaultValue) {
 		return GedUtil.getBoolean(getParamStringValue(pa, key, String.valueOf(defaultValue)), defaultValue);
 	}
 
@@ -104,7 +104,7 @@ public abstract class AbstractAction<T extends AbstractScanDef, D> {
 	 * @param file The file to delete
 	 */
 	@SuppressWarnings("static-method")
-	protected void deleteFile(File file) {
+	protected void deleteFile(final File file) {
 		if (!file.delete()) {
 			LOGGER.warn("deleteFile() : cannot delete file {}", file);
 		}
@@ -117,7 +117,7 @@ public abstract class AbstractAction<T extends AbstractScanDef, D> {
 	 * @param fileTo The renamed name
 	 */
 	@SuppressWarnings("static-method")
-	protected void renameFiles(File fileFrom, File fileTo) {
+	protected void renameFiles(final File fileFrom, final File fileTo) {
 		if (!fileFrom.renameTo(fileTo)) {
 			LOGGER.warn("renameFiles() : {} cannot be renamed in {}", fileFrom, fileTo);
 		}
@@ -130,10 +130,10 @@ public abstract class AbstractAction<T extends AbstractScanDef, D> {
 	 * @param fileTo The renamed name
 	 */
 	@SuppressWarnings("static-method")
-	protected void renameFiles(Path fileFrom, Path fileTo) {
+	protected void renameFiles(final Path fileFrom, final Path fileTo) {
 		try {
 			Files.move(fileFrom, fileTo, StandardCopyOption.REPLACE_EXISTING);
-		} catch (final IOException e) {
+		} catch (@SuppressWarnings("unused") final IOException e) {
 			LOGGER.warn("renameFiles() : {} cannot be renamed in {}", fileFrom.toAbsolutePath(), fileTo.toAbsolutePath());
 		}
 	}

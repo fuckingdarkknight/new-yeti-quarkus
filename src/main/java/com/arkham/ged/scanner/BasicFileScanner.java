@@ -66,7 +66,7 @@ public class BasicFileScanner extends AbstractFileScanner {
 	 *
 	 * @param sfd The scan definition
 	 */
-	public BasicFileScanner(ScanFileDef sfd) {
+	public BasicFileScanner(final ScanFileDef sfd) {
 		super(sfd);
 
 		final OptionalParameterType depth = GedProperties.getOptionalParameters(sfd.getParam(), "depth");
@@ -80,7 +80,7 @@ public class BasicFileScanner extends AbstractFileScanner {
 		}
 	}
 
-	static Pattern[] buildPatterns(String[] patterns) {
+	static Pattern[] buildPatterns(final String[] patterns) {
 		final List<Pattern> result = new ArrayList<>(patterns.length);
 		for (final String ext : patterns) {
 			final Pattern pattern = Pattern.compile(buildRegexp(ext), Pattern.CASE_INSENSITIVE);
@@ -90,10 +90,10 @@ public class BasicFileScanner extends AbstractFileScanner {
 		return result.toArray(new Pattern[result.size()]);
 	}
 
-	static String buildRegexp(String s) {
+	static String buildRegexp(final String s) {
 		final StringBuilder result = new StringBuilder();
 
-		s.chars().forEach((int c) -> {
+		s.chars().forEach((final int c) -> {
 			if (c == '*') {
 				// All chars
 				result.append('.');
@@ -118,7 +118,7 @@ public class BasicFileScanner extends AbstractFileScanner {
 		return result.toString();
 	}
 
-	static boolean isIncluded(String filename, Pattern[] patterns) {
+	static boolean isIncluded(final String filename, final Pattern[] patterns) {
 		for (final Pattern pattern : patterns) {
 			final Matcher matcher = pattern.matcher(filename);
 			if (matcher.matches()) {
@@ -129,7 +129,7 @@ public class BasicFileScanner extends AbstractFileScanner {
 		return false;
 	}
 
-	static boolean isIncluded(Path path, Pattern[] patterns) {
+	static boolean isIncluded(final Path path, final Pattern[] patterns) {
 		return path != null && isIncluded(path.getFileName().toString(), patterns);
 	}
 
@@ -165,7 +165,7 @@ public class BasicFileScanner extends AbstractFileScanner {
 
 		final List<File> result = new ArrayList<>();
 		try (final Stream<Path> stream = Files.walk(startpath, mDepth)) {
-			stream.filter(path -> isIncluded(path, includedPatterns) && !isIncluded(path, excludedPatterns)).sorted().forEach((Path path) -> {
+			stream.filter(path -> isIncluded(path, includedPatterns) && !isIncluded(path, excludedPatterns)).sorted().forEach((final Path path) -> {
 				// Don't consider empty files for this scanner, except if settings accept it
 				final File f = path.toFile();
 
@@ -173,7 +173,7 @@ public class BasicFileScanner extends AbstractFileScanner {
 					result.add(f);
 				}
 			});
-		} catch (final NoSuchFileException | UncheckedIOException e) { // NOSONAR
+		} catch (@SuppressWarnings("unused") final NoSuchFileException | UncheckedIOException e) { // NOSONAR
 			// Don't care about it, may occur when several scanner scan the same directory at the same time and a file
 			// is ever consumed by another job
 		} catch (final IOException e) {

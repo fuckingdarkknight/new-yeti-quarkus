@@ -33,7 +33,7 @@ public class DateTransformer implements ITransformer<String> {
 	private static final DateTimeFormatter POI_FORMATTER = DateTimeFormatter.ofPattern("yyyy/MM/dd");
 
 	@Override
-	public Object transform(String value) {
+	public Object transform(final String value) {
 		if (value == null) {
 			return "";
 		}
@@ -46,7 +46,7 @@ public class DateTransformer implements ITransformer<String> {
 			final Date datum = DateUtil.parseYYYYMMDDDate(d); // NOSONAR
 
 			return datum;
-		} catch (final DateTimeParseException e) { // NOSONAR
+		} catch (@SuppressWarnings("unused") final DateTimeParseException e) { // NOSONAR
 			LOG.error("transform() : unable to convert date format, value=\"{}\"", value);
 		}
 

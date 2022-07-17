@@ -177,7 +177,7 @@ public class ExcelGenerator implements FunctionValueProvider {
 	 * @param path The YAML filename to parse
 	 * @param charset The charset of YAML encoding
 	 */
-	public ExcelGenerator(Path path, String charset) {
+	public ExcelGenerator(final Path path, final String charset) {
 		this();
 
 		mPath = path;
@@ -189,7 +189,7 @@ public class ExcelGenerator implements FunctionValueProvider {
 	 *
 	 * @param message The YAML message
 	 */
-	public ExcelGenerator(String message) {
+	public ExcelGenerator(final String message) {
 		this();
 
 		mMessage = message;
@@ -207,7 +207,7 @@ public class ExcelGenerator implements FunctionValueProvider {
 	 * @param re The general information about YAML
 	 * @return The output filename to generate
 	 */
-	private static String getOutputFilename(RootExcel re) {
+	private static String getOutputFilename(final RootExcel re) {
 		final String f = re.getGeneral().getOutput();
 		if (f != null) {
 			return f;
@@ -216,7 +216,7 @@ public class ExcelGenerator implements FunctionValueProvider {
 		return GedUtil.suffixFilename(re.getGeneral().getModel(), "_processed");
 	}
 
-	private HyperlinkType getLinkProtocol(String link) {
+	private HyperlinkType getLinkProtocol(final String link) {
 		if (link != null) {
 			try {
 				final String p = link.substring(0, link.indexOf(':'));
@@ -229,7 +229,7 @@ public class ExcelGenerator implements FunctionValueProvider {
 		return null;
 	}
 
-	private String getLinkValue(String link) {
+	private String getLinkValue(final String link) {
 		if (link != null) {
 			try {
 				return link.substring(link.indexOf(':') + 1);
@@ -241,12 +241,12 @@ public class ExcelGenerator implements FunctionValueProvider {
 		return null;
 	}
 
-	private static ExprSolver createSolver(FunctionValueProvider fvp) {
+	private static ExprSolver createSolver(final FunctionValueProvider fvp) {
 		final XlsgenExprValueProvider vp = new XlsgenExprValueProvider(fvp);
 		return new ExprSolver(vp);
 	}
 
-	private int getIntSolved(String expr) {
+	private int getIntSolved(final String expr) {
 		try {
 			final Object result = mEs.solve(expr);
 			if (result.getClass() == long.class || result.getClass() == Long.class) {
@@ -261,7 +261,7 @@ public class ExcelGenerator implements FunctionValueProvider {
 		return -1;
 	}
 
-	private String getStringSolved(String expr) {
+	private String getStringSolved(final String expr) {
 		if (expr == null) {
 			return null;
 		}
@@ -287,7 +287,7 @@ public class ExcelGenerator implements FunctionValueProvider {
 		return result.toString();
 	}
 
-	private void updateCell(Cell cell, CellType ct) {
+	private void updateCell(final Cell cell, final CellType ct) {
 		// Convenient test : the cell should never be null at this point
 		if (cell == null) {
 			return;
@@ -343,7 +343,7 @@ public class ExcelGenerator implements FunctionValueProvider {
 	 * @param cell The cell
 	 * @param ct The cell type
 	 */
-	private void applyLink(Cell cell, CellType ct) {
+	private void applyLink(final Cell cell, final CellType ct) {
 		if (ct.getLink() != null) {
 			final HyperlinkType lt = getLinkProtocol(ct.getLink());
 			final String linkValue = getLinkValue(ct.getLink());
@@ -361,14 +361,14 @@ public class ExcelGenerator implements FunctionValueProvider {
 	 * @param cell The cell
 	 * @param styleRef The style reference that should exist in predefined styles
 	 */
-	private void applyStyle(Cell cell, String styleRef) {
+	private void applyStyle(final Cell cell, final String styleRef) {
 		final CellStyle cs = mEsb.getCellStyle(styleRef);
 		if (cell != null && cs != null) {
 			cell.setCellStyle(cs);
 		}
 	}
 
-	private void applyFormula(Cell cell, String formula) {
+	private void applyFormula(final Cell cell, final String formula) {
 		if (formula != null && cell != null) {
 			try {
 				cell.setCellFormula(formula);
@@ -389,7 +389,7 @@ public class ExcelGenerator implements FunctionValueProvider {
 	 * @param colspan Colspan for comment
 	 * @param rowspan Rowspan for comment
 	 */
-	private void applyComment(String comment, Cell cell, String author, int colspan, int rowspan) {
+	private void applyComment(final String comment, final Cell cell, final String author, final int colspan, final int rowspan) {
 		if (comment != null) {
 			if (cell.getCellComment() == null) {
 				mEu.setComment(cell, comment, author, colspan, rowspan);
@@ -401,13 +401,13 @@ public class ExcelGenerator implements FunctionValueProvider {
 		}
 	}
 
-	private static void applyHeight(Row row, Float height) {
+	private static void applyHeight(final Row row, final Float height) {
 		if (height != null) {
 			row.setHeightInPoints(height);
 		}
 	}
 
-	private void applyGroupings(List<GroupType> lgt) {
+	private void applyGroupings(final List<GroupType> lgt) {
 		if (lgt != null) {
 			for (final GroupType gt : lgt) {
 				if (gt.getStart() != null && gt.getEnd() != null) {
@@ -425,7 +425,7 @@ public class ExcelGenerator implements FunctionValueProvider {
 		}
 	}
 
-	private void applyImage(Connection con, Sheet sheet, CellType ct) {
+	private void applyImage(final Connection con, final Sheet sheet, final CellType ct) {
 		if (con != null) {
 			final ImageType it = ct.getImage();
 			final CellReference cr = new CellReference(ct.getRef());
@@ -460,7 +460,7 @@ public class ExcelGenerator implements FunctionValueProvider {
 		}
 	}
 
-	private static void applyColspan(Sheet sheet, int col, int row, Integer colspan) {
+	private static void applyColspan(final Sheet sheet, final int col, final int row, final Integer colspan) {
 		if (colspan != null && colspan > 1) {
 			final int coltarget = col - 1 + colspan;
 			final CellRangeAddress r = new CellRangeAddress(row, row, col, coltarget);
@@ -491,8 +491,7 @@ public class ExcelGenerator implements FunctionValueProvider {
 		}
 	}
 
-	@SuppressWarnings("null")
-	private RootExcel readYaml(Reader reader) throws IOException {
+	private RootExcel readYaml(final Reader reader) throws IOException {
 		// Fonctionnalité inopérante avec le parser YAML (snake). Une exception est levée systématiquement, sans possibilité
 		// d'intervenir sur la gravité du truc (change caractère de remplacement, ce qui m'irait très très bien).
 		// org.yaml.snakeyaml.reader.StreamReader
@@ -519,7 +518,7 @@ public class ExcelGenerator implements FunctionValueProvider {
 		return mapper.readValue(reader, RootExcel.class);
 	}
 
-	private static int getGreaterColumn(Sheet sheet) {
+	private static int getGreaterColumn(final Sheet sheet) {
 		int res = 0;
 		// Arbitraire : uniquement sur les 100 premières lignes ... si là on ne trouve rien, on peut
 		// supposé que le modèle est vraiment moisi.
@@ -539,7 +538,7 @@ public class ExcelGenerator implements FunctionValueProvider {
 	 * @param sheet The sheet
 	 */
 	@SuppressWarnings("static-method")
-	protected void autosizeColumns(Sheet sheet) {
+	protected void autosizeColumns(final Sheet sheet) {
 		if (sheet.getPhysicalNumberOfRows() > 0) {
 			final int last = getGreaterColumn(sheet);
 			for (int i = 0; i < last; i++) {
@@ -560,7 +559,7 @@ public class ExcelGenerator implements FunctionValueProvider {
 	 * @return The generated file
 	 * @throws XlsgenException Exception escalation
 	 */
-	public File generate(Connection con) throws XlsgenException { // NOSONAR
+	public File generate(final Connection con) throws XlsgenException { // NOSONAR
 		final RootExcel re = readYaml();
 
 		LOGGER.info("generate() : using model {}", re.getGeneral().getModel());
@@ -629,7 +628,7 @@ public class ExcelGenerator implements FunctionValueProvider {
 		}
 	}
 
-	private void applyHeader(HeaderType ht, Connection con) {
+	private void applyHeader(final HeaderType ht, final Connection con) {
 		if (ht != null) {
 			for (final CellType ct : ht.getCell()) {
 				final String name = ct.getRef();
@@ -654,7 +653,7 @@ public class ExcelGenerator implements FunctionValueProvider {
 		}
 	}
 
-	private void applyBody(BodyType bt) {
+	private void applyBody(final BodyType bt) {
 		// Body is optional
 		if (bt != null) {
 			// Columns grouping
@@ -663,7 +662,7 @@ public class ExcelGenerator implements FunctionValueProvider {
 			// Start index and create a stack to push/pop values
 			mIndex = bt.getIndex();
 
-			final Deque<Integer> stack = new ArrayDeque();
+			final Deque<Integer> stack = new ArrayDeque<>();
 			stack.push(mIndex);
 
 			// Loop for each row to process
@@ -756,7 +755,7 @@ public class ExcelGenerator implements FunctionValueProvider {
 		}
 	}
 
-	private void applyPostProcessing(PostType postAction) {
+	private void applyPostProcessing(final PostType postAction) {
 		if (postAction != null) {
 			// Seul cas global pris en compte : auto pour toutes les colonnes
 			if ("auto".equalsIgnoreCase(postAction.getAdjustment())) {
@@ -864,7 +863,7 @@ public class ExcelGenerator implements FunctionValueProvider {
 	 * @param params The optional parameters used for translate the message
 	 * @throws XslgenRuntimeException In case of STRICT mode, the given exception is re-raised as a runtime
 	 */
-	private void processException(Exception e, String message, Object... params) {
+	private void processException(final Exception e, final String message, final Object... params) {
 		if (e == null) {
 			LOGGER.warn(message, params);
 		} else {
@@ -886,7 +885,7 @@ public class ExcelGenerator implements FunctionValueProvider {
 	 * @param filename The file name to read
 	 * @return A unmodifiable Map of properties
 	 */
-	private final Map<String, String> readProperties(String filename) {
+	private final Map<String, String> readProperties(final String filename) {
 		if (filename != null) {
 			final Properties p = new Properties();
 			try (Reader reader = new InputStreamReader(Files.newInputStream(Paths.get(filename)), StandardCharsets.UTF_8)) {
@@ -898,7 +897,7 @@ public class ExcelGenerator implements FunctionValueProvider {
 			}
 		}
 
-		return Collections.unmodifiableMap(new HashMap());
+		return Collections.unmodifiableMap(new HashMap<String, String>());
 	}
 
 	@Override
@@ -912,7 +911,7 @@ public class ExcelGenerator implements FunctionValueProvider {
 	}
 
 	@Override
-	public String getProperty(String name) {
+	public String getProperty(final String name) {
 		return mProperties.get(name);
 	}
 }

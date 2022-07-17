@@ -21,33 +21,35 @@ import com.arkham.ged.message.GedMessage;
  * @since 29 déc. 2015
  */
 public class ActionException extends GedException {
-	/**
-	 * Constructor ActionException
-	 *
-	 * @param message Message
-	 * @param params Optional parameters
-	 */
-	public ActionException(GedMessage message, Object... params) {
-		super(message, params);
-	}
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * Constructor ActionException
-	 *
-	 * @param cause The root cause
-	 * @param message Message
-	 * @param params Optional parameters
-	 */
-	public ActionException(Throwable cause, GedMessage message, Object... params) {
-		super(cause, message, params);
-	}
+    /**
+     * Constructor ActionException
+     *
+     * @param message Message
+     * @param params Optional parameters
+     */
+    public ActionException(final GedMessage message, final Object... params) {
+        super(message, params);
+    }
 
-	/**
-	 * Constructor ActionException
-	 *
-	 * @param cause The root cause
-	 */
-	public ActionException(Throwable cause) {
-		super(cause);
-	}
+    /**
+     * Constructor ActionException
+     *
+     * @param cause The root cause
+     * @param message Message
+     * @param params Optional parameters
+     */
+    public ActionException(final Throwable cause, final GedMessage message, final Object... params) {
+        super(cause, message, params);
+    }
+
+    /**
+     * Constructor ActionException
+     *
+     * @param cause The root cause
+     */
+    public ActionException(final Throwable cause) {
+        super(cause);
+    }
 }

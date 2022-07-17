@@ -21,13 +21,15 @@ import com.arkham.ged.message.GedMessage;
  * @since 10 févr. 2015
  */
 public class PropertiesException extends GedException {
-	/**
+    private static final long serialVersionUID = 1L;
+
+    /**
 	 * {@link PropertiesException} constructor.
 	 *
 	 * @param message Message
 	 * @param params Parameters array
 	 */
-	public PropertiesException(GedMessage message, Object... params) {
+	public PropertiesException(final GedMessage message, final Object... params) {
 		super(message, params);
 	}
 
@@ -38,7 +40,7 @@ public class PropertiesException extends GedException {
 	 * @param message Ged message
 	 * @param params Parameters for the message
 	 */
-	public PropertiesException(Throwable cause, GedMessage message, Object... params) {
+	public PropertiesException(final Throwable cause, final GedMessage message, final Object... params) {
 		super(cause, message, params);
 	}
 }

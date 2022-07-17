@@ -30,11 +30,12 @@ public class FileStreamProtocolAdapter extends AbstractStreamProtocolAdapter<Str
 	 *
 	 * @param value
 	 */
-	FileStreamProtocolAdapter(String value) {
+	FileStreamProtocolAdapter(final String value) {
 		super(value);
 	}
 
-	@Override
+	@SuppressWarnings("resource")
+    @Override
 	public InputStream getStream() throws StreamProtocolException {
 		final Path path = Paths.get(getValue());
 		final File file = path.toFile();

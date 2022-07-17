@@ -35,17 +35,17 @@ public class BorderStyleTypeDeserializer extends AbstractTypeDeserializer<Border
 	 *
 	 * @param ea Appender for errors
 	 */
-	public BorderStyleTypeDeserializer(ErrorAppender ea) {
+	public BorderStyleTypeDeserializer(final ErrorAppender ea) {
 		super(ea);
 	}
 
 	@Override
-	public BorderStyleType deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+	public BorderStyleType deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
 		final String s = p.getText();
 
 		try {
 			return BorderStyleType.valueOf(s.toUpperCase());
-		} catch (final IllegalArgumentException e) { // NOSONAR
+		} catch (@SuppressWarnings("unused") final IllegalArgumentException e) { // NOSONAR
 			addError(LOGGER, p, BorderStyleType.class, s);
 		}
 

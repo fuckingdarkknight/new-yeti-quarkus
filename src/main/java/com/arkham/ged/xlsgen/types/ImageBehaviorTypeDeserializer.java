@@ -35,17 +35,17 @@ public class ImageBehaviorTypeDeserializer extends AbstractTypeDeserializer<Imag
 	 *
 	 * @param ea Appender for errors
 	 */
-	public ImageBehaviorTypeDeserializer(ErrorAppender ea) {
+	public ImageBehaviorTypeDeserializer(final ErrorAppender ea) {
 		super(ea);
 	}
 
 	@Override
-	public ImageBehaviorType deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+	public ImageBehaviorType deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
 		final String s = p.getText();
 
 		try {
 			return ImageBehaviorType.valueOf(s.toUpperCase());
-		} catch (final IllegalArgumentException e) { // NOSONAR
+		} catch (@SuppressWarnings("unused") final IllegalArgumentException e) { // NOSONAR
 			addError(LOGGER, p, ImageBehaviorType.class, s);
 		}
 

@@ -19,8 +19,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.event.Observes;
+import javax.inject.Inject;
+
 import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.core.config.Configurator;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.arkham.common.pattern.listener.BasicEvent;
@@ -31,7 +35,9 @@ import com.arkham.ged.properties.GedProperties;
 import com.arkham.ged.properties.PropertiesAdapter.GLOBAL_EVENTS;
 import com.arkham.ged.properties.PropertiesException;
 
-import io.quarkus.runtime.annotations.QuarkusMain;
+import io.quarkus.runtime.ShutdownEvent;
+import io.quarkus.runtime.StartupEvent;
+import io.quarkus.runtime.annotations.CommandLineArguments;
 
 /**
  * Standalone document archiver properties :
@@ -45,119 +51,132 @@ import io.quarkus.runtime.annotations.QuarkusMain;
  * @version 1.0
  * @since 10 févr. 2015
  */
-@QuarkusMain
+@ApplicationScoped
 public final class StandaloneScanner {
-	private StandaloneScanner() {
-		// Standalone launcher
-	}
+    private static final Logger LOGGER = LoggerFactory.getLogger(StandaloneScanner.class);
 
-	static class BasePropertiesProvider extends PropertiesProvider {
-		private final Map<String, String> mProp = new HashMap<>();
+    @Inject
+    @CommandLineArguments
+    String[] mArgs;
 
-		BasePropertiesProvider(final File file) {
-			final FlatProp gfp = new FlatProp();
-			try (Reader reader = new FileReader(file)) {
-				gfp.load(reader);
+    private StandaloneScanner() {
+        // Standalone launcher
+    }
 
-				final Set<String> keys = gfp.getKeys();
-				for (final String k : keys) {
-					mProp.put(k, gfp.getProperty(k));
-				}
-			} catch (final IOException e) { // NOSONAR
-				// No mind, the files are not mandatory
-			}
-		}
+    void onStart(@Observes final StartupEvent ev) {
+        LOGGER.info("onStart() : starting YETI");
 
-		@Override
-		protected Map<String, String> getProperties() throws IOException {
-			return mProp;
-		}
-	}
+        try {
+            launch(mArgs);
+        } catch (PropertiesException | IOException e) {
+            LOGGER.error("onStart() : critical while starting YETI {}", e);
+        }
+    }
 
-	/**
-	 * @param args
-	 * @throws PropertiesException
-	 * @throws IOException
-	 */
-	public static void main(final String[] args) throws PropertiesException, IOException {
-		System.out.println("StandaloneScanner : starting ............"); // NOSONAR
-		System.out.println("java.version=" + System.getProperty("java.version")); // NOSONAR
-		System.out.println("classpath=" + System.getProperty("java.class.path")); // NOSONAR
-		System.out.println("user.dir=" + System.getProperty("user.dir")); // NOSONAR
+    @SuppressWarnings("static-method")
+    void onStop(@Observes final ShutdownEvent ev) {
+        LOGGER.info("onStop() : stopping YETI");
+    }
 
-		// Force scanner activation
-		System.setProperty(GedInit.SCANNING_ACTIVE_PARAMETER, "true");
+    static class BasePropertiesProvider extends PropertiesProvider {
+        private final Map<String, String> mProp = new HashMap<>();
 
-		String basedir = System.getProperty(GedInit.BASEDIR_PARAM);
-		if (basedir == null) {
-			basedir = System.getProperty("user.dir");
-		}
+        BasePropertiesProvider(final File file) {
+            final FlatProp gfp = new FlatProp();
+            try (Reader reader = new FileReader(file)) {
+                gfp.load(reader);
 
-		// The baseDir should exists
-		final File dirFile = new File(basedir);
-		if (!dirFile.exists() || !dirFile.isDirectory()) {
-			System.err.println("main() : directory=" + dirFile.getAbsolutePath() + " does not exist"); // NOSONAR
-			return;
-		}
-		final String baseDirPath = dirFile.getAbsolutePath();
-		System.out.println("basedir=" + baseDirPath); // NOSONAR
+                final Set<String> keys = gfp.getKeys();
+                for (final String k : keys) {
+                    mProp.put(k, gfp.getProperty(k));
+                }
+            } catch (@SuppressWarnings("unused") final IOException e) { // NOSONAR
+                // No mind, the files are not mandatory
+            }
+        }
 
-		// System.setProperty("log4j.debug", "true"); // NOSONAR
-		// The default log4j file is the same for standalone mode and others.
-		final String filename = System.getProperty("log4j2.configurationFile", baseDirPath + "/log4j2.xml");
-		System.out.println("log4j used=" + filename); // NOSONAR
+        @Override
+        protected Map<String, String> getProperties() throws IOException {
+            return mProp;
+        }
+    }
 
-		Configurator.initialize(null, filename);
+    /**
+     * @param args
+     * @throws PropertiesException
+     * @throws IOException
+     */
+    private static void launch(final String[] args) throws PropertiesException, IOException {
+        System.out.println("StandaloneScanner : starting ............"); // NOSONAR
+        System.out.println("java.version=" + System.getProperty("java.version")); // NOSONAR
+        System.out.println("classpath=" + System.getProperty("java.class.path")); // NOSONAR
+        System.out.println("user.dir=" + System.getProperty("user.dir")); // NOSONAR
 
-		// Try to read get.properties
-		final File baseProp = new File(dirFile, "ged-standalone.properties");
-		final BasePropertiesProvider bpp = new BasePropertiesProvider(baseProp);
+        // Force scanner activation
+        System.setProperty(GedInit.SCANNING_ACTIVE_PARAMETER, "true");
 
-		// Read ged_properties.xml
-		final String fileProperties = System.getProperty("ged.properties", "ged-standalone.xml");
-		System.out.println("Properties=" + fileProperties); // NOSONAR
+        String basedir = System.getProperty(GedInit.BASEDIR_PARAM);
+        if (basedir == null) {
+            basedir = System.getProperty("user.dir");
+        }
 
-		final GedStateHolder gsh = GedInit.init(dirFile.getCanonicalPath(), fileProperties, bpp, LoggerFactory.getLogger(StandaloneScanner.class));
+        // The baseDir should exists
+        final File dirFile = new File(basedir);
+        if (!dirFile.exists() || !dirFile.isDirectory()) {
+            System.err.println("main() : directory=" + dirFile.getAbsolutePath() + " does not exist"); // NOSONAR
+            return;
+        }
+        final String baseDirPath = dirFile.getAbsolutePath();
+        System.out.println("basedir=" + baseDirPath); // NOSONAR
 
-		Runtime.getRuntime().addShutdownHook(new Thread("ShudownHook") {
-			@Override
-			public void run() {
-				System.out.println("GedInit : shutdown in progress ..."); // NOSONAR
+        // Try to read get.properties
+        final File baseProp = new File(dirFile, "ged-standalone.properties");
+        final BasePropertiesProvider bpp = new BasePropertiesProvider(baseProp);
 
-				LogManager.shutdown();
-			}
-		});
+        // Read ged_properties.xml
+        final String fileProperties = System.getProperty("ged.properties", "ged-standalone.xml");
+        System.out.println("Properties=" + fileProperties); // NOSONAR
 
-		System.out.println("GedInit : started"); // NOSONAR
-		System.out.println("Logs are redirected using " + filename); // NOSONAR
-		System.out.println("GedInit : scanning ..."); // NOSONAR
+        final GedStateHolder gsh = GedInit.init(dirFile.getCanonicalPath(), fileProperties, bpp, LoggerFactory.getLogger(StandaloneScanner.class));
 
-		final AtomicBoolean loop = new AtomicBoolean(true);
-		GedProperties.getInstance().registerListener(new BasicListener<String, GLOBAL_EVENTS, PropertiesException>() {
-			@Override
-			public void eventFired(final BasicEvent<String, GLOBAL_EVENTS> event) throws PropertiesException {
-				System.out.println("eventFired() : event=" + event.getType() + " source=" + event.getSource()); // NOSONAR
+        Runtime.getRuntime().addShutdownHook(new Thread("ShudownHook") {
+            @Override
+            public void run() {
+                System.out.println("GedInit : shutdown in progress ..."); // NOSONAR
 
-				if (event.getType() == GLOBAL_EVENTS.SHUTDOWN) {
-					// First stop all the jobs via the scheduler
-					gsh.destroy();
+                LogManager.shutdown();
+            }
+        });
 
-					loop.set(false);
-				}
-			}
+        System.out.println("GedInit : started"); // NOSONAR
+        System.out.println("GedInit : scanning ..."); // NOSONAR
 
-			@Override
-			public void destroy() {
-				// Nothing to do
-			}
-		});
+        final AtomicBoolean loop = new AtomicBoolean(true);
+        GedProperties.getInstance().registerListener(new BasicListener<String, GLOBAL_EVENTS, PropertiesException>() {
+            @Override
+            public void eventFired(final BasicEvent<String, GLOBAL_EVENTS> event) throws PropertiesException {
+                System.out.println("eventFired() : event=" + event.getType() + " source=" + event.getSource()); // NOSONAR
 
-		try {
-			while (loop.get()) {
-				Thread.sleep(1000);
-			}
-		} catch (final InterruptedException e) { // NOSONAR
-			System.out.println("StandaloneScanner : interrupted -----------"); // NOSONAR
-		}
-	}
+                if (event.getType() == GLOBAL_EVENTS.SHUTDOWN) {
+                    // First stop all the jobs via the scheduler
+                    gsh.destroy();
+
+                    loop.set(false);
+                }
+            }
+
+            @Override
+            public void destroy() {
+                // Nothing to do
+            }
+        });
+        //
+        // try {
+        // while (loop.get()) {
+        // Thread.sleep(1000);
+        // }
+        // } catch (final InterruptedException e) { // NOSONAR
+        // System.out.println("StandaloneScanner : interrupted -----------"); // NOSONAR
+        // }
+    }
 }

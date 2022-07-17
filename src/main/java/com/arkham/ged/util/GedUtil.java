@@ -75,7 +75,7 @@ public final class GedUtil {
 	 * @param l The list of index that define the start index to split
 	 * @return A string array that contains splitted values by using the list of index
 	 */
-	public static String[] splitKey(String value, int[] l) {
+	public static String[] splitKey(final String value, final int[] l) {
 		final List<String> result = new ArrayList<>();
 
 		int pos = 0;
@@ -101,7 +101,7 @@ public final class GedUtil {
 	 * @param delim The delimiter
 	 * @return The string splitted as an array of string
 	 */
-	public static String[] splitValue(String value, String delim) {
+	public static String[] splitValue(final String value, final String delim) {
 		if (value != null) {
 			final List<String> result = new ArrayList<>();
 			final StringTokenizer st = new StringTokenizer(value, delim, false);
@@ -122,7 +122,7 @@ public final class GedUtil {
 	 * @param delim The delimiter
 	 * @return The string splitted as an array of int (value will be -1 if the value is not numerical)
 	 */
-	public static int[] splitIntValue(String value, String delim) {
+	public static int[] splitIntValue(final String value, final String delim) {
 		final String[] s = splitValue(value, delim);
 		final int[] result = new int[s.length];
 		for (int i = 0; i < s.length; i++) {
@@ -152,7 +152,7 @@ public final class GedUtil {
 	 * @param value The value, if <code>null</code> an empty array is returned
 	 * @return An array containing the splitted values
 	 */
-	public static String[] splitValues(String value) {
+	public static String[] splitValues(final String value) {
 		if (value != null) {
 			final String[] result = SPLIT_SEQ.split(value);
 			for (int i = 0; i < result.length; i++) {
@@ -185,7 +185,7 @@ public final class GedUtil {
 	 * @param format The format converted to {@link DateFormat}
 	 * @return The current date formated into "format"
 	 */
-	public static String getDT(String format) {
+	public static String getDT(final String format) {
 		final DateFormat dateFormat = new SimpleDateFormat(format);
 
 		return dateFormat.format(Calendar.getInstance().getTime());
@@ -197,7 +197,7 @@ public final class GedUtil {
 	 * @param file The file
 	 * @return The file name
 	 */
-	public static String getName(File file) {
+	public static String getName(final File file) {
 		final String name = file.getName();
 		final int lp = name.lastIndexOf('\\');
 		if (lp == -1) {
@@ -213,7 +213,7 @@ public final class GedUtil {
 	 * @param filename A filename
 	 * @return The file extension if exists or <code>null</code> if <code>filename</code> is null or if there's no extension
 	 */
-	public static String getFileExtension(String filename) {
+	public static String getFileExtension(final String filename) {
 		if (filename == null) {
 			return null;
 		}
@@ -238,7 +238,7 @@ public final class GedUtil {
 	 * @param extension The file extension to match with filename
 	 * @return true if extensions matchs (case insensitive)
 	 */
-	public static boolean isFileExtension(String filename, String extension) {
+	public static boolean isFileExtension(final String filename, final String extension) {
 		final String ext = getFileExtension(filename);
 
 		return ext != null && ext.equalsIgnoreCase(extension);
@@ -251,7 +251,7 @@ public final class GedUtil {
 	 * @param extension The extension to replace with
 	 * @return The new file name
 	 */
-	public static String replaceFileExtension(String filename, String extension) {
+	public static String replaceFileExtension(final String filename, final String extension) {
 		// Convenience
 		if (filename == null) {
 			return null;
@@ -287,7 +287,7 @@ public final class GedUtil {
 	 * @param filename The file name
 	 * @return The file name without its extension or <code>null</code> if the file name is <code>null</code>
 	 */
-	public static String removeFileExtension(String filename) {
+	public static String removeFileExtension(final String filename) {
 		if (filename == null) {
 			return null;
 		}
@@ -311,7 +311,7 @@ public final class GedUtil {
 	 * @param value The value to trim
 	 * @return the trimmed value or <code>null</code> if value is null
 	 */
-	public static String trim(String value) {
+	public static String trim(final String value) {
 		if (value == null) {
 			return null;
 		}
@@ -346,7 +346,7 @@ public final class GedUtil {
 	 * @param value The string to escape
 	 * @return The escaped value
 	 */
-	public static String escapeChars(String value) {
+	public static String escapeChars(final String value) {
 		if (value == null) {
 			return null;
 		}
@@ -385,7 +385,7 @@ public final class GedUtil {
 	 * @return The result in bytes or 0 if <code>s</code> is <code>null</code> or if the length <code>s</code> is &lt;= 1
 	 * @throws NumberFormatException
 	 */
-	public static int convertNumberInBytes(String s) {
+	public static int convertNumberInBytes(final String s) {
 		int result = 0;
 		if (s != null && s.trim().length() > 1) {
 			int factor = 1;
@@ -413,7 +413,7 @@ public final class GedUtil {
 	 * @param suffix The suffix to add before extension
 	 * @return The new file name
 	 */
-	public static String suffixFilename(String filename, String suffix) {
+	public static String suffixFilename(final String filename, final String suffix) {
 		if (filename == null) {
 			return null;
 		}
@@ -443,7 +443,7 @@ public final class GedUtil {
 	 * @return size transfered
 	 * @throws IOException Could occurs if out stream is not writable
 	 */
-	public static int copyIs2Os(InputStream is, OutputStream os, int size) throws IOException {
+	public static int copyIs2Os(final InputStream is, final OutputStream os, final int size) throws IOException {
 		int copied = 0;
 		final byte[] buffer = new byte[size];
 		int chunk;
@@ -467,7 +467,7 @@ public final class GedUtil {
 	 * @see #copyIs2Os(InputStream, OutputStream, int)
 	 * @see Files#copy(java.nio.file.Path, java.nio.file.Path, java.nio.file.CopyOption...)
 	 */
-	public static void copyFile(File source, File target, boolean nio) throws IOException {
+	public static void copyFile(final File source, final File target, final boolean nio) throws IOException {
 		if (nio) {
 			Files.copy(source.toPath(), target.toPath(), StandardCopyOption.REPLACE_EXISTING);
 		} else {
@@ -481,7 +481,7 @@ public final class GedUtil {
 					PosixFilePermission.OTHERS_READ, PosixFilePermission.OTHERS_WRITE);
 
 			Files.setPosixFilePermissions(target.toPath(), perms);
-		} catch (final UnsupportedOperationException e) { // NOSONAR
+		} catch (@SuppressWarnings("unused") final UnsupportedOperationException e) { // NOSONAR
 			// Do nothing : not supported by windows
 		}
 	}
@@ -494,7 +494,7 @@ public final class GedUtil {
 	 * @throws IOException In case of copy problem
 	 * @see #copyIs2Os(InputStream, OutputStream, int)
 	 */
-	public static void copyFile(File source, File target) throws IOException {
+	public static void copyFile(final File source, final File target) throws IOException {
 		copyFile(source, target, false);
 	}
 
@@ -505,7 +505,7 @@ public final class GedUtil {
 	 * @return The stream converted to UTF-8
 	 * @throws IOException If any problem occurs while converting
 	 */
-	public static String getString(InputStream is) throws IOException {
+	public static String getString(final InputStream is) throws IOException {
 		return getString(is, "UTF-8");
 	}
 
@@ -517,7 +517,7 @@ public final class GedUtil {
 	 * @return The stream converted to charset
 	 * @throws IOException If any problem occurs while converting
 	 */
-	public static String getString(InputStream is, String charset) throws IOException {
+	public static String getString(final InputStream is, final String charset) throws IOException {
 		try (final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
 			copyIs2Os(is, baos, 8192);
 
@@ -531,7 +531,7 @@ public final class GedUtil {
 	 * @param files Files to sort by lastModified attribute
 	 * @return new array sorted
 	 */
-	public static File[] sortByDate(File[] files) {
+	public static File[] sortByDate(final File[] files) {
 		if (files.length == 0) {
 			return files;
 		}
@@ -545,7 +545,7 @@ public final class GedUtil {
 	 * @param files Files to sort by name
 	 * @return new array sorted
 	 */
-	public static File[] sortByName(File[] files) {
+	public static File[] sortByName(final File[] files) {
 		if (files.length == 0) {
 			return files;
 		}
@@ -565,7 +565,7 @@ public final class GedUtil {
 	 * @param value The value to test
 	 * @return true if option is active
 	 */
-	public static boolean isOptionActive(String value) {
+	public static boolean isOptionActive(final String value) {
 		if (value == null) {
 			return false;
 		}
@@ -580,7 +580,7 @@ public final class GedUtil {
 	 * @param length The last byte to compute
 	 * @return The hashcode
 	 */
-	public static int getHashCode(byte[] buf, int length) {
+	public static int getHashCode(final byte[] buf, final int length) {
 		int h = 0; // default value
 		for (int i = 0; i < length; i++) {
 			h = 31 * h + buf[i];
@@ -595,7 +595,7 @@ public final class GedUtil {
 	 * @return The hashcode
 	 * @throws IOException Exception while reading stream
 	 */
-	public static int getHashCode(InputStream is) throws IOException {
+	public static int getHashCode(final InputStream is) throws IOException {
 		final byte[] buf = new byte[4096];
 		int i;
 		int hashcode = 0;
@@ -613,12 +613,12 @@ public final class GedUtil {
 	 * @param defaultValue The default value if an error occurs while parsing
 	 * @return The int value of "s"
 	 */
-	public static int getInt(String s, int defaultValue) {
+	public static int getInt(final String s, final int defaultValue) {
 		try {
 			if (s != null) {
 				return Integer.parseInt(s.trim());
 			}
-		} catch (final NumberFormatException e) {	// NOSONAR
+		} catch (@SuppressWarnings("unused") final NumberFormatException e) {	// NOSONAR
 			// Default value
 		}
 
@@ -633,7 +633,7 @@ public final class GedUtil {
 	 * @return true if string is "true", defaultValue if the string is <code>null</code> or empty, false otherwise
 	 * @see #isOptionActive(String)
 	 */
-	public static boolean getBoolean(String s, boolean defaultValue) {
+	public static boolean getBoolean(final String s, final boolean defaultValue) {
 		if (s == null || s.trim().length() == 0) {
 			return defaultValue;
 		}
@@ -648,7 +648,7 @@ public final class GedUtil {
 	 * @param defaultValue The defaultValue
 	 * @return default value if "s" is <code>null</code> or is an empty string, otherwise "s"
 	 */
-	public static String getString(String s, String defaultValue) {
+	public static String getString(final String s, final String defaultValue) {
 		if (s == null || s.trim().length() == 0) {
 			return defaultValue;
 		}
@@ -663,7 +663,7 @@ public final class GedUtil {
 	 * @return The flat properties
 	 * @throws IOException Occurs if problem while reading file
 	 */
-	public static FlatProp getProp(File file) throws IOException {
+	public static FlatProp getProp(final File file) throws IOException {
 		try (Reader reader = new UTF8FileReader(file)) {
 			final FlatProp p = new FlatProp();
 			p.load(reader);
@@ -694,7 +694,7 @@ public final class GedUtil {
 	 * @param o JSONObject
 	 * @return The mapped first level of JSONObject
 	 */
-	public static Map<String, String> getMap(JSONObject o) {
+	public static Map<String, String> getMap(final JSONObject o) {
 		final Map<String, String> result = new HashMap<>();
 		if (o != null) {
 			for (final Entry<String, Object> entry : o.toMap().entrySet()) {
@@ -717,9 +717,8 @@ public final class GedUtil {
 	 * @return The jsonify string
 	 * @throws IOException Should never occurs
 	 */
-	public static String convertYamlToJson(String message) throws IOException {
+	public static String convertYamlToJson(final String message) throws IOException {
 		final ObjectMapper yamlReader = new ObjectMapper(new YAMLFactory());
-		@SuppressWarnings("null")
 		final Object yamlObject = yamlReader.readValue(message, Object.class);
 
 		final ObjectMapper jsonWriter = new ObjectMapper();
@@ -734,7 +733,7 @@ public final class GedUtil {
 	 * @return The jsonify string
 	 * @throws IOException Should never occurs
 	 */
-	public static String convertJsonToYaml(String message) throws IOException {
+	public static String convertJsonToYaml(final String message) throws IOException {
 		final JsonNode jsonNodeTree = new ObjectMapper().readTree(message);
 
 		return new YAMLMapper().writeValueAsString(jsonNodeTree);

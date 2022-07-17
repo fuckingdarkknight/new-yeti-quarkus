@@ -19,33 +19,35 @@ import com.arkham.ged.message.GedMessage;
  * @since 12 févr. 2015
  */
 public class DocumentLinkException extends GedException {
-	/**
-	 * Constructor MediaBlobException
-	 *
-	 * @param message
-	 * @param params
-	 */
-	public DocumentLinkException(GedMessage message, Object... params) {
-		super(message, params);
-	}
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * Constructor DocumentLinkException
-	 *
-	 * @param cause
-	 * @param message
-	 * @param params
-	 */
-	public DocumentLinkException(Throwable cause, GedMessage message, Object... params) {
-		super(cause, message, params);
-	}
+    /**
+     * Constructor MediaBlobException
+     *
+     * @param message
+     * @param params
+     */
+    public DocumentLinkException(final GedMessage message, final Object... params) {
+        super(message, params);
+    }
 
-	/**
-	 * Constructor DocumentLinkException
-	 *
-	 * @param cause
-	 */
-	public DocumentLinkException(Throwable cause) {
-		super(cause);
-	}
+    /**
+     * Constructor DocumentLinkException
+     *
+     * @param cause
+     * @param message
+     * @param params
+     */
+    public DocumentLinkException(final Throwable cause, final GedMessage message, final Object... params) {
+        super(cause, message, params);
+    }
+
+    /**
+     * Constructor DocumentLinkException
+     *
+     * @param cause
+     */
+    public DocumentLinkException(final Throwable cause) {
+        super(cause);
+    }
 }

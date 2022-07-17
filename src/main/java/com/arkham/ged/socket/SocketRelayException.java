@@ -18,12 +18,14 @@ import com.arkham.ged.GedException;
  * @since 18 déc. 2017
  */
 public class SocketRelayException extends GedException {
-	/**
+    private static final long serialVersionUID = 1L;
+
+    /**
 	 * Constructor SocketRelayException
 	 *
 	 * @param cause The root cause
 	 */
-	public SocketRelayException(Throwable cause) {
+	public SocketRelayException(final Throwable cause) {
 		super(cause);
 	}
 }

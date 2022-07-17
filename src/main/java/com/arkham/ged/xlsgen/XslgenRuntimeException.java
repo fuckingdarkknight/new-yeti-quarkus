@@ -18,12 +18,14 @@ package com.arkham.ged.xlsgen;
  * @since 24 févr. 2020
  */
 public class XslgenRuntimeException extends RuntimeException {
-	/**
-	 * Constructor XslgenRuntimeException
-	 *
-	 * @param cause The root cause
-	 */
-	public XslgenRuntimeException(Throwable cause) {
-		super(cause);
-	}
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * Constructor XslgenRuntimeException
+     *
+     * @param cause The root cause
+     */
+    public XslgenRuntimeException(final Throwable cause) {
+        super(cause);
+    }
 }

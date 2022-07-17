@@ -35,50 +35,49 @@ abstract class AbstractStreamProtocolAdapter<T, O> implements StreamProtocolAdap
 	private O mOptions;
 	private Connection mConnection;
 
-	@SuppressWarnings("null")
-	AbstractStreamProtocolAdapter(T value) {
+	AbstractStreamProtocolAdapter(final T value) {
 		mValue = value;
 	}
 
-	void initInner(Connection con, O options) {
+	void initInner(final Connection con, final O options) {
 		mConnection = con;
 		mOptions = options;
 	}
 
-	void setStream(InputStream inputStream) {
+	void setStream(final InputStream inputStream) {
 		mInputStream = inputStream;
 	}
 
-	void setArray(byte[] array) {
+	void setArray(final byte[] array) {
 		mArray = array; // NOSONAR
 	}
 
-	void setStreamName(String streamName) {
+	void setStreamName(final String streamName) {
 		mStreamName = streamName;
 	}
 
-	void setValue(T value) {
+	void setValue(final T value) {
 		mValue = value;
 	}
 
 	/**
 	 * @param charset the charset to set
 	 */
-	void setCharset(String charset) {
+	void setCharset(final String charset) {
 		mCharset = charset;
 	}
 
 	/**
 	 * @param contentType the contentType to set
 	 */
-	void setContentType(String contentType) {
+	void setContentType(final String contentType) {
 		mContentType = contentType;
 	}
 
 	/**
 	 * @param statusCode the statusCode to set
 	 */
-	void setStatusCode(int statusCode) {
+	void setStatusCode(final int statusCode) {
 		mStatusCode = statusCode;
 	}
 

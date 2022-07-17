@@ -1,3 +1,14 @@
+# Post file
+
+```bash
+cd standalone
+
+# 15s (300s par défaut)
+java -Xms128m -Xmx512m -XX:+UseZGC -XX:ZUncommitDelay=15 -XX:ZCollectionInterval=5 -jar yeti-0.1-runner.jar
+
+curl -sX POST http://localhost:8080/excel/stream --data-binary @spl/SOC800_36370.yaml.processed -o spl/test.xls -H 'Content-Type: application/yaml'
+```
+
 # new-yeti-quarkus Project
 
 This project uses Quarkus, the Supersonic Subatomic Java Framework.
@@ -54,3 +65,4 @@ If you want to learn more about building native executables, please consult http
 Easily start your Reactive RESTful Web Services
 
 [Related guide section...](https://quarkus.io/guides/getting-started-reactive#reactive-jax-rs-resources)
+

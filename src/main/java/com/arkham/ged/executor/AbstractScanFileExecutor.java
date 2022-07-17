@@ -79,8 +79,7 @@ public abstract class AbstractScanFileExecutor<T extends ScanFileDef> extends Ab
 	 * @param sfd type T extends ScanFileDef
 	 * @throws ExecutorException Should occurs if dynamic instanciation of classes fail
 	 */
-	@SuppressWarnings("null")
-	public AbstractScanFileExecutor(Connection connection, PropertiesAdapter pa, T sfd) throws ExecutorException {
+	public AbstractScanFileExecutor(final Connection connection, final PropertiesAdapter pa, final T sfd) throws ExecutorException {
 		super(connection, pa);
 
 		mSfd = sfd;
@@ -124,8 +123,8 @@ public abstract class AbstractScanFileExecutor<T extends ScanFileDef> extends Ab
 	 * @return The IntFileKey
 	 * @throws FileKeyProviderException
 	 */
-	@SuppressWarnings("null")
-	protected final FileKey getFileKey(File file, PropertiesAdapter pa) throws FileKeyProviderException {
+	@SuppressWarnings("resource")
+    protected final FileKey getFileKey(final File file, final PropertiesAdapter pa) throws FileKeyProviderException {
 		FileKey fk = null;
 		for (int i = 0; i < mFkpList.size(); i++) {
 			final FileKeyProvider fkp = mFkpList.get(i);
@@ -194,7 +193,6 @@ public abstract class AbstractScanFileExecutor<T extends ScanFileDef> extends Ab
 				LOGGER.info("run() : start periodic job, files scanned={}", files.length);
 
 				boolean considerZeroLengthFile = false;
-				@SuppressWarnings("null")
 				final OptionalParameterType zeroLength = GedProperties.getOptionalParameters(getSFD().getParam(), "empty");
 				if (zeroLength != null) {
 					considerZeroLengthFile = GedUtil.getBoolean(zeroLength.getValue(), false);
@@ -263,8 +261,7 @@ public abstract class AbstractScanFileExecutor<T extends ScanFileDef> extends Ab
 	 * @param filename A file name that is relative to getScan().getDir() definition
 	 * @return true is the file exists
 	 */
-	private boolean isFileExists(String filename) {
-		@SuppressWarnings("null")
+	private boolean isFileExists(final String filename) {
 		final File file = new File(new File(getSFD().getDir()), filename);
 
 		return file.exists();
@@ -274,8 +271,7 @@ public abstract class AbstractScanFileExecutor<T extends ScanFileDef> extends Ab
 	 * @param files The source files array that shouldn't be <code>null</code>
 	 * @return A new array limited by <code>maxFileProcessing</code> parameter if set
 	 */
-	protected File[] limitFileProcessing(File[] files) {
-		@SuppressWarnings("null")
+	protected File[] limitFileProcessing(final File[] files) {
 		final OptionalParameterType opt = getPA().getOptionalParameter(getSFD().getParam(), "maxFileProcessing");
 		if (opt != null) {
 			final String mfp = opt.getValue();
@@ -288,7 +284,7 @@ public abstract class AbstractScanFileExecutor<T extends ScanFileDef> extends Ab
 
 						return result;
 					}
-				} catch (final NumberFormatException e) {
+				} catch (@SuppressWarnings("unused") final NumberFormatException e) {
 					LOGGER.error("limitFileProcessing() : maxFileProcessing is set but the value={} is invalid ==> all the filenames will be processed", mfp);
 				}
 			}
@@ -304,7 +300,7 @@ public abstract class AbstractScanFileExecutor<T extends ScanFileDef> extends Ab
 			// Private because it's an utility class, so we should't get an instance of this class
 		}
 
-		static String getPermission(boolean canRead, boolean canWrite, boolean isHidden, boolean isArchivable) {
+		static String getPermission(final boolean canRead, final boolean canWrite, final boolean isHidden, final boolean isArchivable) {
 			final StringBuilder result = new StringBuilder(4);
 			if (canRead) {
 				result.append(ALL.charAt(0));
@@ -331,7 +327,7 @@ public abstract class AbstractScanFileExecutor<T extends ScanFileDef> extends Ab
 		}
 	}
 
-	private static List<FileKeyProvider> createFileKeyProvider(PropertiesAdapter pa, List<FileKeyProviderRefType> fkprtl) throws ExecutorException {
+	private static List<FileKeyProvider> createFileKeyProvider(final PropertiesAdapter pa, final List<FileKeyProviderRefType> fkprtl) throws ExecutorException {
 		final List<FileKeyProvider> fkpList = new ArrayList<>();
 		for (final FileKeyProviderRefType fkprt : fkprtl) {
 			final String name = fkprt.getName();
@@ -355,7 +351,7 @@ public abstract class AbstractScanFileExecutor<T extends ScanFileDef> extends Ab
 		return fkpList;
 	}
 
-	private AbstractFileScanner createScanner(String className, T sfd) {
+	private AbstractFileScanner createScanner(final String className, final T sfd) {
 		AbstractFileScanner result = null;
 		// By default, we use ant capabilities to scan directories
 		if (className == null || className.trim().length() == 0 || "ant".equals(className)) {
@@ -380,7 +376,7 @@ public abstract class AbstractScanFileExecutor<T extends ScanFileDef> extends Ab
 	 * @return The action list to be executed by this executor
 	 * @throws ExecutorException
 	 */
-	private static List<AbstractAction> createActions(List<ActionType> atl) throws ExecutorException {
+	private static List<AbstractAction> createActions(final List<ActionType> atl) throws ExecutorException {
 		final List<AbstractAction> aaList = new ArrayList<>();
 		for (final ActionType at : atl) {
 			final AbstractAction aa;
@@ -398,12 +394,11 @@ public abstract class AbstractScanFileExecutor<T extends ScanFileDef> extends Ab
 	protected COMMIT_MODE getCommitMode() {
 		COMMIT_MODE result = COMMIT_MODE.GLOBAL;
 
-		@SuppressWarnings("null")
 		final OptionalParameterType opt = getPA().getOptionalParameter(getSFD().getParam(), "commit");
 		if (opt != null) {
 			try {
 				result = COMMIT_MODE.valueOf(opt.getValue());
-			} catch (final IllegalArgumentException e) { // NOSONAR
+			} catch (@SuppressWarnings("unused") final IllegalArgumentException e) { // NOSONAR
 				LOGGER.error("getCommitMode() : the commit mode is badly defined, correct values are global and integrateOnly ==> set default value to global");
 			}
 		}
@@ -412,7 +407,7 @@ public abstract class AbstractScanFileExecutor<T extends ScanFileDef> extends Ab
 	}
 
 	@Override
-	public void reject(File file, FileKey fk, Throwable t, String message, Connection con, PropertiesAdapter pa) {
+	public void reject(final File file, final FileKey fk, final Throwable t, final String message, final Connection con, final PropertiesAdapter pa) {
 		for (final AbstractRejector rejector : mRejector) {
 			rejector.reject(file, fk, t, message, con, pa);
 		}

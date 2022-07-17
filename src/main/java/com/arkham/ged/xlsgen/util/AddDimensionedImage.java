@@ -152,7 +152,7 @@ public class AddDimensionedImage {
 	 *
 	 * @param sheet The worksheet
 	 */
-	public AddDimensionedImage(Sheet sheet) {
+	public AddDimensionedImage(final Sheet sheet) {
 		mSheet = sheet;
 	}
 
@@ -188,7 +188,7 @@ public class AddDimensionedImage {
 	 *             to the resizeBehaviour
 	 *             parameter.
 	 */
-	public void addImageToSheet(String cellNumber, InputStream imageFile, double reqImageWidthMM, double reqImageHeightMM, ImageBehaviorType resizeBehaviour, int imageFormat) throws IOException {
+	public void addImageToSheet(final String cellNumber, final InputStream imageFile, final double reqImageWidthMM, final double reqImageHeightMM, final ImageBehaviorType resizeBehaviour, final int imageFormat) throws IOException {
 		// Convert the String into column and row indices then chain the
 		// call to the overridden addImageToSheet() method.
 		final CellReference cellRef = new CellReference(cellNumber);
@@ -232,7 +232,7 @@ public class AddDimensionedImage {
 	 *             to the resizeBehaviour
 	 *             parameter.
 	 */
-	public void addImageToSheet(int colNumber, int rowNumber, InputStream imageFile, double reqImageWidthMM, double reqImageHeightMM, ImageBehaviorType resizeBehaviour, int imageFormat) throws IOException {
+	public void addImageToSheet(final int colNumber, final int rowNumber, final InputStream imageFile, final double reqImageWidthMM, final double reqImageHeightMM, final ImageBehaviorType resizeBehaviour, final int imageFormat) throws IOException {
 		HSSFClientAnchor anchor;
 		ClientAnchorDetail rowClientAnchorDetail;
 		ClientAnchorDetail colClientAnchorDetail;
@@ -283,7 +283,8 @@ public class AddDimensionedImage {
 		try (ByteArrayOutputStream os = new ByteArrayOutputStream()) {
 			GxUtil.copyIs2Os(imageFile, os);
 
-			final int index = mSheet.getWorkbook().addPicture(os.toByteArray(), imageFormat);
+			@SuppressWarnings("resource")
+            final int index = mSheet.getWorkbook().addPicture(os.toByteArray(), imageFormat);
 
 			// Get the drawing patriarch and create the picture.
 			final Drawing<?> patriarch = mSheet.createDrawingPatriarch();
@@ -315,7 +316,7 @@ public class AddDimensionedImage {
 	 *         edge of the image can protrude into the next column - expressed
 	 *         as a specific number of co-ordinate positions.
 	 */
-	private ClientAnchorDetail fitImageToColumns(int colNumber, double reqImageWidthMM, ImageBehaviorType resizeBehaviour) {
+	private ClientAnchorDetail fitImageToColumns(final int colNumber, final double reqImageWidthMM, final ImageBehaviorType resizeBehaviour) {
 
 		double colWidthMM;
 		double colCoordinatesPerMM;
@@ -386,7 +387,7 @@ public class AddDimensionedImage {
 	 *         bottom edge of the image can protrude into the next (lower)
 	 *         row - expressed as a specific number of co-ordinate positions.
 	 */
-	private ClientAnchorDetail fitImageToRows(int rowNumber, double reqImageHeightMM, ImageBehaviorType resizeBehaviour) {
+	private ClientAnchorDetail fitImageToRows(final int rowNumber, final double reqImageHeightMM, final ImageBehaviorType resizeBehaviour) {
 		double rowCoordinatesPerMM;
 		int pictureHeightCoordinates;
 		ClientAnchorDetail rowClientAnchorDetail = null;
@@ -450,7 +451,7 @@ public class AddDimensionedImage {
 	 *         edge of the image can protrude into the next column - expressed
 	 *         as a specific number of co-ordinate positions.
 	 */
-	private ClientAnchorDetail calculateColumnLocation(int startingColumn, double reqImageWidthMM) {
+	private ClientAnchorDetail calculateColumnLocation(final int startingColumn, final double reqImageWidthMM) {
 		ClientAnchorDetail anchorDetail;
 		double totalWidthMM = 0.0D;
 		double colWidthMM = 0.0D;
@@ -543,7 +544,7 @@ public class AddDimensionedImage {
 	 *         can protrude into the next (lower) row - expressed as a specific
 	 *         number of co-ordinate positions.
 	 */
-	private ClientAnchorDetail calculateRowLocation(int startingRow, double reqImageHeightMM) {
+	private ClientAnchorDetail calculateRowLocation(final int startingRow, final double reqImageHeightMM) {
 		ClientAnchorDetail clientAnchorDetail;
 		Row row;
 		double rowHeightMM = 0.0D;
@@ -642,7 +643,7 @@ public class AddDimensionedImage {
 		 *            how far the image should be inset from the top or the
 		 *            left hand edge of a cell.
 		 */
-		public ClientAnchorDetail(int fromIndex, int toIndex, int inset) {
+		public ClientAnchorDetail(final int fromIndex, final int toIndex, final int inset) {
 			mFromIndex = fromIndex;
 			mToIndex = toIndex;
 			mInset = inset;
@@ -728,7 +729,7 @@ public class AddDimensionedImage {
 		 * @param pxs Width in pixel
 		 * @return excel width
 		 */
-		public static short pixel2WidthUnits(int pxs) {
+		public static short pixel2WidthUnits(final int pxs) {
 			short widthUnits = (short) (EXCEL_COLUMN_WIDTH_FACTOR * (pxs / UNIT_OFFSET_LENGTH));
 			widthUnits += UNIT_OFFSET_MAP[pxs % UNIT_OFFSET_LENGTH];
 			return widthUnits;
@@ -741,7 +742,7 @@ public class AddDimensionedImage {
 		 * @param widthUnits Width in excel unit
 		 * @return pixel width
 		 */
-		public static int widthUnits2Pixel(short widthUnits) {
+		public static int widthUnits2Pixel(final short widthUnits) {
 			int pixels = widthUnits / EXCEL_COLUMN_WIDTH_FACTOR * UNIT_OFFSET_LENGTH;
 			final int offsetWidthUnits = widthUnits % EXCEL_COLUMN_WIDTH_FACTOR;
 			pixels += Math.round(offsetWidthUnits / ((double) EXCEL_COLUMN_WIDTH_FACTOR / UNIT_OFFSET_LENGTH));
@@ -756,7 +757,7 @@ public class AddDimensionedImage {
 		 * @return A primitive double that contains the columns width or rows
 		 *         height in millimetres.
 		 */
-		public static double widthUnits2Millimetres(short widthUnits) {
+		public static double widthUnits2Millimetres(final short widthUnits) {
 			return ConvertImageUnits.widthUnits2Pixel(widthUnits) / ConvertImageUnits.PIXELS_PER_MILLIMETRES;
 		}
 
@@ -768,7 +769,7 @@ public class AddDimensionedImage {
 		 * @return A primitive int that contains the columns width or rows
 		 *         height in Excel's units.
 		 */
-		public static int millimetres2WidthUnits(double millimetres) {
+		public static int millimetres2WidthUnits(final double millimetres) {
 			return ConvertImageUnits.pixel2WidthUnits((int) (millimetres * ConvertImageUnits.PIXELS_PER_MILLIMETRES));
 		}
 	}
