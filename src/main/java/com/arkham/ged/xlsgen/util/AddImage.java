@@ -1,0 +1,65 @@
+/*
+ * Licensed to the Arkham asylum Software Foundation under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.arkham.ged.xlsgen.util;
+
+import java.awt.Dimension;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
+import org.apache.poi.ss.usermodel.ClientAnchor;
+import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.Drawing;
+import org.apache.poi.ss.usermodel.Picture;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellReference;
+
+import com.arkham.ged.util.GedUtil;
+import com.arkham.ged.yaml.ImageBehaviorType;
+
+/**
+ * @author arocher / Arkham asylum
+ * @version 1.0
+ * @since 22 janv. 2020
+ */
+public class AddImage {
+	private final Sheet mSheet;
+
+	/**
+	 * Constructor AddImage
+	 *
+	 * @param sheet
+	 */
+	public AddImage(Sheet sheet) {
+		mSheet = sheet;
+	}
+
+	public void addImageToSheet(CellReference cr, InputStream imageFile, double w, double h, ImageBehaviorType resizeBehaviour, int imageFormat) throws IOException {
+		final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		GedUtil.copyIs2Os(imageFile, baos, 8192);
+		final byte[] b = baos.toByteArray();
+
+		final Workbook wb = mSheet.getWorkbook();
+		final CreationHelper helper = wb.getCreationHelper();
+		final int pictureIdx = wb.addPicture(b, imageFormat);
+		final ClientAnchor anchor = helper.createClientAnchor();
+		anchor.setCol1(cr.getCol());
+		anchor.setRow1(cr.getRow());
+		final Drawing drawing = mSheet.createDrawingPatriarch();
+		final Picture pict = drawing.createPicture(anchor, pictureIdx);
+
+		final Dimension dim = pict.getImageDimension();
+		final double widthRatio = w/dim.getWidth();
+		pict.resize(1);
+		// pict.resize(4, 2);
+	}
+}

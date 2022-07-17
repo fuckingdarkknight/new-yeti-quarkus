@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+		Schéma de validation de ged_properties.xml
+		Licensed to the Arkham asylum Software Foundation under one or more
+		contributor license agreements. See the NOTICE file distributed with
+		this work for additional information regarding copyright ownership.
+		
+		Unless required by applicable law or agreed to in writing, software
+		distributed under the License is distributed on an "AS IS" BASIS,
+		WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+		See the License for the specific language governing permissions and
+		limitations under the License.
+-->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns="http://www.arkham.com/ged/parameters"
+            targetNamespace="http://www.arkham.com/ged/parameters"
+            elementFormDefault="qualified"
+            attributeFormDefault="unqualified">
+	<xsd:complexType name="SimpleInputParameters" abstract="true">
+		<xsd:attribute name="entity" type="xsd:int" use="required">
+			<xsd:annotation>
+				<xsd:documentation>The logical CODSOC (ENTITY)</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="enttyp" type="xsd:string" use="required">
+			<xsd:annotation>
+				<xsd:documentation>The TYPTIE field (PRO for products ...)</xsd:documentation>
+				<xsd:appinfo/>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="keydoc" type="xsd:string" use="required">
+			<xsd:annotation>
+				<xsd:documentation>The master key (field NOMCLE)</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="coddoc" type="xsd:string" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>Document code</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="numver" type="xsd:int" use="required">
+			<xsd:annotation>
+				<xsd:documentation>The version number of the document</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="filename" type="xsd:string" use="required">
+			<xsd:annotation>
+				<xsd:documentation>The file name</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="oldFilename" type="xsd:string" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>The old file name that is used, if precised it is used to query the database and filename will be used to update the row found. It's a rename filename mode</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="datdoc" type="xsd:string" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>The current date-time formated in yyyyMMdd-HHmmss format</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="username" type="xsd:string" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>The usual UTIMOD field that contains user name</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="valzn1" type="xsd:string" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>Optional value</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="valzn2" type="xsd:string" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>Optional value</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="valzn3" type="xsd:string" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>Optional value</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="valzn4" type="xsd:string" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>Optional value</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="valzn5" type="xsd:string" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>Optional value</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="valzn6" type="xsd:string" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>Optional value</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="valzn7" type="xsd:string" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>Optional value</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="valzn8" type="xsd:string" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>Optional value</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="valzn9" type="xsd:string" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>Optional value</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="valzn10" type="xsd:string" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>Optional value</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+	<xsd:complexType name="DocumentLink">
+		<xsd:complexContent>
+			<xsd:extension base="SimpleInputParameters">
+				<xsd:attribute name="indseq" type="xsd:int">
+					<xsd:annotation>
+						<xsd:documentation>Indseq : Unique index that represents this bean (like a second primary key)</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="indrgp" type="xsd:int" use="required">
+					<xsd:annotation>
+						<xsd:documentation>Indrgp : Group index that should matches with ONE Indseq</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="typmed" type="xsd:string" use="optional"/>
+				<xsd:attribute name="orddoc" type="xsd:int" use="required"/>
+				<xsd:attribute name="comdoc" type="xsd:string" use="optional"/>
+				<xsd:attribute name="filesize" type="xsd:int" use="required">
+					<xsd:annotation>
+						<xsd:appinfo>
+							<readOnly>true</readOnly>
+						</xsd:appinfo>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="indthb" type="xsd:int" use="optional">
+					<xsd:annotation>
+						<xsd:documentation>Thumb : value is 1 if the Document is thumbed</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="indsto" type="xsd:int" use="optional">
+					<xsd:annotation>
+						<xsd:documentation>Storage : 1 for database, 2 for filesystem</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="docnum" type="xsd:int" use="optional"/>
+				<xsd:attribute name="codsoc_phy" type="xsd:int" use="required"/>
+				<xsd:attribute name="page_count" type="xsd:int" use="optional">
+					<xsd:annotation>
+						<xsd:documentation>Extra field : the page count of a PDF</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="penalty" type="xsd:string" use="optional">
+					<xsd:annotation>
+						<xsd:documentation>Extra field : penalty indicator</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="catdoc" type="xsd:string" use="optional">
+					<xsd:annotation>
+						<xsd:documentation>Extra field : document category (ARCHIVE for example). This field should be part of the primary key</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="ind_approval" type="xsd:string" use="optional">
+					<xsd:annotation>
+						<xsd:documentation>Extra field : approval indicator</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="ind_info" type="xsd:string" use="optional">
+					<xsd:annotation>
+						<xsd:documentation>Extra field : information indicator</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="datdmd" type="xsd:string" use="optional">
+					<xsd:annotation>
+						<xsd:documentation>Extra field : date for demand</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="datrec" type="xsd:string" use="optional">
+					<xsd:annotation>
+						<xsd:documentation>Extra field : date for reception</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="indmail" type="xsd:string" use="optional">
+					<xsd:annotation>
+						<xsd:documentation>Extra field : maileva indicator</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="achvte" type="xsd:string" use="optional">
+					<xsd:annotation>
+						<xsd:documentation>Extra field : achvte</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="typeve" type="xsd:string" use="optional">
+					<xsd:annotation>
+						<xsd:documentation>Extra field : typeve</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="numeve" type="xsd:int" use="required">
+					<xsd:annotation>
+						<xsd:documentation>Extra field : numeve</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="numpos" type="xsd:int" use="required">
+					<xsd:annotation>
+						<xsd:documentation>Extra field : numpos</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="numlig" type="xsd:int" use="required">
+					<xsd:annotation>
+						<xsd:documentation>Extra field : numlig</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="numspo" type="xsd:int" use="required">
+					<xsd:annotation>
+						<xsd:documentation>Extra field : numspo</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="codpro" type="xsd:string" use="optional">
+					<xsd:annotation>
+						<xsd:documentation>Extra field : codpro</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="numlot" type="xsd:string" use="optional">
+					<xsd:annotation>
+						<xsd:documentation>Extra field : numlot</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="legalization" type="xsd:string" use="optional">
+					<xsd:annotation>
+						<xsd:documentation>Extra field : legalization indicator</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="copy_count" type="xsd:int" use="optional">
+					<xsd:annotation>
+						<xsd:documentation>Extra field : for archive document, duplicatas count</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="origin_count" type="xsd:int" use="optional">
+					<xsd:annotation>
+						<xsd:documentation>Extra field : for archive document, original count</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="typdoc" type="xsd:string" use="optional">
+					<xsd:annotation>
+						<xsd:documentation>Extra field : type of document, complementary to catdoc</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="codsig" type="xsd:string" use="optional">
+					<xsd:annotation>
+						<xsd:documentation>Extra field : user code that have signed the document</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="indsig" type="xsd:int" use="required">
+					<xsd:annotation>
+						<xsd:documentation>Extra field : should be to 1 or more if the document is signed</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="indpub" type="xsd:int" use="required">
+					<xsd:annotation>
+						<xsd:documentation>Extra field : should be to 1 or more if the document should be published</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="datdeb" type="xsd:string" use="optional">
+					<xsd:annotation>
+						<xsd:documentation>Extra field : date</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="datfin" type="xsd:string" use="optional">
+					<xsd:annotation>
+						<xsd:documentation>Extra field : date</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="uticre" type="xsd:string" use="optional">
+					<xsd:annotation>
+						<xsd:documentation>User that have created the document</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="reldir" type="xsd:string" use="optional">
+					<xsd:annotation>
+						<xsd:documentation>Relative directory to rootPath for mode : indsto=4</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="typtie" type="xsd:string" use="optional">
+					<xsd:annotation>
+						<xsd:documentation>Typtie1</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="sigtie" type="xsd:string" use="optional">
+					<xsd:annotation>
+						<xsd:documentation>Sigtie1</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+</xsd:schema>

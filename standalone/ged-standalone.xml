@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns="http://www.arkham.com/ged/properties" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.arkham.com/ged/properties ged.xsd">
+	<storage type="database" baseDir="${arkham.ged.storage.basedir}"/>
+	<!--<datasource ds_name="jdbc/Arkham-DS" pooled="false"/>-->
+	<datasource jdbc="jdbc:oracle:thin:xxx/yyy@host:1521:sid" pooled="true" poolSize="2" idleTime="120"/>
+	<!-- Génération fichier XLS à partir de fichiers YAML produits au format SOCx_y.yaml -->
+	<import dir="${arkham.ged.yaml.basedir}" includes="SOC*.yaml" frequency="0.4" fileRefRename=".processed" scanner="com.arkham.ged.scanner.BasicFileScanner" thread="1" usedb="false">
+		<param name="sort" value="byDate"/>
+		<action type="other" name="com.arkham.ged.action.GenerateExcelFileAction">
+			<param name="charset" value="windows-1252"/>
+		</action>
+		<fileKeyProvider name="nop"/>
+	</import>
+	<import dir="${arkham.ged.yaml.basedir}" includes="action.shutdown" frequency="1" fileRefRename=".processed" scanner="com.arkham.ged.scanner.BasicFileScanner" thread="1" usedb="false">
+		<action type="other" name="com.arkham.ged.action.ShutdownAction"/>
+		<fileKeyProvider name="nop"/>
+	</import>
+	<socket port="61617" address="127.0.0.1/32"/>
+	<!-- key providers -->
+	<fileKeyProvider name="nop" classref="com.arkham.ged.filekey.NopFileKeyProvider"/>
+</root>

@@ -1,0 +1,644 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+		Schéma de validation de ged_properties.xml
+		Licensed to the Arkham asylum Software Foundation under one or more
+		contributor license agreements. See the NOTICE file distributed with
+		this work for additional information regarding copyright ownership.
+		
+		Unless required by applicable law or agreed to in writing, software
+		distributed under the License is distributed on an "AS IS" BASIS,
+		WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+		See the License for the specific language governing permissions and
+		limitations under the License.
+-->
+
+<!-- <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns="http://www.arkham.com/ged/yaml"
+            xmlns:jaxb="https://jakarta.ee/xml/ns/jaxb"
+            xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+            xmlns:annox="http://annox.dev.java.net"
+            xmlns:inheritance="http://jaxb2-commons.dev.java.net/basic/inheritance"
+            jaxb:extensionBindingPrefixes="annox inheritance"
+            targetNamespace="http://www.arkham.com/ged/yaml"
+            elementFormDefault="qualified"
+            jaxb:version="3.0" > -->
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns="http://www.arkham.com/ged/yaml"
+            xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+            xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+            xmlns:annox="http://annox.dev.java.net"
+            xmlns:inheritance="http://jaxb2-commons.dev.java.net/basic/inheritance"
+            jaxb:extensionBindingPrefixes="annox inheritance xjc"
+            targetNamespace="http://www.arkham.com/ged/yaml"
+            elementFormDefault="qualified"
+            jaxb:version="1.0" >
+
+	<!--Root XML Element-->
+	<xsd:element name="rootExcel">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="general" type="GeneralType">
+					<xsd:annotation>
+						<xsd:documentation>Définition des paramètres généraux, en particulier le nom du modèle</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="color" type="ColorType" minOccurs="0" maxOccurs="unbounded">
+					<xsd:annotation>
+						<xsd:documentation>Définition des couleurs</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="font" type="FontType" minOccurs="0" maxOccurs="unbounded">
+					<xsd:annotation>
+						<xsd:documentation>Définition des polices et styles</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="border" type="BorderType" minOccurs="0" maxOccurs="unbounded">
+					<xsd:annotation>
+						<xsd:documentation>Définition des bordures</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="format" type="FormatType" minOccurs="0" maxOccurs="unbounded">
+					<xsd:annotation>
+						<xsd:documentation>Définition des formats</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="style" type="StyleType" minOccurs="0" maxOccurs="unbounded">
+					<xsd:annotation>
+						<xsd:documentation>Définition des styles : un style regroupe un format, une font et un style de boite</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="tab" type="TabType" maxOccurs="unbounded">
+					<xsd:annotation>
+						<xsd:documentation>Définition des onglets</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<!--Informations générales-->
+	<xsd:complexType name="GeneralType">
+		<xsd:complexContent>
+			<xsd:extension base="MetadataType">
+				<xsd:attribute name="model" type="xsd:string" use="required">
+					<xsd:annotation>
+						<xsd:documentation>Nom du modèle XLS, préconisation d'utiliser le resolver URI gedmodxls. Ex: gedmodxls:Modèle.xls</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="output" type="xsd:string" use="required">
+					<xsd:annotation>
+						<xsd:documentation>Nom du fichier de sortie XLS, optionnel et prendra le même nom de fichier suffixé par défaut</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="password" type="xsd:string" use="optional">
+					<xsd:annotation>
+						<xsd:documentation>Mot de passe optionnel du worksheet</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="properties" type="xsd:string" use="optional">
+					<xsd:annotation>
+						<xsd:documentation>Nom d'un fichier optionnel de propriétés qui seront accessible via les fonctions (donc cellules). Ce fichier doit obligatoirement être encodé en UTF-8</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="report" type="ModeBehaviorType" use="optional" default="REPORT">
+					<xsd:annotation>
+						<xsd:documentation>LAX, STRICT, REPORT : STRICT arrête la génération du rapport à la moindre erreur, LAX continue la génération même en cas d'erreur, REPORT idem mode LAX mais avec un onglet de rapport créé</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<!--Couleurs-->
+	<xsd:complexType name="ColorType">
+		<xsd:attribute name="name" type="xsd:string" use="required">
+			<xsd:annotation>
+				<xsd:documentation>Le nom "logique" de la couleur</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="color" type="xsd:string" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>BLACK,BROWN,OLIVE_GREEN,DARK_GREEN,DARK_TEAL,DARK_BLUE,INDIGO,GREY_80_PERCENT,ORANGE,DARK_YELLOW,GREEN,TEAL,BLUE,BLUE_GREY,GREY_50_PERCENT,RED,LIGHT_ORANGE,LIME,SEA_GREEN,AQUA,LIGHT_BLUE,VIOLET,GREY_40_PERCENT,PINK,GOLD,YELLOW,BRIGHT_GREEN,TURQUOISE,DARK_RED,SKY_BLUE,PLUM,GREY_25_PERCENT,ROSE,LIGHT_YELLOW,LIGHT_GREEN,LIGHT_TURQUOISE,PALE_BLUE,LAVENDER,WHITE,CORNFLOWER_BLUE,LEMON_CHIFFON,MAROON,ORCHID,CORAL,ROYAL_BLUE,LIGHT_CORNFLOWER_BLUE,TAN,AUTOMATIC</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="index" type="xsd:short" use="optional" default="-1">
+			<xsd:annotation>
+				<xsd:documentation>Index interne (généré) : ne pas utiliser (il sera écrasé de toute manière)</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+	<!--Polices-->
+	<xsd:complexType name="FontType">
+		<xsd:attribute name="name" type="xsd:string" use="required">
+			<xsd:annotation>
+				<xsd:documentation>Le nom "logique" de la police</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="police" type="xsd:string" use="optional"/>
+		<xsd:attribute name="bold" type="xsd:boolean" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>Booléen : true/false</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="italic" type="xsd:boolean" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>Booléen : true/false</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="strikeout" type="xsd:boolean" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>Booléen : true/false</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="underline" type="UnderlineType" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>Type de souligné</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="height" type="xsd:short" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>Taille de la police en points (12, 14 ...)</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="color" type="xsd:string" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>Référence à la section "colors"</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+	<!--Bordures-->
+	<xsd:complexType name="BorderType">
+		<xsd:attribute name="name" type="xsd:string" use="required">
+			<xsd:annotation>
+				<xsd:documentation>Le nom de la bordure à appliquer</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="left" type="BorderStyleType" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>Le type de bordure (NONE, THIN, MEDIUM ...)</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="right" type="BorderStyleType" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>Le type de bordure (NONE, THIN, MEDIUM ...)</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="top" type="BorderStyleType" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>Le type de bordure (NONE, THIN, MEDIUM ...)</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="bottom" type="BorderStyleType" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>Le type de bordure (NONE, THIN, MEDIUM ...)</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="fill" type="FillType" use="optional"/>
+		<xsd:attribute name="bgcolor" type="xsd:string" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>La couleur de fond de cellule</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="bcolor" type="xsd:string" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>La couleur du bord de cellule. Je n'en considère qu'une seule pour tout le cadre, on verra s'il a besoin de faire une couleur par côté</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+	<!--Format de données-->
+	<xsd:complexType name="FormatType">
+		<xsd:attribute name="name" type="xsd:string" use="required">
+			<xsd:annotation>
+				<xsd:documentation>Le nom du format à appliquer</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="value" type="xsd:string" use="required">
+			<xsd:annotation>
+				<xsd:documentation>La valeur du format, par exemple "### ##0.00"</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="align" type="AlignmentType" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>Gestion de l'alignement horizontal</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="valign" type="VerticalAlignmentType" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>Gestion de l'alignement vertical</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="wrap" type="xsd:boolean" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>Gestion du wrapping du texte (retour à la ligne)</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="index" type="xsd:short" use="optional" default="-1">
+			<xsd:annotation>
+				<xsd:documentation>Index interne (généré) : ne pas utiliser (il sera écrasé de toute manière)</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+	<!--Définition des styles : cela comprend une police, des bordures et un format-->
+	<xsd:complexType name="StyleType">
+		<xsd:attribute name="name" type="xsd:string" use="required">
+			<xsd:annotation>
+				<xsd:documentation>Le nom du style à appliquer : doit être renseigné et significatif pour une question de lisibilité</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="font" type="xsd:string" use="optional"/>
+		<xsd:attribute name="border" type="xsd:string" use="optional"/>
+		<xsd:attribute name="format" type="xsd:string" use="optional"/>
+		<xsd:attribute name="lock" type="xsd:boolean" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>Verrouillage de la cellule, false par défaut (programmatique, c'est le bordel à gérer via snakeYaml qui a du mal à faire la différence entre Boolean et boolean)</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="index" type="xsd:short" use="optional" default="-1">
+			<xsd:annotation>
+				<xsd:documentation>Index interne (généré) : ne pas utiliser (il sera écrasé de toute manière)</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+	<!--Défintion d'un onglet -->
+	<xsd:complexType name="TabType">
+		<xsd:sequence>
+			<xsd:element name="header" type="HeaderType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Définition de l'entête</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="body" type="BodyType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Définition du corps</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="post" type="PostType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Post actions, par exemple retaillage des colonnes</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="id" type="xsd:string" use="required">
+			<xsd:annotation>
+				<xsd:documentation>ID de l'onglet, soit son numéro (0 based index) soit son nom</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+	<!--Défintion du corps : liste de lignes -->
+	<xsd:complexType name="BodyType">
+		<xsd:sequence>
+			<xsd:element name="row" type="RowType" minOccurs="0" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>Liste de lignes, chaque ligne peut être composée de cellules</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="group" type="GroupType" minOccurs="0" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>Regroupement de cellules</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="index" type="xsd:int" use="required">
+			<xsd:annotation>
+				<xsd:documentation>Index (row) de départ sur lequel on va se baser pour commencer l'alimentation (par défaut 0)</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+	<!--Définition des rows -->
+	<xsd:complexType name="RowType">
+		<xsd:annotation>
+			<xsd:documentation>Définition d'une ligne de tableau</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="cell" type="CellType" minOccurs="0" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>Liste de cellules optionnelle et non limitée. A noter qu'on peut spécifier plusieurs fois une même référence de cellule, auquel cas c'est la dernière référence qui prent le pas sur les précédentes.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="mode" type="RowModeType" use="optional" default="COPYFROM">
+			<xsd:annotation>
+				<xsd:documentation>Plusieurs valeurs sont disponibles, COPYFROM permet de bénéficier des styles du modèle Excel en recopiant la ligne spécifiée par l'index (0-based attention). Le mode INDEX permet de forcer le positionnement sur la ligne donnée par index (c'est un mode d'écrasement de ligne). INSERTAT est identique au mode INDEX, si ce n'est qu'on va insérer une nouvelle ligne en décalant les suivantes vers le bas.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="index" type="xsd:int" use="required">
+			<xsd:annotation>
+				<xsd:documentation>Index du row courant, en mode COPYFROM cela correspond à l'index du row que l'on veut dupliquer</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="expr" type="xsd:string">
+			<xsd:annotation>
+				<xsd:documentation>Permet de spécifier une expression pour calculer l'index courant, utilisable pour le mode SOLVED uniquement</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="height" type="xsd:float">
+			<xsd:annotation>
+				<xsd:documentation>Hauteur de cellule en points</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+	<!--Définition d'une cellule -->
+	<xsd:complexType name="CellType">
+		<xsd:sequence>
+			<xsd:element name="image" type="ImageType" minOccurs="0"/>
+		</xsd:sequence>
+		<xsd:attribute name="ref" type="xsd:string" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>Référence de la cellule en notification habituelle. Seule la valeur de la colonne est utilisée puisqu'on travaille sur un numéro de ligne courant</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="value" type="xsd:anySimpleType" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>Valeur à positionner dans la cellule</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="type" type="CellValueType" use="optional" default="STRING">
+			<xsd:annotation>
+				<xsd:documentation>Types autorisés : NUMERIC, STRING, DATE, DATEZN, DATEINNER, FORMULA, URL, FILE et EMAIL</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="adjustment" type="xsd:string" use="optional"/>
+		<xsd:attribute name="comment" type="xsd:string" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>Commentaire de celulle</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="ccolspan" type="xsd:integer" use="optional" default="3">
+			<xsd:annotation>
+				<xsd:documentation>Colspan pour les commentaires</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="crowspan" type="xsd:integer" use="optional" default="3">
+			<xsd:annotation>
+				<xsd:documentation>Rowspan pour les commentaires</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="style" type="xsd:string" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>Référence au style prédéfini dans la section generale</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="link" type="xsd:string" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>Création d'un lien hypertexte, doit être de la forme URL:xxx ou EMAIL:xxx ou FILE:xxx</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="colspan" type="xsd:int">
+			<xsd:annotation>
+				<xsd:documentation>Merge de la cellule courante avec les cellules suivantes à hauteur du nombre précisé</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="visibility" type="xsd:string" default="visible">
+			<xsd:annotation>
+				<xsd:documentation>Visibilité : hidden pour cacher, toute autre valeur correspond à une cellule affichée</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+	<!--Définition des entêtes -->
+	<xsd:complexType name="HeaderType">
+		<xsd:sequence>
+			<xsd:element name="cell" type="CellType" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+		<xsd:attribute name="height" type="xsd:float">
+			<xsd:annotation>
+				<xsd:documentation>Hauteur de cellule</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+	<!--Définition des post traitements sur l'onglet courant-->
+	<xsd:complexType name="PostType">
+		<xsd:sequence>
+			<xsd:element name="cell" type="CellType" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+		<xsd:attribute name="adjustment" type="xsd:string" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>Auto ajustement des largeurs de colonnes, les colonnes traitées sont cherchées arbitrairement sur les 100 premières lignes de la feuille</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="freezerow" type="xsd:int">
+			<xsd:annotation>
+				<xsd:documentation>Freeze pane à partir de la ligne concernée</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="freezecol" type="xsd:int">
+			<xsd:annotation>
+				<xsd:documentation>Freeze pane à partir de la colonne concernée</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="protect" type="xsd:string">
+			<xsd:annotation>
+				<xsd:documentation>Mot de passe de protection du classeur. S'il est précisé, le classeur est protégé en modifications sur toutes les cellules verrouillées</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="select" type="xsd:boolean" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>Onglet à activer : attention, si on gère plusieurs onglets c'est le dernier qui sera pris en compte si cet attribut est positionné plusieurs fois</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="autofilter" type="xsd:string" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>Autofiltrage des colonnes : il faut préciser ici la plage d'adresse, par exemple B3:D20. On peut utiliser les expressions résolues, par exemple "B3:D`current()`"</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+	<!--Définition des entêtes-->
+	<xsd:complexType name="MetadataType">
+		<xsd:attribute name="author" type="xsd:string" use="optional"/>
+		<xsd:attribute name="comments" type="xsd:string" use="optional"/>
+		<xsd:attribute name="title" type="xsd:string" use="optional"/>
+		<xsd:attribute name="subject" type="xsd:string" use="optional"/>
+		<xsd:attribute name="keywords" type="xsd:string" use="optional"/>
+	</xsd:complexType>
+	<!--Définition d'une image-->
+	<xsd:complexType name="ImageType">
+		<xsd:attribute name="width" type="xsd:int"/>
+		<xsd:attribute name="height" type="xsd:int"/>
+		<xsd:attribute name="value" type="xsd:string"/>
+		<xsd:attribute name="behavior" type="ImageBehaviorType"/>
+	</xsd:complexType>
+	<!--Regroupement de colonnes-->
+	<xsd:complexType name="GroupType">
+		<xsd:attribute name="start" type="xsd:string"/>
+		<xsd:attribute name="end" type="xsd:string"/>
+	</xsd:complexType>
+	<!--Défintion des types simples, énumérations etc ...-->
+	<xsd:simpleType name="RowModeType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="COPYFROM">
+				<xsd:annotation>
+					<xsd:documentation>Copie le row depuis l'index spécifié vers l'index courant</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="COPYFROMCURRENT">
+				<xsd:annotation>
+					<xsd:documentation>Copie le row depuis l'index précédent vers l'index courant</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="INSERTAT"/>
+			<xsd:enumeration value="INDEX"/>
+			<xsd:enumeration value="CURRENT"/>
+			<xsd:enumeration value="SOLVED">
+				<xsd:annotation>
+					<xsd:documentation>Permet d'utiliser une expression (solver) pour trouver l'index courant</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="PUSH">
+				<xsd:annotation>
+					<xsd:documentation>Pousse l'index courant dans une pile, pour ce mode aucune autre action ne sera exécutée sur la ligne</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="POP">
+				<xsd:annotation>
+					<xsd:documentation>Positionne l'index courant depuis la pile (implique d'avoir utilisé PUSH auparavant), pour ce mode aucune autre action ne sera exécutée sur la ligne</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="CellValueType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="STRING">
+				<xsd:annotation>
+					<xsd:appinfo>
+						<annox:annotate target="enum-constant">@com.fasterxml.jackson.annotation.JsonEnumDefaultValue</annox:annotate>
+					</xsd:appinfo>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="NUMERIC"/>
+			<xsd:enumeration value="DATE"/>
+			<xsd:enumeration value="DATEZN"/>
+			<xsd:enumeration value="DATEINNER"/>
+			<xsd:enumeration value="FORMULA"/>
+			<xsd:enumeration value="URL"/>
+			<xsd:enumeration value="FILE"/>
+			<xsd:enumeration value="EMAIL"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="AlignmentType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="LEFT"/>
+			<xsd:enumeration value="CENTER"/>
+			<xsd:enumeration value="RIGHT"/>
+			<xsd:enumeration value="GENERAL">
+				<xsd:annotation>
+					<xsd:appinfo>
+						<annox:annotate target="enum-constant">@com.fasterxml.jackson.annotation.JsonEnumDefaultValue</annox:annotate>
+					</xsd:appinfo>
+				</xsd:annotation>			
+			</xsd:enumeration>
+			<xsd:enumeration value="FILL"/>
+			<xsd:enumeration value="JUSTIFY"/>
+			<xsd:enumeration value="CENTER_SELECTION"/>
+			<xsd:enumeration value="DISTRIBUTED"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="VerticalAlignmentType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="TOP">
+				<xsd:annotation>
+					<xsd:appinfo>
+						<annox:annotate target="enum-constant">@com.fasterxml.jackson.annotation.JsonEnumDefaultValue</annox:annotate>
+					</xsd:appinfo>
+				</xsd:annotation>			
+			</xsd:enumeration>
+			<xsd:enumeration value="BOTTOM"/>
+			<xsd:enumeration value="CENTER"/>
+			<xsd:enumeration value="DISTRIBUTED"/>
+			<xsd:enumeration value="JUSTIFY"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="BorderStyleType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="NONE">
+				<xsd:annotation>
+					<xsd:appinfo>
+						<annox:annotate target="enum-constant">@com.fasterxml.jackson.annotation.JsonEnumDefaultValue</annox:annotate>
+					</xsd:appinfo>
+				</xsd:annotation>			
+			</xsd:enumeration>
+			<xsd:enumeration value="THIN"/>
+			<xsd:enumeration value="MEDIUM"/>
+			<xsd:enumeration value="DASHED"/>
+			<xsd:enumeration value="DOTTED"/>
+			<xsd:enumeration value="THICK"/>
+			<xsd:enumeration value="DOUBLE"/>
+			<xsd:enumeration value="HAIR"/>
+			<xsd:enumeration value="MEDIUM_DASHED"/>
+			<xsd:enumeration value="DASH_DOT"/>
+			<xsd:enumeration value="MEDIUM_DASH_DOT"/>
+			<xsd:enumeration value="DASH_DOT_DOT"/>
+			<xsd:enumeration value="MEDIUM_DASH_DOT_DOT"/>
+			<xsd:enumeration value="SLANTED_DASH_DOT"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="FillType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="NO_FILL">
+				<xsd:annotation>
+					<xsd:appinfo>
+						<annox:annotate target="enum-constant">@com.fasterxml.jackson.annotation.JsonEnumDefaultValue</annox:annotate>
+					</xsd:appinfo>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="SOLID_FOREGROUND"/>
+			<xsd:enumeration value="FINE_DOTS"/>
+			<xsd:enumeration value="ALT_BARS"/>
+			<xsd:enumeration value="SPARSE_DOTS"/>
+			<xsd:enumeration value="THICK_HORZ_BANDS"/>
+			<xsd:enumeration value="THICK_VERT_BANDS"/>
+			<xsd:enumeration value="THICK_BACKWARD_DIAG"/>
+			<xsd:enumeration value="THICK_FORWARD_DIAG"/>
+			<xsd:enumeration value="BIG_SPOTS"/>
+			<xsd:enumeration value="BRICKS"/>
+			<xsd:enumeration value="THIN_HORZ_BANDS"/>
+			<xsd:enumeration value="THIN_VERT_BANDS"/>
+			<xsd:enumeration value="THIN_BACKWARD_DIAG"/>
+			<xsd:enumeration value="THIN_FORWARD_DIAG"/>
+			<xsd:enumeration value="SQUARES"/>
+			<xsd:enumeration value="DIAMONDS"/>
+			<xsd:enumeration value="LESS_DOTS"/>
+			<xsd:enumeration value="LEAST_DOTS"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="UnderlineType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="U_NONE">
+				<xsd:annotation>
+					<xsd:appinfo>
+						<annox:annotate target="enum-constant">@com.fasterxml.jackson.annotation.JsonEnumDefaultValue</annox:annotate>
+					</xsd:appinfo>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="U_SINGLE"/>
+			<xsd:enumeration value="U_DOUBLE"/>
+			<xsd:enumeration value="U_SINGLE_ACCOUNTING"/>
+			<xsd:enumeration value="U_DOUBLE_ACCOUNTING"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="ImageBehaviorType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="INCELL">
+				<xsd:annotation>
+					<xsd:appinfo>
+						<annox:annotate target="enum-constant">@com.fasterxml.jackson.annotation.JsonEnumDefaultValue</annox:annotate>
+					</xsd:appinfo>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="OVERLAY"/>
+			<xsd:enumeration value="EXPAND_ROW"/>
+			<xsd:enumeration value="EXPAND_COL"/>
+			<xsd:enumeration value="LETITBE"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="ModeBehaviorType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="LAX">
+				<xsd:annotation>
+					<xsd:appinfo>
+						<annox:annotate target="enum-constant">@com.fasterxml.jackson.annotation.JsonEnumDefaultValue</annox:annotate>
+					</xsd:appinfo>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="STRICT"/>
+			<xsd:enumeration value="REPORT"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+</xsd:schema>

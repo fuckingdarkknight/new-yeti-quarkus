@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- <jaxb:bindings xmlns:jaxb="https://jakarta.ee/xml/ns/jaxb" 
+               xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+               xmlns:xjc="https://jakarta.ee/xml/ns/jaxb/xjc"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xmlns:annox="http://annox.dev.java.net"
+               xmlns:inheritance="http://jaxb2-commons.dev.java.net/basic/inheritance"
+               xsi:schemaLocation="https://jakarta.ee/xml/ns/jaxb https://jakarta.ee/xml/ns/jaxb/bindingschema_3_0.xsd"
+               jaxb:version="3.0"> -->
+
+<jaxb:bindings xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" 
+               xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+               xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xmlns:annox="http://annox.dev.java.net"
+               xmlns:inheritance="http://jaxb2-commons.dev.java.net/basic/inheritance"
+               xsi:schemaLocation="http://java.sun.com/xml/ns/jaxb http://java.sun.com/xml/ns/jaxb/bindingschema_2_0.xsd"
+               jaxb:version="2.0">
+
+	<!--
+		https://docs.oracle.com/javase/tutorial/jaxb/intro/custom.html
+		https://github.com/highsource/jaxb2-annotate-plugin
+	-->
+	
+	<jaxb:bindings schemaLocation="../xsd/yeti.xsd" node="/xsd:schema">
+		<jaxb:bindings node="xsd:simpleType[@name='ModeBehaviorType']">
+			<!--
+				<annox:annotateClass>@java.lang.SuppressWarnings({"unchecked","rawtypes"})</annox:annotateClass>
+				<annox:annotate>@java.lang.SuppressWarnings({"unchecked","rawtypes"})</annox:annotate>
+				<annox:annotate target="enum">@java.lang.SuppressWarnings({"all"})</annox:annotate>
+			-->
+			<annox:annotate>@com.arkham.ged.annotation.EnumDefault(value="LAX")</annox:annotate>
+			<inheritance:implements>com.arkham.ged.annotation.EnumDefaultType</inheritance:implements>
+		</jaxb:bindings>
+		<jaxb:bindings node="xsd:simpleType[@name='RowModeType']">
+			<annox:annotate>@com.arkham.ged.annotation.EnumDefault(value="COPYFROM")</annox:annotate>
+			<inheritance:implements>com.arkham.ged.annotation.EnumDefaultType</inheritance:implements>
+		</jaxb:bindings>
+		<jaxb:bindings node="xsd:simpleType[@name='CellValueType']">
+			<annox:annotate>@com.arkham.ged.annotation.EnumDefault(value="STRING")</annox:annotate>
+			<inheritance:implements>com.arkham.ged.annotation.EnumDefaultType</inheritance:implements>
+		</jaxb:bindings>
+		<jaxb:bindings node="xsd:simpleType[@name='AlignmentType']">
+			<annox:annotate>@com.arkham.ged.annotation.EnumDefault(value="GENERAL")</annox:annotate>
+			<inheritance:implements>com.arkham.ged.annotation.EnumDefaultType</inheritance:implements>
+		</jaxb:bindings>
+		<jaxb:bindings node="xsd:simpleType[@name='VerticalAlignmentType']">
+			<annox:annotate>@com.arkham.ged.annotation.EnumDefault(value="TOP")</annox:annotate>
+			<inheritance:implements>com.arkham.ged.annotation.EnumDefaultType</inheritance:implements>
+		</jaxb:bindings>
+		<jaxb:bindings node="xsd:simpleType[@name='BorderStyleType']">
+			<annox:annotate>@com.arkham.ged.annotation.EnumDefault(value="NONE")</annox:annotate>
+			<inheritance:implements>com.arkham.ged.annotation.EnumDefaultType</inheritance:implements>
+		</jaxb:bindings>
+		<jaxb:bindings node="xsd:simpleType[@name='FillType']">
+			<annox:annotate>@com.arkham.ged.annotation.EnumDefault(value="NO_FILL")</annox:annotate>
+			<inheritance:implements>com.arkham.ged.annotation.EnumDefaultType</inheritance:implements>
+		</jaxb:bindings>
+		<jaxb:bindings node="xsd:simpleType[@name='UnderlineType']">
+			<annox:annotate>@com.arkham.ged.annotation.EnumDefault(value="U_NONE")</annox:annotate>
+			<inheritance:implements>com.arkham.ged.annotation.EnumDefaultType</inheritance:implements>
+		</jaxb:bindings>
+		<jaxb:bindings node="xsd:simpleType[@name='ImageBehaviorType']">
+			<annox:annotate>@com.arkham.ged.annotation.EnumDefault(value="INCELL")</annox:annotate>
+			<inheritance:implements>com.arkham.ged.annotation.EnumDefaultType</inheritance:implements>
+		</jaxb:bindings>
+	</jaxb:bindings>
+</jaxb:bindings>

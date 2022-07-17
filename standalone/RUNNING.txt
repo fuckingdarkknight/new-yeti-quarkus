@@ -1,0 +1,20 @@
+
+### Environment
+
+JAVA_HOME need to be set correctly, the PATH also.
+
+Under Windows :
+JAVA_HOME=c:\dev\jdk8
+PATH=%JAVA_HOME%\bin;%PATH%
+
+Under Linux :
+export JAVA_HOME=/dev/jdk8
+export PATH=$JAVA_HOME/bin:$PATH
+
+OpenJDK 8 or Oracle JDK8 is your choice.
+
+### Launching
+
+Just execute launch.bat or launch.sh depending on your OS
+
+On Linux : chmod u+x launch.sh to make the shell executable for the concerned linux user.

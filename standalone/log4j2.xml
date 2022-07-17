@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="debug" strict="true">
+	<!--Pour rappel : l'ordre des niveaux de traces est le suivant : TRACE => DEBUG => INFO => WARN => ERROR => FATAL => OFF-->
+	<Properties>
+		<Property name="webmodule" value=""/>
+	</Properties>
+	<Appenders>
+		<Appender type="Console" name="consoleAppender">
+			<Layout type="PatternLayout">
+				<Pattern>[%d]¤%-5p¤%X{ARKHAM_GED_NODE}:%t¤%m%n</Pattern>
+			</Layout>
+		</Appender>
+		<RollingFile name="gedAppender">
+			<FileName>logs/${webmodule:-}/ged${sys:arkham.ged.node:-}.log</FileName>
+			<FilePattern>logs/${webmodule:-}/ged${sys:arkham.ged.node:-}.log.%i</FilePattern>
+			<PatternLayout>
+				<Pattern>[%d]¤%-5p¤%X{ARKHAM_GED_NODE}:%t¤%m%n</Pattern>
+			</PatternLayout>
+			<Policies>
+				<SizeBasedTriggeringPolicy size="40 MB"/>
+			</Policies>
+			<DefaultRolloverStrategy max="10"/>
+		</RollingFile>
+		<RandomAccessFile name="gedActivityDetailAppender" fileName="logs/${webmodule:-}/ged${sys:arkham.ged.node:-}_activity_detail.log">
+			<PatternLayout>
+				<Pattern>[%d]¤%-5p¤%X{ARKHAM_GED_NODE}:%t¤%X{ARKHAM_GED_TYPE}¤%X{FILENAME}¤%X{FILESIZE}¤%X{CONNECTION}¤%X{IMPORT_BLOB}¤%X{EXPORT_BLOB}¤%X{EXTRACTING}¤%X{INDEXING}¤%X{COMMIT}¤%X{ELAPSE_TIME_EXECUTE}%n</Pattern>
+			</PatternLayout>
+		</RandomAccessFile>
+		<Appender type="File" name="gedActivityRunAppender" fileName="logs/${webmodule:-}/ged${sys:arkham.ged.node:-}_activity_run.log">
+			<Layout type="PatternLayout">
+				<Pattern>[%d]¤%-5p¤%X{ARKHAM_GED_NODE}:%t¤%X{CONNECTION}¤%X{SCANNING}¤%X{ELAPSE_TIME_RUN}¤%X{ELAPSE_TIME_GLOBAL}%n</Pattern>
+			</Layout>
+		</Appender>
+	</Appenders>
+	<Loggers>
+		<logger name="com.arkham.ged" level="info" additivity="false">
+			<AppenderRef ref="gedAppender"/>
+		</logger>
+		<logger name="gedActivityDetail" level="info" additivity="false">
+			<AppenderRef ref="gedActivityDetailAppender"/>
+		</logger>
+		<logger name="gedActivityRun" level="info" additivity="false">
+			<AppenderRef ref="gedActivityRunAppender"/>
+		</logger>
+		<Root level="info">
+			<AppenderRef ref="gedAppender"/>
+		</Root>
+	</Loggers>
+</Configuration>

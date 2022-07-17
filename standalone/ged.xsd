@@ -1,0 +1,418 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+		Schéma de validation de ged_properties.xml
+		Licensed to the Arkham asylum Software Foundation under one or more
+		contributor license agreements. See the NOTICE file distributed with
+		this work for additional information regarding copyright ownership.
+		
+		Unless required by applicable law or agreed to in writing, software
+		distributed under the License is distributed on an "AS IS" BASIS,
+		WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+		See the License for the specific language governing permissions and
+		limitations under the License.
+-->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.arkham.com/ged/properties" targetNamespace="http://www.arkham.com/ged/properties" elementFormDefault="qualified">
+	<!-- Root XML Element -->
+	<xsd:element name="root">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="storage" type="StorageType"/>
+				<xsd:element name="datasource" type="DatasourceType"/>
+				<xsd:element name="import" type="InputScanFileDef" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element name="export" type="OutputScanFileDef" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element name="batch" type="BatchType" minOccurs="0"/>
+				<xsd:element name="jms" type="JmsType" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element name="socket" type="SocketType" minOccurs="0"/>
+				<xsd:element name="broker" type="BrokerType" minOccurs="0"/>
+				<xsd:element name="fileKeyProvider" type="FileKeyProviderType" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element name="indexer" type="IndexerType" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element name="media" type="MediaType" minOccurs="0"/>
+				<xsd:element name="upload" type="UploadType" minOccurs="0"/>
+				<xsd:element ref="internal" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>Internal management, should only by used by experts.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<!-- Type : abstract scanner -->
+	<xsd:complexType name="AbstractScanDef" abstract="true">
+		<xsd:annotation>
+			<xsd:documentation>Scanner par défaut</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="param" type="OptionalParameterType" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element name="action" type="ActionType" maxOccurs="unbounded"/>
+			<xsd:element name="rejector" type="RejectorType" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+		<xsd:attribute name="active" type="xsd:boolean" use="optional" default="true">
+			<xsd:annotation>
+				<xsd:documentation>Consumer activation</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+	<!-- Type : abstract scanner for file input/ouput -->
+	<xsd:complexType name="ScanFileDef" abstract="true">
+		<xsd:complexContent>
+			<xsd:extension base="AbstractScanDef">
+				<xsd:annotation>
+					<xsd:documentation>Scanner type : directory, including files, types ...</xsd:documentation>
+				</xsd:annotation>
+				<xsd:sequence>
+					<xsd:element name="fileKeyProvider" type="FileKeyProviderRefType" minOccurs="0" maxOccurs="unbounded"/>
+				</xsd:sequence>
+				<xsd:attribute name="dir" type="xsd:string" use="required">
+					<xsd:annotation>
+						<xsd:documentation>The directory to scan.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="includes" type="xsd:string" use="required">
+					<xsd:annotation>
+						<xsd:documentation>The pattern of files to scan, eg. : *.ref;*.int</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="excludes" type="xsd:string" use="optional">
+					<xsd:annotation>
+						<xsd:documentation>The pattern of files to exclude from scan, eg. : *.xslx</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="frequency" type="xsd:decimal" use="optional" default="1">
+					<xsd:annotation>
+						<xsd:documentation>Scan directory frequency : in seconds</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="fileRefDeletion" type="xsd:boolean" use="optional" default="true">
+					<xsd:annotation>
+						<xsd:documentation>Delete the reference (.ref) file after processing, true by default</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="fileDeletion" type="xsd:boolean" use="optional" default="false">
+					<xsd:annotation>
+						<xsd:documentation>Supprime le fichier à intégrer après traitement, vaut false par défaut. Si on n'utilise pas un gestionnaire de clé basé sur des fichiers .ref, cet attribut n'a pas de sens, fileRefDeletion fait déjà le travail</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="fileRefRename" type="xsd:string" use="optional">
+					<xsd:annotation>
+						<xsd:documentation>Rename the reference (.ref) file after processing, add extension specified by the value</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="executor" type="xsd:string" use="optional">
+					<xsd:annotation>
+						<xsd:documentation>The class (canonical name) that determine how the files will be processed. The class should override com.arkham.ged.executor.AbstractExecutor</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="scanner" type="xsd:string" use="optional">
+					<xsd:annotation>
+						<xsd:documentation>La référence de la classe qui détermine le type de scanning qui doit être fait. The class should override com.arkham.ged.scanner.AbstractFileScanner
+By default, the value is "ant"</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="countByLoop" type="xsd:integer" use="optional" default="-1">
+					<xsd:annotation>
+						<xsd:documentation>Execution count by executor loop, by default no limit (-1)</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="thread" type="xsd:integer" use="optional" default="1">
+					<xsd:annotation>
+						<xsd:documentation>Thread count to create for jobs consumers</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="usedb" type="xsd:boolean" use="optional" default="true">
+					<xsd:annotation>
+						<xsd:documentation>A DB connection should be created for this job ?</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<!-- Scanner d'entrée : lecture de fichiers sur disque et écriture en BDD -->
+	<xsd:complexType name="InputScanFileDef">
+		<xsd:complexContent>
+			<xsd:extension base="ScanFileDef"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<!-- Scanner de sortie : écriture des fichiers sur disque depuis la BDD -->
+	<xsd:complexType name="OutputScanFileDef">
+		<xsd:complexContent>
+			<xsd:extension base="ScanFileDef">
+				<xsd:attribute name="toDir" type="xsd:string" use="required">
+					<xsd:annotation>
+						<xsd:documentation>Répertoire d'écriture</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<!-- Type définissant un batch -->
+	<xsd:complexType name="BatchType">
+		<xsd:annotation>
+			<xsd:documentation>Paramétrage du mode batch</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="param" type="OptionalParameterType" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+		<xsd:attribute name="frequency" type="xsd:decimal" use="required">
+			<xsd:annotation>
+				<xsd:documentation>La fréquence de passage en secondes</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+	<!-- Type définissant un Listener JMS -->
+	<xsd:complexType name="JmsType">
+		<xsd:complexContent>
+			<xsd:extension base="AbstractScanDef">
+				<xsd:annotation>
+					<xsd:documentation>Paramétrage du broker JMS</xsd:documentation>
+				</xsd:annotation>
+				<xsd:attribute name="url" type="xsd:string" use="required">
+					<xsd:annotation>
+						<xsd:documentation>URL of JMS broker</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="queue" type="xsd:string" use="required">
+					<xsd:annotation>
+						<xsd:documentation>La queue JMS à consommer</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="executor" type="xsd:string" use="required">
+					<xsd:annotation>
+						<xsd:documentation>The class (canonical name) that determine how the messages be processed. The class should override com.arkham.ged.executor.AbstractExecutor</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<!-- Type définissant le broker JMS par défaut -->
+	<xsd:complexType name="BrokerType">
+		<xsd:attribute name="url" type="xsd:string" use="required">
+			<xsd:annotation>
+				<xsd:documentation>URL of JMS broker</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+	<!-- Type définissant un socket de relay vers JMS -->
+	<xsd:complexType name="SocketType">
+		<xsd:attribute name="address" type="xsd:string" use="required">
+			<xsd:annotation>
+				<xsd:documentation>IP address to listen</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="port" type="xsd:integer" use="required">
+			<xsd:annotation>
+				<xsd:documentation>Port to listen</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+	<!-- Type définissant la DS -->
+	<xsd:complexType name="DatasourceType">
+		<xsd:attribute name="jdbc" type="xsd:string" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>La connexion JDBC, de la forme : jdbc:oracle:thin:user/pw@//localhost:1521/service_name (mieux : préco Oracle) ou alors jdbc:oracle:thin:user/pw@localhost:1521:sid (moins bien)</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="ds_name" type="xsd:string" use="optional" default="jdbc/eGX-DS">
+			<xsd:annotation>
+				<xsd:documentation>Le nom logique de la DS défini dans web.xml (res-ref-name), dans le cas d'une utilisation non standalone. Par défaut, on conserve le nom JNDI utilisé par GCE, aucune raison de changer.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="pooled" type="xsd:string" use="optional" default="true">
+			<xsd:annotation>
+				<xsd:documentation>En cas de connexion JDBC directe, permet de spécifier si les connexions doivent être poolées ou pas. Pour une connexion en mode DS, c'est la DS elle-même qui gère cela donc la valeur doit être false</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="poolSize" type="xsd:int" use="optional" default="2">
+			<xsd:annotation>
+				<xsd:documentation>Taille du pool de connexions JDBC</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="idleTime" type="xsd:int" use="optional" default="10">
+			<xsd:annotation>
+				<xsd:documentation>Temps d'inactivité (en secondes) au delà duquel une connexion JDBC se trouvant en pool sera supprimée "physiquement"</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+	<!-- Définition du support physique de stockage -->
+	<xsd:complexType name="StorageType">
+		<xsd:attribute name="type" type="PhysicalStorageType" use="required">
+			<xsd:annotation>
+				<xsd:documentation>Définition du stockage physique des documents : soit dans MEDIA_BLOB.DATA_BLOB, soit sur un FileSystem</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="baseDir" type="xsd:string" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>Le répertoire de base (racine) contenant les documents. Cet attribut n'a de sens que pour le cas d'une gestion sur le FileSystem (upload ou archivage d'ailleurs)</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+	<xsd:simpleType name="PhysicalStorageType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="database"/>
+			<xsd:enumeration value="filesystem"/>
+			<xsd:enumeration value="link"/>
+			<xsd:enumeration value="mail"/>
+			<xsd:enumeration value="other"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="OnErrorType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="stop"/>
+			<xsd:enumeration value="continue"/>
+			<xsd:enumeration value="other"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<!-- Type définissant un type de média par rapport à son extension -->
+	<xsd:complexType name="MediaType">
+		<xsd:annotation>
+			<xsd:documentation>Définit un type de média par rapport à l'extension du fichier.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="mapping" type="MediaMappingType" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+		<xsd:attribute name="default" use="optional" default="INT">
+			<xsd:annotation>
+				<xsd:documentation>Le type de média par défaut, correspond au champ TYPMED de la table MEDIA_BLOB</xsd:documentation>
+			</xsd:annotation>
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:string">
+					<xsd:minLength value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+		</xsd:attribute>
+	</xsd:complexType>
+	<xsd:complexType name="MediaMappingType">
+		<xsd:attribute name="ext" type="xsd:string" use="required">
+			<xsd:annotation>
+				<xsd:documentation>La liste des extensions séparées par un ";"</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="type" type="xsd:string" use="required">
+			<xsd:annotation>
+				<xsd:documentation>Le type de média, correspond au champ TYPMED de la table MEDIA_BLOB</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+	<!-- Paramètres supplémentaires et optionnels -->
+	<xsd:complexType name="OptionalParameterType">
+		<xsd:attribute name="name" type="xsd:string" use="required"/>
+		<xsd:attribute name="value" type="xsd:string" use="optional"/>
+		<xsd:attribute name="default" type="xsd:string" use="optional"/>
+		<xsd:attribute name="expression" type="xsd:string" use="optional"/>
+	</xsd:complexType>
+	<!-- Type définissant un indexer -->
+	<xsd:complexType name="IndexerType">
+		<xsd:annotation>
+			<xsd:documentation>Définit un type d'indexer</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="param" type="OptionalParameterType" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+		<xsd:attribute name="name" type="xsd:string" use="required">
+			<xsd:annotation>
+				<xsd:documentation>Le nom logique de l'indexer. Il pourra être utilisé par les scanner et la servlet d'upload</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="extractor" type="xsd:string" use="required">
+			<xsd:annotation>
+				<xsd:documentation>La référence canonique de la classe qui permettra d'indexer le contenu d'un document. Cette classe doit implémenter l'interface com.generixgroup.ddm.indexer.DocumentIndexer</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="target" type="xsd:string" use="required">
+			<xsd:annotation>
+				<xsd:documentation>La cible de l'indexation : solr ou ot (Oracle Text : table DOC_REC). Il est possible d'utiliser une référence canonique de classe.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+	<!-- Type définissant un FileKeyProvider -->
+	<xsd:complexType name="FileKeyProviderType">
+		<xsd:annotation>
+			<xsd:documentation>Définit un fournisseur de clés</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="param" type="OptionalParameterType" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+		<xsd:attribute name="name" type="xsd:string" use="required">
+			<xsd:annotation>
+				<xsd:documentation>Le nom logique du fournisseur de clés</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="classref" type="xsd:string" use="required">
+			<xsd:annotation>
+				<xsd:documentation>La référence de la classe qui détermine le type de décodage devant être fait : soit on utilise des fichiers de référence, soit on décode le nom du fichier afin de déterminer la clé de la PK de la table MEDIA_BLOB. Elle doit implémenter com.generixgroup.ddm.filekey.FileKeyProvider
+La valeur par défaut est XmlFileKeyProvider, on peut utiliser "ref" (XmlFileKeyProvider) et "name" (ByNameFileKeyProvider) pour exploiter les modes fournis en standard</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+	<xsd:complexType name="FileKeyProviderRefType">
+		<xsd:attribute name="name" type="xsd:string" use="required"/>
+	</xsd:complexType>
+	<!--
+		Actions à réaliser par un executor
+	-->
+	<xsd:complexType name="ActionType">
+		<xsd:sequence>
+			<xsd:element name="param" type="OptionalParameterType" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+		<xsd:attribute name="name" type="xsd:string" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>Le nom logique de l'action ou une référence canonique de classe</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="type" type="PhysicalStorageType" use="required"/>
+		<xsd:attribute name="onError" type="OnErrorType" use="optional" default="stop">
+			<xsd:annotation>
+				<xsd:documentation>L'action doit-elle arrêter le traitement sur le fichier en cours en cas d'échec ou on continue les actions suivantes ?</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="consumername" type="xsd:string" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>Le nom du consommateur ayant créé l'action, cet attribut permet de faire un retour utilisateur plus ciblé (consommation JSON des callback JS)</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+	<!--
+		Réjecteurs à utiliser en cas de problème, d'exception ...
+	-->
+	<xsd:complexType name="RejectorType">
+		<xsd:sequence>
+			<xsd:element name="param" type="OptionalParameterType" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+		<xsd:attribute name="name" type="xsd:string" use="required">
+			<xsd:annotation>
+				<xsd:documentation>La référence de la classe qui gère le rejet sur un traitement. Elle doit dériver de com.arkham.ged.rejection.AbstractRejection
+Par défaut, la valeur est "file"</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+	<!-- Type définissant le paramétrage de l'indexer de la servlet d'upload -->
+	<xsd:complexType name="UploadType">
+		<xsd:annotation>
+			<xsd:documentation>Définit le paramétrage de l''indexer pour la servlet d'upload</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="param" type="OptionalParameterType" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:element name="internal">
+		<xsd:complexType>
+			<xsd:sequence minOccurs="0" maxOccurs="unbounded">
+				<xsd:element name="misc">
+					<xsd:annotation>
+						<xsd:documentation>Options diverses</xsd:documentation>
+					</xsd:annotation>
+					<xsd:complexType>
+						<xsd:attributeGroup ref="baseElementCouple"/>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:attributeGroup name="baseElementCouple">
+		<xsd:annotation>
+			<xsd:documentation>Définition des couples clés/valeurs</xsd:documentation>
+		</xsd:annotation>
+		<xsd:attribute name="name" type="xsd:string" use="required"/>
+		<xsd:attribute name="value" type="xsd:string" use="required"/>
+		<xsd:attribute name="comment" type="xsd:string" use="optional"/>
+	</xsd:attributeGroup>
+</xsd:schema>
