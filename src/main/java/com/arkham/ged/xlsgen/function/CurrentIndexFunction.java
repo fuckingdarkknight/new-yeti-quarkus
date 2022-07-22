@@ -22,19 +22,19 @@ import com.arkham.ged.xlsgen.FunctionValueProvider;
  * @since 24 août 2018
  */
 public class CurrentIndexFunction extends Function {
-	private final FunctionValueProvider mFvp;
+    private final FunctionValueProvider mFvp;
 
-	CurrentIndexFunction(FunctionValueProvider fvp) {
-		mFvp = fvp;
-	}
+    CurrentIndexFunction(FunctionValueProvider fvp) {
+        mFvp = fvp;
+    }
 
-	@Override
-	public String getName() {
-		return "current";
-	}
+    @Override
+    public String getName() {
+        return "current";
+    }
 
-	@Override
-	public Object invoke(Object... params) throws FunctionExecutionException {
-		return mFvp.getIndex();
-	}
+    @Override
+    public Object invoke(Object... params) throws FunctionExecutionException {
+        return mFvp.getIndex();
+    }
 }

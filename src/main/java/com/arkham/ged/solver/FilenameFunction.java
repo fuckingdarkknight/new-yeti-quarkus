@@ -23,28 +23,28 @@ import com.arkham.common.solver.function.FunctionExecutionException;
  * @since 10 févr. 2015
  */
 public class FilenameFunction extends Function {
-	private final File mFile;
+    private final File mFile;
 
-	/**
-	 * Constructor FilenameFunction
-	 *
-	 * @param file The file
-	 */
-	public FilenameFunction(File file) {
-		mFile = file;
-	}
+    /**
+     * Constructor FilenameFunction
+     *
+     * @param file The file
+     */
+    public FilenameFunction(File file) {
+        mFile = file;
+    }
 
-	@Override
-	public String getName() {
-		return "filename";
-	}
+    @Override
+    public String getName() {
+        return "filename";
+    }
 
-	@Override
-	public Object invoke(Object... params) throws FunctionExecutionException {
-		if (mFile != null) {
-			return mFile.getName();
-		}
+    @Override
+    public Object invoke(Object... params) throws FunctionExecutionException {
+        if (mFile != null) {
+            return mFile.getName();
+        }
 
-		return "";
-	}
+        return "";
+    }
 }

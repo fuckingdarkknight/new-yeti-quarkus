@@ -24,32 +24,32 @@ public class FileKeyProviderException extends GedException {
     private static final long serialVersionUID = 1L;
 
     /**
-	 * {@link FileKeyProviderException} constructor.
-	 *
-	 * @param cause Root cause
-	 */
-	public FileKeyProviderException(final Throwable cause) {
-		super(cause);
-	}
+     * {@link FileKeyProviderException} constructor.
+     *
+     * @param cause Root cause
+     */
+    public FileKeyProviderException(final Throwable cause) {
+        super(cause);
+    }
 
-	/**
-	 * {@link FileKeyProviderException} constructor.
-	 *
-	 * @param message Message
-	 * @param params Parameters array
-	 */
-	public FileKeyProviderException(final GedMessage message, final Object... params) {
-		super(message, params);
-	}
+    /**
+     * {@link FileKeyProviderException} constructor.
+     *
+     * @param message Message
+     * @param params Parameters array
+     */
+    public FileKeyProviderException(final GedMessage message, final Object... params) {
+        super(message, params);
+    }
 
-	/**
-	 * Constructor FileKeyProviderException
-	 *
-	 * @param cause Root cause
-	 * @param message Message
-	 * @param params Parameters array
-	 */
-	public FileKeyProviderException(final Throwable cause, final GedMessage message, final Object... params) {
-		super(cause, message, params);
-	}
+    /**
+     * Constructor FileKeyProviderException
+     *
+     * @param cause Root cause
+     * @param message Message
+     * @param params Parameters array
+     */
+    public FileKeyProviderException(final Throwable cause, final GedMessage message, final Object... params) {
+        super(cause, message, params);
+    }
 }

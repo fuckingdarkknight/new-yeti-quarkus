@@ -21,56 +21,56 @@ import java.io.InputStream;
  * @param <O> Optional parameters
  */
 public interface StreamProtocolAdapter<T, O> extends Closeable {
-	/**
-	 * Assume UTF-8 as default streams charset
-	 */
-	String DEFAULT_CHARSET = "UTF-8";
+    /**
+     * Assume UTF-8 as default streams charset
+     */
+    String DEFAULT_CHARSET = "UTF-8";
 
-	/**
-	 * Get a stream from a name that begin (or not) with a protocol
-	 *
-	 * @return The stream provided by adapters
-	 * @throws StreamProtocolException Generic exception in case of troubles creating the matching stream
-	 * @see #getArray()
-	 */
-	InputStream getStream() throws StreamProtocolException;
+    /**
+     * Get a stream from a name that begin (or not) with a protocol
+     *
+     * @return The stream provided by adapters
+     * @throws StreamProtocolException Generic exception in case of troubles creating the matching stream
+     * @see #getArray()
+     */
+    InputStream getStream() throws StreamProtocolException;
 
-	/**
-	 * Get an array from a name that begin (or not) with a protocol
-	 *
-	 * @return The result provided by adapters
-	 * @throws StreamProtocolException Generic exception in case of troubles creating the matching stream
-	 * @see #getStream()
-	 */
-	byte[] getArray() throws StreamProtocolException;
+    /**
+     * Get an array from a name that begin (or not) with a protocol
+     *
+     * @return The result provided by adapters
+     * @throws StreamProtocolException Generic exception in case of troubles creating the matching stream
+     * @see #getStream()
+     */
+    byte[] getArray() throws StreamProtocolException;
 
-	/**
-	 * @return The name without protocol prefix
-	 */
-	T getValue();
+    /**
+     * @return The name without protocol prefix
+     */
+    T getValue();
 
-	/**
-	 * @return The optional stream name
-	 */
-	String getStreamName();
+    /**
+     * @return The optional stream name
+     */
+    String getStreamName();
 
-	/**
-	 * @return The charset if streamer update it
-	 */
-	String getCharset();
+    /**
+     * @return The charset if streamer update it
+     */
+    String getCharset();
 
-	/**
-	 * @return The content-type if streamer update it
-	 */
-	String getContentType();
+    /**
+     * @return The content-type if streamer update it
+     */
+    String getContentType();
 
-	/**
-	 * @return The optional parameters
-	 */
-	O getOptions();
+    /**
+     * @return The optional parameters
+     */
+    O getOptions();
 
-	/**
-	 * @return The optional status code, should be usefull for HTTP adapter for example
-	 */
-	int getStatusCode();
+    /**
+     * @return The optional status code, should be usefull for HTTP adapter for example
+     */
+    int getStatusCode();
 }

@@ -24,39 +24,39 @@ import com.arkham.ged.solver.Translator;
  * @since 10 févr. 2015
  */
 public class LikeAntPropertiesTranslator implements Translator {
-	@Override
-	public String translate(String value, Object... p) {
-		if (value == null) {
-			return null;
-		}
+    @Override
+    public String translate(String value, Object... p) {
+        if (value == null) {
+            return null;
+        }
 
-		String result = value;
-		final Map<String, String> mappings = parse(value);
-		for (final Entry<String, String> entry : mappings.entrySet()) {
-			result = result.replace(entry.getKey(), entry.getValue());
-		}
+        var result = value;
+        final var mappings = parse(value);
+        for (final Entry<String, String> entry : mappings.entrySet()) {
+            result = result.replace(entry.getKey(), entry.getValue());
+        }
 
-		return result;
-	}
+        return result;
+    }
 
-	private static Map<String, String> parse(String value) {
-		final Map<String, String> result = new HashMap<>();
-		int pos = 0;
-		while ((pos = value.indexOf("${", pos)) != -1) {
-			final int last = value.indexOf('}', pos);
-			if (last != -1) {
-				final String var = value.substring(pos + 2, last);
-				final String key = "${" + var + "}";
-				final String val = PropertiesProvider.getProperty(var, "");
-				result.put(key, val);
+    private static Map<String, String> parse(String value) {
+        final Map<String, String> result = new HashMap<>();
+        var pos = 0;
+        while ((pos = value.indexOf("${", pos)) != -1) {
+            final var last = value.indexOf('}', pos);
+            if (last != -1) {
+                final var var = value.substring(pos + 2, last);
+                final var key = "${" + var + "}";
+                final var val = PropertiesProvider.getProperty(var, "");
+                result.put(key, val);
 
-				pos = last;
-			} else {
-				// Stop the parsing : the string is incorrect, should be toto${xxx}/zzz
-				break;
-			}
-		}
+                pos = last;
+            } else {
+                // Stop the parsing : the string is incorrect, should be toto${xxx}/zzz
+                break;
+            }
+        }
 
-		return result;
-	}
+        return result;
+    }
 }

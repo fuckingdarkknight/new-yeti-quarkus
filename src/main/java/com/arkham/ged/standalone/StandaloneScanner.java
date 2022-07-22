@@ -82,11 +82,11 @@ public final class StandaloneScanner {
         private final Map<String, String> mProp = new HashMap<>();
 
         BasePropertiesProvider(final File file) {
-            final FlatProp gfp = new FlatProp();
+            final var gfp = new FlatProp();
             try (Reader reader = new FileReader(file)) {
                 gfp.load(reader);
 
-                final Set<String> keys = gfp.getKeys();
+                final var keys = gfp.getKeys();
                 for (final String k : keys) {
                     mProp.put(k, gfp.getProperty(k));
                 }
@@ -115,29 +115,29 @@ public final class StandaloneScanner {
         // Force scanner activation
         System.setProperty(GedInit.SCANNING_ACTIVE_PARAMETER, "true");
 
-        String basedir = System.getProperty(GedInit.BASEDIR_PARAM);
+        var basedir = System.getProperty(GedInit.BASEDIR_PARAM);
         if (basedir == null) {
             basedir = System.getProperty("user.dir");
         }
 
         // The baseDir should exists
-        final File dirFile = new File(basedir);
+        final var dirFile = new File(basedir);
         if (!dirFile.exists() || !dirFile.isDirectory()) {
             System.err.println("main() : directory=" + dirFile.getAbsolutePath() + " does not exist"); // NOSONAR
             return;
         }
-        final String baseDirPath = dirFile.getAbsolutePath();
+        final var baseDirPath = dirFile.getAbsolutePath();
         System.out.println("basedir=" + baseDirPath); // NOSONAR
 
         // Try to read get.properties
-        final File baseProp = new File(dirFile, "ged-standalone.properties");
-        final BasePropertiesProvider bpp = new BasePropertiesProvider(baseProp);
+        final var baseProp = new File(dirFile, "ged-standalone.properties");
+        final var bpp = new BasePropertiesProvider(baseProp);
 
         // Read ged_properties.xml
-        final String fileProperties = System.getProperty("ged.properties", "ged-standalone.xml");
+        final var fileProperties = System.getProperty("ged.properties", "ged-standalone.xml");
         System.out.println("Properties=" + fileProperties); // NOSONAR
 
-        final GedStateHolder gsh = GedInit.init(dirFile.getCanonicalPath(), fileProperties, bpp, LoggerFactory.getLogger(StandaloneScanner.class));
+        final var gsh = GedInit.init(dirFile.getCanonicalPath(), fileProperties, bpp, LoggerFactory.getLogger(StandaloneScanner.class));
 
         Runtime.getRuntime().addShutdownHook(new Thread("ShudownHook") {
             @Override
@@ -151,7 +151,7 @@ public final class StandaloneScanner {
         System.out.println("GedInit : started"); // NOSONAR
         System.out.println("GedInit : scanning ..."); // NOSONAR
 
-        final AtomicBoolean loop = new AtomicBoolean(true);
+        final var loop = new AtomicBoolean(true);
         GedProperties.getInstance().registerListener(new BasicListener<String, GLOBAL_EVENTS, PropertiesException>() {
             @Override
             public void eventFired(final BasicEvent<String, GLOBAL_EVENTS> event) throws PropertiesException {

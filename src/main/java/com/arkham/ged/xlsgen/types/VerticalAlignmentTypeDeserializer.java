@@ -28,27 +28,27 @@ import com.arkham.ged.yaml.VerticalAlignmentType;
  * @since 13 févr. 2020
  */
 public class VerticalAlignmentTypeDeserializer extends AbstractTypeDeserializer<VerticalAlignmentType> {
-	private static final Logger LOGGER = LoggerFactory.getLogger(VerticalAlignmentTypeDeserializer.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(VerticalAlignmentTypeDeserializer.class);
 
-	/**
-	 * Constructor ImageBehaviorTypeDeserializer
-	 *
-	 * @param ea Appender for errors
-	 */
-	public VerticalAlignmentTypeDeserializer(final ErrorAppender ea) {
-		super(ea);
-	}
+    /**
+     * Constructor ImageBehaviorTypeDeserializer
+     *
+     * @param ea Appender for errors
+     */
+    public VerticalAlignmentTypeDeserializer(final ErrorAppender ea) {
+        super(ea);
+    }
 
-	@Override
-	public VerticalAlignmentType deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
-		final String s = p.getText();
+    @Override
+    public VerticalAlignmentType deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
+        final var s = p.getText();
 
-		try {
-			return VerticalAlignmentType.valueOf(s.toUpperCase());
-		} catch (@SuppressWarnings("unused") final IllegalArgumentException e) { // NOSONAR
-			addError(LOGGER, p, VerticalAlignmentType.class, s);
-		}
+        try {
+            return VerticalAlignmentType.valueOf(s.toUpperCase());
+        } catch (@SuppressWarnings("unused") final IllegalArgumentException e) { // NOSONAR
+            addError(LOGGER, p, VerticalAlignmentType.class, s);
+        }
 
-		return VerticalAlignmentType.TOP;
-	}
+        return VerticalAlignmentType.TOP;
+    }
 }

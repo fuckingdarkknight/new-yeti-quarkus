@@ -20,16 +20,16 @@ import java.time.format.DateTimeFormatter;
  * @since 23 août 2018
  */
 public class DateZnTransformer extends DateTransformer {
-	private static final DateTimeFormatter SRC_FORMATTER = DateTimeFormatter.ofPattern("ddMMyyyy");
+    private static final DateTimeFormatter SRC_FORMATTER = DateTimeFormatter.ofPattern("ddMMyyyy");
 
-	/**
-	 * Format "ddMMyyyy"
-	 * {@inheritDoc}
-	 *
-	 * @see com.arkham.ged.xlsgen.transformer.DateTransformer#getSourceFormatter()
-	 */
-	@Override
-	protected DateTimeFormatter getSourceFormatter() {
-		return SRC_FORMATTER;
-	}
+    /**
+     * Format "ddMMyyyy"
+     * {@inheritDoc}
+     *
+     * @see com.arkham.ged.xlsgen.transformer.DateTransformer#getSourceFormatter()
+     */
+    @Override
+    protected DateTimeFormatter getSourceFormatter() {
+        return SRC_FORMATTER;
+    }
 }

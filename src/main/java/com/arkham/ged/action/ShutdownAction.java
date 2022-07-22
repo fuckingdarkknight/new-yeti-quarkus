@@ -32,15 +32,15 @@ import com.arkham.ged.properties.PropertiesAdapter.GLOBAL_EVENTS;
  * @since 7 févr. 2020
  */
 public class ShutdownAction extends AbstractAction<InputScanFileDef, File> {
-	private static final Logger LOGGER = LoggerFactory.getLogger(ShutdownAction.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ShutdownAction.class);
 
-	@Override
-	public List<DocumentLinkBean> execute(File data, FileKey fk, Connection con, PropertiesAdapter pa, List<DocumentLinkBean> bean, InputScanFileDef asd) throws ActionException {
-		LOGGER.info("execute() : Shutdown action, deleting file {}", data.getName());
-		deleteFile(data);
+    @Override
+    public List<DocumentLinkBean> execute(File data, FileKey fk, Connection con, PropertiesAdapter pa, List<DocumentLinkBean> bean, InputScanFileDef asd) throws ActionException {
+        LOGGER.info("execute() : Shutdown action, deleting file {}", data.getName());
+        deleteFile(data);
 
-		pa.fireEvent(new BasicEvent<>("yeti", GLOBAL_EVENTS.SHUTDOWN));
+        pa.fireEvent(new BasicEvent<>("yeti", GLOBAL_EVENTS.SHUTDOWN));
 
-		return bean;
-	}
+        return bean;
+    }
 }

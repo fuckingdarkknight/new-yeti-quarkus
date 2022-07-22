@@ -25,16 +25,16 @@ import com.arkham.ged.util.GedUtil;
  * @since 14 janv. 2019
  */
 public class YamlFileKeyProvider extends JsonFileKeyProvider {
-	private static final Logger LOGGER = LoggerFactory.getLogger(YamlFileKeyProvider.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(YamlFileKeyProvider.class);
 
-	@Override
-	protected String transform(String content) throws IOException {
-		LOGGER.info("transform() : consuming YAML message=\n{}", content);
+    @Override
+    protected String transform(String content) throws IOException {
+        LOGGER.info("transform() : consuming YAML message=\n{}", content);
 
-		final String result = GedUtil.convertYamlToJson(content);
+        final var result = GedUtil.convertYamlToJson(content);
 
-		LOGGER.info("transform() : transformed to JSON message=\n{}", result);
+        LOGGER.info("transform() : transformed to JSON message=\n{}", result);
 
-		return result;
-	}
+        return result;
+    }
 }

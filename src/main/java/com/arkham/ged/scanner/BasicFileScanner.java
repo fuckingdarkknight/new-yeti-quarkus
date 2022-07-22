@@ -45,141 +45,141 @@ import com.arkham.ged.util.GedUtil;
  * @since 29 juil. 2017
  */
 public class BasicFileScanner extends AbstractFileScanner {
-	private static final Logger LOGGER = LoggerFactory.getLogger(BasicFileScanner.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BasicFileScanner.class);
 
-	/**
-	 * Default directories depth for scanning
-	 */
-	private static final int DEFAULT_DEPTH = 4;
+    /**
+     * Default directories depth for scanning
+     */
+    private static final int DEFAULT_DEPTH = 4;
 
-	/**
-	 * Threshold to consider file to be considerer in ms
-	 */
-	private static final int THRESHOLD_LASTMODIFIED = 250;
+    /**
+     * Threshold to consider file to be considerer in ms
+     */
+    private static final int THRESHOLD_LASTMODIFIED = 250;
 
-	private int mDepth = DEFAULT_DEPTH;
+    private int mDepth = DEFAULT_DEPTH;
 
-	private boolean mConsiderZeroLengthFile;
+    private boolean mConsiderZeroLengthFile;
 
-	/**
-	 * Constructor BasicFileScanner
-	 *
-	 * @param sfd The scan definition
-	 */
-	public BasicFileScanner(final ScanFileDef sfd) {
-		super(sfd);
+    /**
+     * Constructor BasicFileScanner
+     *
+     * @param sfd The scan definition
+     */
+    public BasicFileScanner(final ScanFileDef sfd) {
+        super(sfd);
 
-		final OptionalParameterType depth = GedProperties.getOptionalParameters(sfd.getParam(), "depth");
-		if (depth != null) {
-			mDepth = GedUtil.getInt(depth.getValue(), DEFAULT_DEPTH);
-		}
+        final var depth = GedProperties.getOptionalParameters(sfd.getParam(), "depth");
+        if (depth != null) {
+            mDepth = GedUtil.getInt(depth.getValue(), DEFAULT_DEPTH);
+        }
 
-		final OptionalParameterType zeroLength = GedProperties.getOptionalParameters(sfd.getParam(), "empty");
-		if (zeroLength != null) {
-			mConsiderZeroLengthFile = GedUtil.getBoolean(zeroLength.getValue(), false);
-		}
-	}
+        final var zeroLength = GedProperties.getOptionalParameters(sfd.getParam(), "empty");
+        if (zeroLength != null) {
+            mConsiderZeroLengthFile = GedUtil.getBoolean(zeroLength.getValue(), false);
+        }
+    }
 
-	static Pattern[] buildPatterns(final String[] patterns) {
-		final List<Pattern> result = new ArrayList<>(patterns.length);
-		for (final String ext : patterns) {
-			final Pattern pattern = Pattern.compile(buildRegexp(ext), Pattern.CASE_INSENSITIVE);
-			result.add(pattern);
-		}
+    static Pattern[] buildPatterns(final String[] patterns) {
+        final List<Pattern> result = new ArrayList<>(patterns.length);
+        for (final String ext : patterns) {
+            final var pattern = Pattern.compile(buildRegexp(ext), Pattern.CASE_INSENSITIVE);
+            result.add(pattern);
+        }
 
-		return result.toArray(new Pattern[result.size()]);
-	}
+        return result.toArray(new Pattern[result.size()]);
+    }
 
-	static String buildRegexp(final String s) {
-		final StringBuilder result = new StringBuilder();
+    static String buildRegexp(final String s) {
+        final var result = new StringBuilder();
 
-		s.chars().forEach((final int c) -> {
-			if (c == '*') {
-				// All chars
-				result.append('.');
-				result.append('*');
-			} else if (c == '.') {
-				// Escape dot
-				result.append('\\');
-				result.append('.');
-			} else if (c == '_') {
-				// Escape underscore
-				result.append('\\');
-				result.append('_');
-			} else if (c == '?') {
-				// Unique char wildcard
-				result.append('_');
-			} else {
-				// Need to cast, else c is appended as an int
-				result.append((char) c);
-			}
-		});
+        s.chars().forEach((final var c) -> {
+            if (c == '*') {
+                // All chars
+                result.append('.');
+                result.append('*');
+            } else if (c == '.') {
+                // Escape dot
+                result.append('\\');
+                result.append('.');
+            } else if (c == '_') {
+                // Escape underscore
+                result.append('\\');
+                result.append('_');
+            } else if (c == '?') {
+                // Unique char wildcard
+                result.append('_');
+            } else {
+                // Need to cast, else c is appended as an int
+                result.append((char) c);
+            }
+        });
 
-		return result.toString();
-	}
+        return result.toString();
+    }
 
-	static boolean isIncluded(final String filename, final Pattern[] patterns) {
-		for (final Pattern pattern : patterns) {
-			final Matcher matcher = pattern.matcher(filename);
-			if (matcher.matches()) {
-				return true;
-			}
-		}
+    static boolean isIncluded(final String filename, final Pattern[] patterns) {
+        for (final Pattern pattern : patterns) {
+            final var matcher = pattern.matcher(filename);
+            if (matcher.matches()) {
+                return true;
+            }
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	static boolean isIncluded(final Path path, final Pattern[] patterns) {
-		return path != null && isIncluded(path.getFileName().toString(), patterns);
-	}
+    static boolean isIncluded(final Path path, final Pattern[] patterns) {
+        return path != null && isIncluded(path.getFileName().toString(), patterns);
+    }
 
-	@Override
-	protected File[] scan() {
-		final Chrono chrono = Chrono.getChrono();
-		try {
-			chrono.start();
+    @Override
+    protected File[] scan() {
+        final var chrono = Chrono.getChrono();
+        try {
+            chrono.start();
 
-			return runScan();
-		} finally {
-			chrono.stop();
+            return runScan();
+        } finally {
+            chrono.stop();
 
-			LoggerMDC.putMDC(MDC_KEY.SCANNING, chrono.getElapsed(UNIT.MS));
-		}
-	}
+            LoggerMDC.putMDC(MDC_KEY.SCANNING, chrono.getElapsed(UNIT.MS));
+        }
+    }
 
-	private File[] runScan() {
-		final Path startpath = Paths.get(getSFD().getDir());
-		LOGGER.trace("scan() : start scanning for path={}", startpath.toAbsolutePath());
+    private File[] runScan() {
+        final var startpath = Paths.get(getSFD().getDir());
+        LOGGER.trace("scan() : start scanning for path={}", startpath.toAbsolutePath());
 
-		final String[] included = GedUtil.splitValues(getSFD().getIncludes());
-		final String[] excluded = GedUtil.splitValues(getSFD().getExcludes());
-		final Pattern[] includedPatterns = buildPatterns(included);
-		final Pattern[] excludedPatterns = buildPatterns(excluded);
+        final var included = GedUtil.splitValues(getSFD().getIncludes());
+        final var excluded = GedUtil.splitValues(getSFD().getExcludes());
+        final var includedPatterns = buildPatterns(included);
+        final var excludedPatterns = buildPatterns(excluded);
 
-		if (LOGGER.isDebugEnabled()) {
-			Arrays.stream(includedPatterns).forEach(pat -> LOGGER.trace("runScan() : included patterns={}", pat));
-			Arrays.stream(excludedPatterns).forEach(pat -> LOGGER.trace("runScan() : excluded patterns={}", pat));
-		}
+        if (LOGGER.isDebugEnabled()) {
+            Arrays.stream(includedPatterns).forEach(pat -> LOGGER.trace("runScan() : included patterns={}", pat));
+            Arrays.stream(excludedPatterns).forEach(pat -> LOGGER.trace("runScan() : excluded patterns={}", pat));
+        }
 
-		final long fromTime = System.currentTimeMillis() + THRESHOLD_LASTMODIFIED;
+        final var fromTime = System.currentTimeMillis() + THRESHOLD_LASTMODIFIED;
 
-		final List<File> result = new ArrayList<>();
-		try (final Stream<Path> stream = Files.walk(startpath, mDepth)) {
-			stream.filter(path -> isIncluded(path, includedPatterns) && !isIncluded(path, excludedPatterns)).sorted().forEach((final Path path) -> {
-				// Don't consider empty files for this scanner, except if settings accept it
-				final File f = path.toFile();
+        final List<File> result = new ArrayList<>();
+        try (final var stream = Files.walk(startpath, mDepth)) {
+            stream.filter(path -> isIncluded(path, includedPatterns) && !isIncluded(path, excludedPatterns)).sorted().forEach((final Path path) -> {
+                // Don't consider empty files for this scanner, except if settings accept it
+                final var f = path.toFile();
 
-				if ((f.length() > 0 || mConsiderZeroLengthFile) && f.lastModified() < fromTime) {
-					result.add(f);
-				}
-			});
-		} catch (@SuppressWarnings("unused") final NoSuchFileException | UncheckedIOException e) { // NOSONAR
-			// Don't care about it, may occur when several scanner scan the same directory at the same time and a file
-			// is ever consumed by another job
-		} catch (final IOException e) {
-			LOGGER.trace("runScan()", e);
-		}
+                if ((f.length() > 0 || mConsiderZeroLengthFile) && f.lastModified() < fromTime) {
+                    result.add(f);
+                }
+            });
+        } catch (@SuppressWarnings("unused") final NoSuchFileException | UncheckedIOException e) { // NOSONAR
+            // Don't care about it, may occur when several scanner scan the same directory at the same time and a file
+            // is ever consumed by another job
+        } catch (final IOException e) {
+            LOGGER.trace("runScan()", e);
+        }
 
-		return result.toArray(new File[result.size()]);
-	}
+        return result.toArray(new File[result.size()]);
+    }
 }

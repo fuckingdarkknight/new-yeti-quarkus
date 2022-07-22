@@ -24,33 +24,33 @@ import com.arkham.ged.solver.Translator;
  * @since 13 févr. 2020
  */
 public class ErrorAppender {
-	private final List<String> mList = new ArrayList<>();
+    private final List<String> mList = new ArrayList<>();
 
-	private static final Translator mTranslator = new SlfTranslator();
+    private static final Translator mTranslator = new SlfTranslator();
 
-	/**
-	 * Add an issue
-	 *
-	 * @param e The issue
-	 */
-	public void add(String e) {
-		mList.add(e);
-	}
+    /**
+     * Add an issue
+     *
+     * @param e The issue
+     */
+    public void add(String e) {
+        mList.add(e);
+    }
 
-	/**
-	 * Add a translated issue to the stack
-	 *
-	 * @param message The message
-	 * @param p The parameters that should be translated by {@link SlfTranslator}
-	 */
-	public void add(String message, Object... p) {
-		add(mTranslator.translate(message, p));
-	}
+    /**
+     * Add a translated issue to the stack
+     *
+     * @param message The message
+     * @param p The parameters that should be translated by {@link SlfTranslator}
+     */
+    public void add(String message, Object... p) {
+        add(mTranslator.translate(message, p));
+    }
 
-	/**
-	 * @return The list of issues
-	 */
-	public List<String> getList() {
-		return mList;
-	}
+    /**
+     * @return The list of issues
+     */
+    public List<String> getList() {
+        return mList;
+    }
 }

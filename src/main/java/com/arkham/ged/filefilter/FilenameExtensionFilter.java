@@ -23,35 +23,35 @@ import com.arkham.ged.util.GedUtil;
  * @since 10 févr. 2015
  */
 public class FilenameExtensionFilter implements FileFilter {
-	private final String[] mExtensions;
+    private final String[] mExtensions;
 
-	/**
-	 * Constructor FilenameExtensionFilter
-	 *
-	 * @param ext File extensions list, separated by ";" or "," or "|" or ":"
-	 */
-	public FilenameExtensionFilter(String ext) {
-		mExtensions = GedUtil.splitValues(ext);
-		// For compareasons it's simplest to add directly the "."
-		for (int i = 0; i < mExtensions.length; i++) {
-			mExtensions[i] = "." + mExtensions[i];
-		}
-	}
+    /**
+     * Constructor FilenameExtensionFilter
+     *
+     * @param ext File extensions list, separated by ";" or "," or "|" or ":"
+     */
+    public FilenameExtensionFilter(String ext) {
+        mExtensions = GedUtil.splitValues(ext);
+        // For compareasons it's simplest to add directly the "."
+        for (var i = 0; i < mExtensions.length; i++) {
+            mExtensions[i] = "." + mExtensions[i];
+        }
+    }
 
-	@Override
-	public boolean accept(File pathname) {
-		final String filename = pathname.getName();
-		if (filename.startsWith(".")) {
-			return false;
-		}
+    @Override
+    public boolean accept(File pathname) {
+        final var filename = pathname.getName();
+        if (filename.startsWith(".")) {
+            return false;
+        }
 
-		for (int i = 0; i < mExtensions.length; i++) {
-			final String ext = mExtensions[i];
-			if (filename.endsWith(ext)) {
-				return true;
-			}
-		}
+        for (var i = 0; i < mExtensions.length; i++) {
+            final var ext = mExtensions[i];
+            if (filename.endsWith(ext)) {
+                return true;
+            }
+        }
 
-		return false;
-	}
+        return false;
+    }
 }

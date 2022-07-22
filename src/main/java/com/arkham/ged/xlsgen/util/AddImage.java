@@ -43,19 +43,19 @@ public class AddImage {
     }
 
     public void addImageToSheet(final CellReference cr, final InputStream imageFile, final double w, final double h, final ImageBehaviorType resizeBehaviour, final int imageFormat) throws IOException {
-        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        final var baos = new ByteArrayOutputStream();
         GedUtil.copyIs2Os(imageFile, baos, 8192);
-        final byte[] b = baos.toByteArray();
+        final var b = baos.toByteArray();
 
         @SuppressWarnings("resource")
-        final Workbook wb = mSheet.getWorkbook();
-        final CreationHelper helper = wb.getCreationHelper();
-        final int pictureIdx = wb.addPicture(b, imageFormat);
-        final ClientAnchor anchor = helper.createClientAnchor();
+        final var wb = mSheet.getWorkbook();
+        final var helper = wb.getCreationHelper();
+        final var pictureIdx = wb.addPicture(b, imageFormat);
+        final var anchor = helper.createClientAnchor();
         anchor.setCol1(cr.getCol());
         anchor.setRow1(cr.getRow());
         final Drawing drawing = mSheet.createDrawingPatriarch();
-        final Picture pict = drawing.createPicture(anchor, pictureIdx);
+        final var pict = drawing.createPicture(anchor, pictureIdx);
 
         // final Dimension dim = pict.getImageDimension();
         // final double widthRatio = w/dim.getWidth();

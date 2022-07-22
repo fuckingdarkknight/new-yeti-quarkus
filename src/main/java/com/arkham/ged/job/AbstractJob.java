@@ -39,176 +39,176 @@ import com.arkham.ged.util.GedUtil;
  * @param <T> Scan definition
  */
 public abstract class AbstractJob<T extends ScanFileDef> extends Job implements ISettingsJob {
-	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractJob.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractJob.class);
 
-	private final PropertiesAdapter mPA;
-	private final T mSFD;
-	private int mFrequency;
+    private final PropertiesAdapter mPA;
+    private final T mSFD;
+    private int mFrequency;
 
-	/**
-	 * Constructor AbstractJob
-	 *
-	 * @param name The job name
-	 * @param pa Needed to get file extensions/typmed mappings
-	 * @param sfd The directory definition to scan
-	 */
-	public AbstractJob(final String name, final PropertiesAdapter pa, final T sfd) {
-		super(name);
+    /**
+     * Constructor AbstractJob
+     *
+     * @param name The job name
+     * @param pa Needed to get file extensions/typmed mappings
+     * @param sfd The directory definition to scan
+     */
+    public AbstractJob(final String name, final PropertiesAdapter pa, final T sfd) {
+        super(name);
 
-		mPA = pa;
-		mSFD = sfd;
+        mPA = pa;
+        mSFD = sfd;
 
-		// Default value in XSD : 1s
-		if (sfd != null) {
-			mFrequency = (int) (sfd.getFrequency().doubleValue() * 1000.0);
-		} else {
-			mFrequency = -1;
-		}
+        // Default value in XSD : 1s
+        if (sfd != null) {
+            mFrequency = (int) (sfd.getFrequency().doubleValue() * 1000.0);
+        } else {
+            mFrequency = -1;
+        }
 
-		registerListener(new InterruptedJobListener(this));
-	}
+        registerListener(new InterruptedJobListener(this));
+    }
 
-	/**
-	 * Update MDC, this method should be called from inherits implemented jobs
-	 *
-	 * @see com.arkham.common.scheduler.Job#execute()
-	 */
-	@SuppressWarnings("static-method")
-	protected void initMDC() {
-		GedUtil.initMDC();
-	}
+    /**
+     * Update MDC, this method should be called from inherits implemented jobs
+     *
+     * @see com.arkham.common.scheduler.Job#execute()
+     */
+    @SuppressWarnings("static-method")
+    protected void initMDC() {
+        GedUtil.initMDC();
+    }
 
-	@Override
-	protected boolean shouldExecute() {
-		if (getSFD() != null && getSFD().isActive()) {
-			return super.shouldExecute();
-		}
+    @Override
+    protected boolean shouldExecute() {
+        if (getSFD() != null && getSFD().isActive()) {
+            return super.shouldExecute();
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	@SuppressWarnings("resource")
-	@Override
-	public void execute() throws JobException {
-		if (!getPA().isActive()) {
-			return;
-		}
+    @SuppressWarnings("resource")
+    @Override
+    public void execute() throws JobException {
+        if (!getPA().isActive()) {
+            return;
+        }
 
-		initMDC();
+        initMDC();
 
-		Connection con = null;
-		try {
-			final Timer<TIMERDEF> timer = GedTimerManager.getProvider().create(TIMERDEF.DATABASE_CONNECTION);
-			try {
-				timer.start();
+        Connection con = null;
+        try {
+            final var timer = GedTimerManager.getProvider().create(TIMERDEF.DATABASE_CONNECTION);
+            try {
+                timer.start();
 
-				// By default we can use DB connection but in some cases, no need to create it.
-				if (getSFD().isUsedb()) {
-					con = getDCM().getConnection();
-				}
-			} finally {
-				timer.stopAndPublish();
-			}
+                // By default we can use DB connection but in some cases, no need to create it.
+                if (getSFD().isUsedb()) {
+                    con = getDCM().getConnection();
+                }
+            } finally {
+                timer.stopAndPublish();
+            }
 
-			// Dynamic instance of executor
-			final AbstractExecutor<T> executor = createExecutorInstance(con);
-			if (executor == null) {
-				throw new JobException(createExceptionMessage("Unknown executor"));
-			}
+            // Dynamic instance of executor
+            final var executor = createExecutorInstance(con);
+            if (executor == null) {
+                throw new JobException(createExceptionMessage("Unknown executor"));
+            }
 
-			executor.run();
-		} catch (final Throwable e) { // NOSONAR : il faut tout attraper à ce niveau là
-			LOGGER.error("execute() : ", e);
-		} finally {
-			LoggerMDC.purgeMDC(true);
+            executor.run();
+        } catch (final Throwable e) { // NOSONAR : il faut tout attraper à ce niveau là
+            LOGGER.error("execute() : ", e);
+        } finally {
+            LoggerMDC.purgeMDC(true);
 
-			releaseConnection(con);
-		}
-	}
+            releaseConnection(con);
+        }
+    }
 
-	/**
-	 * @param con The database connection that will be used by the executor for this job run
-	 * @return A new instance of executor as defined by the abstract {@link ScanFileDef}
-	 * @throws ExecutorException
-	 */
-	protected abstract AbstractExecutor<T> createExecutorInstance(Connection con) throws ExecutorException;
+    /**
+     * @param con The database connection that will be used by the executor for this job run
+     * @return A new instance of executor as defined by the abstract {@link ScanFileDef}
+     * @throws ExecutorException
+     */
+    protected abstract AbstractExecutor<T> createExecutorInstance(Connection con) throws ExecutorException;
 
-	private static String createExceptionMessage(final String value) {
-		return "Cannot instantiate the class=" + value + " please consult log for further informations";
-	}
+    private static String createExceptionMessage(final String value) {
+        return "Cannot instantiate the class=" + value + " please consult log for further informations";
+    }
 
-	/**
-	 * Get the job frequency in ms
-	 * <p>
-	 * {@inheritDoc}
-	 *
-	 * @see com.arkham.common.scheduler.Job#getFrequency()
-	 */
-	@Override
-	public int getFrequency() {
-		return mFrequency;
-	}
+    /**
+     * Get the job frequency in ms
+     * <p>
+     * {@inheritDoc}
+     *
+     * @see com.arkham.common.scheduler.Job#getFrequency()
+     */
+    @Override
+    public int getFrequency() {
+        return mFrequency;
+    }
 
-	/**
-	 * @return The {@link ScanFileDef}
-	 */
-	@Override
-	public final T getSFD() {
-		return mSFD;
-	}
+    /**
+     * @return The {@link ScanFileDef}
+     */
+    @Override
+    public final T getSFD() {
+        return mSFD;
+    }
 
-	/**
-	 * @return The {@link DatabaseConnectionManager}
-	 * @throws DatabaseConnectionManagerException
-	 */
-	public final DatabaseConnectionManager getDCM() throws DatabaseConnectionManagerException {
-		return mPA.getDCM();
-	}
+    /**
+     * @return The {@link DatabaseConnectionManager}
+     * @throws DatabaseConnectionManagerException
+     */
+    public final DatabaseConnectionManager getDCM() throws DatabaseConnectionManagerException {
+        return mPA.getDCM();
+    }
 
-	/**
-	 * Release the database connection silently
-	 *
-	 * @param con The databse connection
-	 */
-	protected final void releaseConnection(final Connection con) {
-		if (con != null) {
-			try {
-				getDCM().releaseConnection(con);
-			} catch (final DatabaseConnectionManagerException e) { // NOSONAR
-				LOGGER.error("releaseConnection() : {}", e);
-			}
-		}
-	}
+    /**
+     * Release the database connection silently
+     *
+     * @param con The databse connection
+     */
+    protected final void releaseConnection(final Connection con) {
+        if (con != null) {
+            try {
+                getDCM().releaseConnection(con);
+            } catch (final DatabaseConnectionManagerException e) { // NOSONAR
+                LOGGER.error("releaseConnection() : {}", e);
+            }
+        }
+    }
 
-	/**
-	 * @return The {@link PropertiesAdapter}
-	 */
-	public final PropertiesAdapter getPA() {
-		return mPA;
-	}
+    /**
+     * @return The {@link PropertiesAdapter}
+     */
+    public final PropertiesAdapter getPA() {
+        return mPA;
+    }
 
-	protected class InterruptedJobListener implements IJobListener {
-		private final AbstractJob<T> mJob;
+    protected class InterruptedJobListener implements IJobListener {
+        private final AbstractJob<T> mJob;
 
-		/**
-		 * Constructor InterruptJobListener
-		 *
-		 * @param job
-		 */
-		protected InterruptedJobListener(final AbstractJob<T> job) {
-			mJob = job;
-		}
+        /**
+         * Constructor InterruptJobListener
+         *
+         * @param job
+         */
+        protected InterruptedJobListener(final AbstractJob<T> job) {
+            mJob = job;
+        }
 
-		@Override
-		public void destroy() {
-			// Nothing to do
-		}
+        @Override
+        public void destroy() {
+            // Nothing to do
+        }
 
-		@Override
-		public void eventFired(final BasicEvent<Job, JOB_EVENT> event) {
-			if (event.getType() == JOB_EVENT.INTERRUPTED) {
-				LOGGER.info("eventFired() : stopping Job={}", mJob.getName());
-			}
-		}
-	}
+        @Override
+        public void eventFired(final BasicEvent<Job, JOB_EVENT> event) {
+            if (event.getType() == JOB_EVENT.INTERRUPTED) {
+                LOGGER.info("eventFired() : stopping Job={}", mJob.getName());
+            }
+        }
+    }
 }

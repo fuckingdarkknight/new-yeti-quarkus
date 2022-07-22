@@ -28,27 +28,27 @@ import com.arkham.ged.yaml.ImageBehaviorType;
  * @since 13 févr. 2020
  */
 public class ImageBehaviorTypeDeserializer extends AbstractTypeDeserializer<ImageBehaviorType> {
-	private static final Logger LOGGER = LoggerFactory.getLogger(ImageBehaviorTypeDeserializer.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ImageBehaviorTypeDeserializer.class);
 
-	/**
-	 * Constructor ImageBehaviorTypeDeserializer
-	 *
-	 * @param ea Appender for errors
-	 */
-	public ImageBehaviorTypeDeserializer(final ErrorAppender ea) {
-		super(ea);
-	}
+    /**
+     * Constructor ImageBehaviorTypeDeserializer
+     *
+     * @param ea Appender for errors
+     */
+    public ImageBehaviorTypeDeserializer(final ErrorAppender ea) {
+        super(ea);
+    }
 
-	@Override
-	public ImageBehaviorType deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
-		final String s = p.getText();
+    @Override
+    public ImageBehaviorType deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
+        final var s = p.getText();
 
-		try {
-			return ImageBehaviorType.valueOf(s.toUpperCase());
-		} catch (@SuppressWarnings("unused") final IllegalArgumentException e) { // NOSONAR
-			addError(LOGGER, p, ImageBehaviorType.class, s);
-		}
+        try {
+            return ImageBehaviorType.valueOf(s.toUpperCase());
+        } catch (@SuppressWarnings("unused") final IllegalArgumentException e) { // NOSONAR
+            addError(LOGGER, p, ImageBehaviorType.class, s);
+        }
 
-		return ImageBehaviorType.INCELL;
-	}
+        return ImageBehaviorType.INCELL;
+    }
 }

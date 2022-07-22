@@ -25,48 +25,48 @@ import com.arkham.ged.yaml.RootExcel;
  * @since 6 août 2018
  */
 public class ExcelMetadataBuilder {
-	private final RootExcel mRe;
+    private final RootExcel mRe;
 
-	/**
-	 * Constructor ExcelMetadataBuilder
-	 *
-	 * @param re The root JAXB
-	 */
-	public ExcelMetadataBuilder(RootExcel re) {
-		mRe = re;
-	}
+    /**
+     * Constructor ExcelMetadataBuilder
+     *
+     * @param re The root JAXB
+     */
+    public ExcelMetadataBuilder(RootExcel re) {
+        mRe = re;
+    }
 
-	/**
-	 * Write metadatas (author, title, subject, comments and keywords) to workbook
-	 *
-	 * @param wb The current workbook used to create new styles
-	 */
-	public void write(Workbook wb) {
-		if (wb instanceof HSSFWorkbook) {
-			final GeneralType gt = mRe.getGeneral();
+    /**
+     * Write metadatas (author, title, subject, comments and keywords) to workbook
+     *
+     * @param wb The current workbook used to create new styles
+     */
+    public void write(Workbook wb) {
+        if (wb instanceof HSSFWorkbook) {
+            final var gt = mRe.getGeneral();
 
-			final HSSFWorkbook hwb = (HSSFWorkbook) wb;
-			hwb.createInformationProperties();
-			final SummaryInformation summaryInfo = hwb.getSummaryInformation();
-			if (gt.getAuthor() != null) {
-				summaryInfo.setAuthor(gt.getAuthor());
-			}
+            final var hwb = (HSSFWorkbook) wb;
+            hwb.createInformationProperties();
+            final var summaryInfo = hwb.getSummaryInformation();
+            if (gt.getAuthor() != null) {
+                summaryInfo.setAuthor(gt.getAuthor());
+            }
 
-			if (gt.getTitle() != null) {
-				summaryInfo.setTitle(gt.getTitle());
-			}
+            if (gt.getTitle() != null) {
+                summaryInfo.setTitle(gt.getTitle());
+            }
 
-			if (gt.getSubject() != null) {
-				summaryInfo.setSubject(gt.getSubject());
-			}
+            if (gt.getSubject() != null) {
+                summaryInfo.setSubject(gt.getSubject());
+            }
 
-			if (gt.getComments() != null) {
-				summaryInfo.setComments(gt.getComments());
-			}
+            if (gt.getComments() != null) {
+                summaryInfo.setComments(gt.getComments());
+            }
 
-			if (gt.getKeywords() != null) {
-				summaryInfo.setKeywords(gt.getKeywords());
-			}
-		}
-	}
+            if (gt.getKeywords() != null) {
+                summaryInfo.setKeywords(gt.getKeywords());
+            }
+        }
+    }
 }

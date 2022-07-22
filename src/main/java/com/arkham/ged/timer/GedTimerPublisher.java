@@ -21,16 +21,16 @@ import com.arkham.common.timer.common.ITimerPublisher;
  * @since 29 mai 2015
  */
 class GedTimerPublisher implements ITimerPublisher<TIMERDEF> {
-	@Override
-	public void publish(TIMERDEF timerdef, long elapsed, UNIT unit, double precision) {
-		if (timerdef != null) {
-			final double d = UNIT.convert(elapsed, timerdef.getUnit());
-			if (d > timerdef.getPrecision()) {
-				LoggerMDC.putMDC(timerdef.getKey(), Double.valueOf(d));
-				// Is-it usefull ?
-				LoggerMDC.putMDC(MDC_KEY.ELAPSE_TIME_UNIT, timerdef.getUnit());
-				LoggerMDC.putMDC(MDC_KEY.ELAPSE_TIME_LEVEL, Double.valueOf(timerdef.getPrecision()));
-			}
-		}
-	}
+    @Override
+    public void publish(TIMERDEF timerdef, long elapsed, UNIT unit, double precision) {
+        if (timerdef != null) {
+            final var d = UNIT.convert(elapsed, timerdef.getUnit());
+            if (d > timerdef.getPrecision()) {
+                LoggerMDC.putMDC(timerdef.getKey(), Double.valueOf(d));
+                // Is-it usefull ?
+                LoggerMDC.putMDC(MDC_KEY.ELAPSE_TIME_UNIT, timerdef.getUnit());
+                LoggerMDC.putMDC(MDC_KEY.ELAPSE_TIME_LEVEL, Double.valueOf(timerdef.getPrecision()));
+            }
+        }
+    }
 }

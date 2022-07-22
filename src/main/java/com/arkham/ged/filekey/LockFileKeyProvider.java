@@ -30,42 +30,42 @@ import com.arkham.ged.properties.PropertiesAdapter;
  * @since 10 févr. 2015
  */
 public class LockFileKeyProvider extends FlatFileKeyProvider {
-	@Override
-	public FileKey getKey(File file, Connection con, PropertiesAdapter pa, List<OptionalParameterType> opt) throws FileKeyProviderException {
-		try {
-			FileLock fl = null;
-			try (RandomAccessFile raf = new RandomAccessFile(file, "rw"); FileChannel fc = raf.getChannel()) {
-				fl = fc.tryLock();
+    @Override
+    public FileKey getKey(File file, Connection con, PropertiesAdapter pa, List<OptionalParameterType> opt) throws FileKeyProviderException {
+        try {
+            FileLock fl = null;
+            try (var raf = new RandomAccessFile(file, "rw"); var fc = raf.getChannel()) {
+                fl = fc.tryLock();
 
-				final ByteBuffer bb = ByteBuffer.allocate((int) file.length());
-				fc.read(bb);
+                final var bb = ByteBuffer.allocate((int) file.length());
+                fc.read(bb);
 
-				final FlatProp p = new FlatProp();
-				try (StringReader reader = new StringReader(new String(bb.array()))) {
-					p.load(reader);
-				}
+                final var p = new FlatProp();
+                try (var reader = new StringReader(new String(bb.array()))) {
+                    p.load(reader);
+                }
 
-				// If file is empty, it should have ever been processed : not an error case
-				if (p.isEmpty()) {
-					return null;
-				}
+                // If file is empty, it should have ever been processed : not an error case
+                if (p.isEmpty()) {
+                    return null;
+                }
 
-				// clear the file
-				fc.truncate(0);
+                // clear the file
+                fc.truncate(0);
 
-				return getFileKey(p);
-			} finally {
-				if (fl != null) {
-					fl.release();
-				}
-			}
-		} catch (final IOException e) {
-			throw new FileKeyProviderException(e);
-		}
-	}
+                return getFileKey(p);
+            } finally {
+                if (fl != null) {
+                    fl.release();
+                }
+            }
+        } catch (final IOException e) {
+            throw new FileKeyProviderException(e);
+        }
+    }
 
-	@Override
-	public boolean isRefFile() {
-		return true;
-	}
+    @Override
+    public boolean isRefFile() {
+        return true;
+    }
 }

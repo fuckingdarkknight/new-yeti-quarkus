@@ -33,22 +33,22 @@ import com.arkham.ged.xlsgen.XlsgenException;
  * @since 18 juil. 2018
  */
 public class GenerateExcelFileAction extends AbstractAction<InputScanFileDef, File> {
-	private static final Logger LOGGER = LoggerFactory.getLogger(GenerateExcelFileAction.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(GenerateExcelFileAction.class);
 
-	@Override
-	public List<DocumentLinkBean> execute(File file, FileKey fk, Connection con, PropertiesAdapter pa, List<DocumentLinkBean> bean, InputScanFileDef sfd) throws ActionException {
-		try {
-			final String charset = getParamStringValue(pa, "charset", "UTF-8");
-			final Path path = file.toPath();
+    @Override
+    public List<DocumentLinkBean> execute(File file, FileKey fk, Connection con, PropertiesAdapter pa, List<DocumentLinkBean> bean, InputScanFileDef sfd) throws ActionException {
+        try {
+            final var charset = getParamStringValue(pa, "charset", "UTF-8");
+            final var path = file.toPath();
 
-			LOGGER.info("execute() : processing YAML file {} using charset {}", path.toAbsolutePath(), charset);
+            LOGGER.info("execute() : processing YAML file {} using charset {}", path.toAbsolutePath(), charset);
 
-			final ExcelGenerator eg = new ExcelGenerator(path, charset);
-			eg.generate(con);
-		} catch (final XlsgenException e) {
-			throw new ActionException(e);
-		}
+            final var eg = new ExcelGenerator(path, charset);
+            eg.generate(con);
+        } catch (final XlsgenException e) {
+            throw new ActionException(e);
+        }
 
-		return bean;
-	}
+        return bean;
+    }
 }

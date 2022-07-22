@@ -30,74 +30,74 @@ import com.arkham.ged.util.GedUtil;
  * @since 10 févr. 2015
  */
 public class UnknownFileKeyProvider extends FileKeyProvider {
-	@Override
-	public FileKey getKey(File file, Connection con, PropertiesAdapter pa, List<OptionalParameterType> optl) throws FileKeyProviderException {
-		String codsocp = null;
-		String typtiep = null;
-		String nomclep = null; // "nomcle" prefix
-		String sequence = null;
-		final List<OptionalParameterType> localOptl = getParams();
-		if (localOptl != null) {
-			for (final OptionalParameterType opt : localOptl) {
-				final String name = opt.getName();
-				switch (name) {
-					case "codsoc":
-						codsocp = opt.getValue();
-						break;
-					case "typtie":
-						typtiep = opt.getValue();
-						break;
-					case "nomcle":
-						nomclep = opt.getValue();
-						break;
-					case "sequence":
-						sequence = opt.getValue();
-						break;
-					default:
-						break;
-				}
-			}
-		}
+    @Override
+    public FileKey getKey(File file, Connection con, PropertiesAdapter pa, List<OptionalParameterType> optl) throws FileKeyProviderException {
+        String codsocp = null;
+        String typtiep = null;
+        String nomclep = null; // "nomcle" prefix
+        String sequence = null;
+        final var localOptl = getParams();
+        if (localOptl != null) {
+            for (final OptionalParameterType opt : localOptl) {
+                final var name = opt.getName();
+                switch (name) {
+                    case "codsoc":
+                        codsocp = opt.getValue();
+                        break;
+                    case "typtie":
+                        typtiep = opt.getValue();
+                        break;
+                    case "nomcle":
+                        nomclep = opt.getValue();
+                        break;
+                    case "sequence":
+                        sequence = opt.getValue();
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
 
-		// Settings are bad !!!
-		if (codsocp == null || typtiep == null || nomclep == null) {
-			throw new FileKeyProviderException(GedMessages.Scanner.invalidSettings);
-		}
+        // Settings are bad !!!
+        if (codsocp == null || typtiep == null || nomclep == null) {
+            throw new FileKeyProviderException(GedMessages.Scanner.invalidSettings);
+        }
 
-		final int codsoc = Integer.parseInt(codsocp);
+        final var codsoc = Integer.parseInt(codsocp);
 
-		// Determine NOMCLE by prefix and oracle sequence
-		if (sequence == null) { // NOSONAR
-			sequence = "MEDIA_BLOB_SEQ";
-		}
+        // Determine NOMCLE by prefix and oracle sequence
+        if (sequence == null) { // NOSONAR
+            sequence = "MEDIA_BLOB_SEQ";
+        }
 
-		final int index = getNextVal(con, sequence);
-		if (index == -1) {
-			throw new FileKeyProviderException(GedMessages.Scanner.invalidSequence);
-		}
-		final String nomcle = nomclep + index;
+        final var index = getNextVal(con, sequence);
+        if (index == -1) {
+            throw new FileKeyProviderException(GedMessages.Scanner.invalidSequence);
+        }
+        final var nomcle = nomclep + index;
 
-		String filename = file.getName();
-		if (filename.endsWith(PROCEXT)) {
-			filename = GedUtil.removeFileExtension(filename);
-		}
+        var filename = file.getName();
+        if (filename.endsWith(PROCEXT)) {
+            filename = GedUtil.removeFileExtension(filename);
+        }
 
-		return new FileKey(codsoc, typtiep, nomcle, filename);
-	}
+        return new FileKey(codsoc, typtiep, nomcle, filename);
+    }
 
-	private static int getNextVal(Connection con, String sequence) throws FileKeyProviderException {
-		try (PreparedStatement ps = con.prepareStatement("SELECT " + sequence + ".NEXTVAL FROM DUAL")) {
-			try (ResultSet rs = ps.executeQuery()) {
-				rs.next();
-				return rs.getInt(1);
-			}
-		} catch (final SQLException e) {
-			throw new FileKeyProviderException(e);
-		}
-	}
+    private static int getNextVal(Connection con, String sequence) throws FileKeyProviderException {
+        try (var ps = con.prepareStatement("SELECT " + sequence + ".NEXTVAL FROM DUAL")) {
+            try (var rs = ps.executeQuery()) {
+                rs.next();
+                return rs.getInt(1);
+            }
+        } catch (final SQLException e) {
+            throw new FileKeyProviderException(e);
+        }
+    }
 
-	@Override
-	public boolean isRefFile() {
-		return false;
-	}
+    @Override
+    public boolean isRefFile() {
+        return false;
+    }
 }

@@ -21,21 +21,21 @@ package com.arkham.ged.xlsgen.transformer;
  * @since 19 juil. 2018
  */
 public class NumberTransformer implements ITransformer<String> {
-	@Override
-	public Object transform(final String value) {
-		if (value == null) {
-			return 0.0d;
-		}
+    @Override
+    public Object transform(final String value) {
+        if (value == null) {
+            return 0.0d;
+        }
 
-		final String s = value.trim();
-		if (s.length() > 0) {
-			try {
-				return Double.valueOf(s);
-			} catch (@SuppressWarnings("unused") final NumberFormatException e) { // NOSONAR
-				// Will return default value
-			}
-		}
+        final var s = value.trim();
+        if (s.length() > 0) {
+            try {
+                return Double.valueOf(s);
+            } catch (@SuppressWarnings("unused") final NumberFormatException e) { // NOSONAR
+                // Will return default value
+            }
+        }
 
-		return 0.0d;
-	}
+        return 0.0d;
+    }
 }

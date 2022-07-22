@@ -74,17 +74,17 @@ public class ExcelGeneratorRest {
     public byte[] generate(@Context final HttpServerRequest req, final String message) {
         try {
             // Assume UTF-8 if not specified
-            final String cs = parseCharset(req.getHeader("Content-Type"));
+            final var cs = parseCharset(req.getHeader("Content-Type"));
 
-            final java.nio.file.Path temp = Files.createTempFile("yeti_", ".yaml");
+            final var temp = Files.createTempFile("yeti_", ".yaml");
             try (Writer w = new OutputStreamWriter(Files.newOutputStream(temp), cs)) {
                 w.write(message);
             }
 
-            final ExcelGenerator eg = new ExcelGenerator(temp, cs);
-            final File result = eg.generate(null);
+            final var eg = new ExcelGenerator(temp, cs);
+            final var result = eg.generate(null);
 
-            try (InputStream is = Files.newInputStream(result.toPath()); ByteArrayOutputStream baos = new ByteArrayOutputStream((int) result.length())) {
+            try (var is = Files.newInputStream(result.toPath()); var baos = new ByteArrayOutputStream((int) result.length())) {
                 GedUtil.copyIs2Os(is, baos, 8192);
 
                 return baos.toByteArray();
@@ -108,10 +108,10 @@ public class ExcelGeneratorRest {
     @Timed(name = "checksTimer", description = "A measure of how long it takes to perform the primality test.", unit = MetricUnits.MILLISECONDS)
     public byte[] generateDirect(final String message) {
         try {
-            final ExcelGenerator eg = new ExcelGenerator(message);
-            final File result = eg.generate(null);
+            final var eg = new ExcelGenerator(message);
+            final var result = eg.generate(null);
 
-            try (InputStream is = Files.newInputStream(result.toPath()); ByteArrayOutputStream baos = new ByteArrayOutputStream((int) result.length())) {
+            try (var is = Files.newInputStream(result.toPath()); var baos = new ByteArrayOutputStream((int) result.length())) {
                 GedUtil.copyIs2Os(is, baos, 8192);
 
                 return baos.toByteArray();
@@ -135,8 +135,8 @@ public class ExcelGeneratorRest {
     @Timed(name = "checksTimer", description = "A measure of how long it takes to perform the primality test.", unit = MetricUnits.MILLISECONDS)
     public InputStream generateDirectStream(final String message) {
         try {
-            final ExcelGenerator eg = new ExcelGenerator(message);
-            final File result = eg.generate(null);
+            final var eg = new ExcelGenerator(message);
+            final var result = eg.generate(null);
 
             return Files.newInputStream(result.toPath());
         } catch (final IOException | XlsgenException e) {

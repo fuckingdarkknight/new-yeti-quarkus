@@ -31,61 +31,61 @@ import javax.imageio.ImageIO;
  * @since 10 févr. 2015
  */
 public final class GedImage {
-	private GedImage() {
-		// Private because it's an utility class, so we should't get an instance of this class
-	}
+    private GedImage() {
+        // Private because it's an utility class, so we should't get an instance of this class
+    }
 
-	private static BufferedImage scale(BufferedImage bImage, int maxDimension) {
-		int destWidth = bImage.getWidth();
-		int destHeight = bImage.getHeight();
-		final double maxDim = Math.max(destWidth, destHeight);
-		final double ratio = maxDim / maxDimension;
-		destWidth = (int) (destWidth / ratio);
-		destHeight = (int) (destHeight / ratio);
+    private static BufferedImage scale(BufferedImage bImage, int maxDimension) {
+        var destWidth = bImage.getWidth();
+        var destHeight = bImage.getHeight();
+        final double maxDim = Math.max(destWidth, destHeight);
+        final var ratio = maxDim / maxDimension;
+        destWidth = (int) (destWidth / ratio);
+        destHeight = (int) (destHeight / ratio);
 
-		// créer l'image de destination
-		final GraphicsConfiguration configuration = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
-		final BufferedImage bImageNew = configuration.createCompatibleImage(destWidth, destHeight);
-		final Graphics2D graphics = bImageNew.createGraphics();
-		graphics.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-		graphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
-		// dessiner l'image de destination
-		graphics.drawImage(bImage, 0, 0, destWidth, destHeight, 0, 0, bImage.getWidth(), bImage.getHeight(), null);
-		graphics.dispose();
+        // créer l'image de destination
+        final var configuration = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
+        final var bImageNew = configuration.createCompatibleImage(destWidth, destHeight);
+        final var graphics = bImageNew.createGraphics();
+        graphics.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+        graphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
+        // dessiner l'image de destination
+        graphics.drawImage(bImage, 0, 0, destWidth, destHeight, 0, 0, bImage.getWidth(), bImage.getHeight(), null);
+        graphics.dispose();
 
-		return bImageNew;
-	}
+        return bImageNew;
+    }
 
-	/**
-	 * @param data Input datas
-	 * @param format
-	 * @param maxDim
-	 * @return The resized datas
-	 * @throws IOException
-	 */
-	public static byte[] resizeImage(byte[] data, String format, int maxDim) throws IOException {
-		try (ByteArrayOutputStream baos = new ByteArrayOutputStream(); ByteArrayInputStream bais = new ByteArrayInputStream(data)) {
-			final BufferedImage imgBase = ImageIO.read(bais);
-			// Metadata contenus dans les images : http://johnbokma.com/java/obtaining-image-metadata.html
-			final BufferedImage imgResized = scale(imgBase, maxDim);
-			ImageIO.write(imgResized, format, baos);
-			baos.flush();
+    /**
+     * @param data Input datas
+     * @param format
+     * @param maxDim
+     * @return The resized datas
+     * @throws IOException
+     */
+    public static byte[] resizeImage(byte[] data, String format, int maxDim) throws IOException {
+        try (var baos = new ByteArrayOutputStream(); var bais = new ByteArrayInputStream(data)) {
+            final var imgBase = ImageIO.read(bais);
+            // Metadata contenus dans les images : http://johnbokma.com/java/obtaining-image-metadata.html
+            final var imgResized = scale(imgBase, maxDim);
+            ImageIO.write(imgResized, format, baos);
+            baos.flush();
 
-			return baos.toByteArray();
-		}
-	}
+            return baos.toByteArray();
+        }
+    }
 
-	/**
-	 * @param data
-	 * @param writer
-	 * @param format
-	 * @param maxDim
-	 * @throws IOException
-	 */
-	public static void resizeImage(InputStream data, OutputStream writer, String format, int maxDim) throws IOException {
-		final BufferedImage imgBase = ImageIO.read(data);
-		final BufferedImage imgResized = scale(imgBase, maxDim);
-		ImageIO.write(imgResized, format, writer);
-		writer.flush();
-	}
+    /**
+     * @param data
+     * @param writer
+     * @param format
+     * @param maxDim
+     * @throws IOException
+     */
+    public static void resizeImage(InputStream data, OutputStream writer, String format, int maxDim) throws IOException {
+        final var imgBase = ImageIO.read(data);
+        final var imgResized = scale(imgBase, maxDim);
+        ImageIO.write(imgResized, format, writer);
+        writer.flush();
+    }
 }

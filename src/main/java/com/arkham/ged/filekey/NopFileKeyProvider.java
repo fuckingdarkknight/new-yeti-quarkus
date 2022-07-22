@@ -25,13 +25,13 @@ import com.arkham.ged.properties.PropertiesAdapter;
  * @since 24 janv. 2020
  */
 public class NopFileKeyProvider extends FileKeyProvider {
-	@Override
-	public FileKey getKey(File file, Connection con, PropertiesAdapter pa, List<OptionalParameterType> opt) throws FileKeyProviderException {
-		return new FileKey(0, "xxx", "xxx", file.getName());
-	}
+    @Override
+    public FileKey getKey(File file, Connection con, PropertiesAdapter pa, List<OptionalParameterType> opt) throws FileKeyProviderException {
+        return new FileKey(0, "xxx", "xxx", file.getName());
+    }
 
-	@Override
-	public boolean isRefFile() {
-		return false;
-	}
+    @Override
+    public boolean isRefFile() {
+        return false;
+    }
 }

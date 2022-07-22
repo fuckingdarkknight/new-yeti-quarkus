@@ -24,129 +24,129 @@ import java.sql.Connection;
  * @param <O> Optional parameters
  */
 abstract class AbstractStreamProtocolAdapter<T, O> implements StreamProtocolAdapter<T, O> {
-	private T mValue;
-	private InputStream mInputStream;
-	private byte[] mArray;
-	private String mStreamName;
-	private String mCharset;
-	private String mContentType;
-	private int mStatusCode;
+    private T mValue;
+    private InputStream mInputStream;
+    private byte[] mArray;
+    private String mStreamName;
+    private String mCharset;
+    private String mContentType;
+    private int mStatusCode;
 
-	private O mOptions;
-	private Connection mConnection;
+    private O mOptions;
+    private Connection mConnection;
 
-	AbstractStreamProtocolAdapter(final T value) {
-		mValue = value;
-	}
+    AbstractStreamProtocolAdapter(final T value) {
+        mValue = value;
+    }
 
-	void initInner(final Connection con, final O options) {
-		mConnection = con;
-		mOptions = options;
-	}
+    void initInner(final Connection con, final O options) {
+        mConnection = con;
+        mOptions = options;
+    }
 
-	void setStream(final InputStream inputStream) {
-		mInputStream = inputStream;
-	}
+    void setStream(final InputStream inputStream) {
+        mInputStream = inputStream;
+    }
 
-	void setArray(final byte[] array) {
-		mArray = array; // NOSONAR
-	}
+    void setArray(final byte[] array) {
+        mArray = array; // NOSONAR
+    }
 
-	void setStreamName(final String streamName) {
-		mStreamName = streamName;
-	}
+    void setStreamName(final String streamName) {
+        mStreamName = streamName;
+    }
 
-	void setValue(final T value) {
-		mValue = value;
-	}
+    void setValue(final T value) {
+        mValue = value;
+    }
 
-	/**
-	 * @param charset the charset to set
-	 */
-	void setCharset(final String charset) {
-		mCharset = charset;
-	}
+    /**
+     * @param charset the charset to set
+     */
+    void setCharset(final String charset) {
+        mCharset = charset;
+    }
 
-	/**
-	 * @param contentType the contentType to set
-	 */
-	void setContentType(final String contentType) {
-		mContentType = contentType;
-	}
+    /**
+     * @param contentType the contentType to set
+     */
+    void setContentType(final String contentType) {
+        mContentType = contentType;
+    }
 
-	/**
-	 * @param statusCode the statusCode to set
-	 */
-	void setStatusCode(final int statusCode) {
-		mStatusCode = statusCode;
-	}
+    /**
+     * @param statusCode the statusCode to set
+     */
+    void setStatusCode(final int statusCode) {
+        mStatusCode = statusCode;
+    }
 
-	@Override
-	public InputStream getStream() throws StreamProtocolException {
-		return mInputStream;
-	}
+    @Override
+    public InputStream getStream() throws StreamProtocolException {
+        return mInputStream;
+    }
 
-	@Override
-	public byte[] getArray() throws StreamProtocolException {
-		return mArray; // NOSONAR
-	}
+    @Override
+    public byte[] getArray() throws StreamProtocolException {
+        return mArray; // NOSONAR
+    }
 
-	@Override
-	public String getStreamName() {
-		return mStreamName;
-	}
+    @Override
+    public String getStreamName() {
+        return mStreamName;
+    }
 
-	@Override
-	public T getValue() {
-		return mValue;
-	}
+    @Override
+    public T getValue() {
+        return mValue;
+    }
 
-	@Override
-	public void close() throws IOException {
-		if (mInputStream != null) {
-			mInputStream.close();
-		}
-	}
+    @Override
+    public void close() throws IOException {
+        if (mInputStream != null) {
+            mInputStream.close();
+        }
+    }
 
-	/**
-	 * If charset if not known, assume that we process UTF-8
-	 *
-	 * @return the charset
-	 */
-	@Override
-	public String getCharset() {
-		if (mCharset == null) {
-			return "UTF-8";
-		}
+    /**
+     * If charset if not known, assume that we process UTF-8
+     *
+     * @return the charset
+     */
+    @Override
+    public String getCharset() {
+        if (mCharset == null) {
+            return "UTF-8";
+        }
 
-		return mCharset;
-	}
+        return mCharset;
+    }
 
-	/**
-	 * @return the contentType
-	 */
-	@Override
-	public String getContentType() {
-		return mContentType;
-	}
+    /**
+     * @return the contentType
+     */
+    @Override
+    public String getContentType() {
+        return mContentType;
+    }
 
-	/**
-	 * @return the options
-	 */
-	@Override
-	public O getOptions() {
-		return mOptions;
-	}
+    /**
+     * @return the options
+     */
+    @Override
+    public O getOptions() {
+        return mOptions;
+    }
 
-	protected Connection getConnection() {
-		return mConnection;
-	}
+    protected Connection getConnection() {
+        return mConnection;
+    }
 
-	/**
-	 * @return the statusCode
-	 */
-	@Override
-	public int getStatusCode() {
-		return mStatusCode;
-	}
+    /**
+     * @return the statusCode
+     */
+    @Override
+    public int getStatusCode() {
+        return mStatusCode;
+    }
 }

@@ -30,64 +30,64 @@ import com.arkham.ged.util.GedUtil;
  * @since 28 mai 2015
  */
 public class EditiqueEventByNameFileKeyProvider extends FileKeyProvider {
-	private static final Logger LOGGER = LoggerFactory.getLogger(EditiqueEventByNameFileKeyProvider.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(EditiqueEventByNameFileKeyProvider.class);
 
-	@Override
-	public FileKey getKey(File file, Connection con, PropertiesAdapter pa, List<OptionalParameterType> opt) throws FileKeyProviderException {
-		// The file is ever renamed, we have to get its name without extension in order to decode it
-		// Eg. : PRO1023AG333.jpg_tmp => filename=PRO1023AG333.jpg
-		// Sample of use : 121_ACDE_666.pdf : codsoc_achvte+typeve_numeve
-		String filename = file.getName();
+    @Override
+    public FileKey getKey(File file, Connection con, PropertiesAdapter pa, List<OptionalParameterType> opt) throws FileKeyProviderException {
+        // The file is ever renamed, we have to get its name without extension in order to decode it
+        // Eg. : PRO1023AG333.jpg_tmp => filename=PRO1023AG333.jpg
+        // Sample of use : 121_ACDE_666.pdf : codsoc_achvte+typeve_numeve
+        var filename = file.getName();
 
-		// No others informations than primary key, so we use the "basic" constructor.
-		// Hack : the file name is ended by ".processing" so it's a rename file scanner that is used. The fk need the real and base file name !
-		if (filename.endsWith(PROCEXT)) {
-			filename = GedUtil.removeFileExtension(filename);
-		}
+        // No others informations than primary key, so we use the "basic" constructor.
+        // Hack : the file name is ended by ".processing" so it's a rename file scanner that is used. The fk need the real and base file name !
+        if (filename.endsWith(PROCEXT)) {
+            filename = GedUtil.removeFileExtension(filename);
+        }
 
-		final int dotPos = filename.lastIndexOf('.');
-		if (dotPos != -1) {
-			try {
-				final String fn = filename.substring(0, dotPos);
-				if (fn.length() < 8) {
-					LOGGER.info("getKey() : cannot decode file {} with {} - length issue", file.getName(), getClass().getSimpleName());
-					return null;
-				}
+        final var dotPos = filename.lastIndexOf('.');
+        if (dotPos != -1) {
+            try {
+                final var fn = filename.substring(0, dotPos);
+                if (fn.length() < 8) {
+                    LOGGER.info("getKey() : cannot decode file {} with {} - length issue", file.getName(), getClass().getSimpleName());
+                    return null;
+                }
 
-				final String[] items = fn.split("_");
-				if (items.length < 3) {
-					LOGGER.info("getKey() : cannot decode file {} with {} - underscore issue", file.getName(), getClass().getSimpleName());
-					return null;
-				}
+                final var items = fn.split("_");
+                if (items.length < 3) {
+                    LOGGER.info("getKey() : cannot decode file {} with {} - underscore issue", file.getName(), getClass().getSimpleName());
+                    return null;
+                }
 
-				final String codsoc = items[0];
-				final String achvtetypeve = items[1];
-				String numeve = items[2];
+                final var codsoc = items[0];
+                final var achvtetypeve = items[1];
+                var numeve = items[2];
 
-				if (achvtetypeve.length() < 4) {
-					LOGGER.info("getKey() : cannot decode file {} with {} - ACHVTE+TYPEVE issue", file.getName(), getClass().getSimpleName());
-					return null;
-				}
+                if (achvtetypeve.length() < 4) {
+                    LOGGER.info("getKey() : cannot decode file {} with {} - ACHVTE+TYPEVE issue", file.getName(), getClass().getSimpleName());
+                    return null;
+                }
 
-				final String achvte = achvtetypeve.substring(0, 1);
-				final String typeve = achvtetypeve.substring(1, 4);
+                final var achvte = achvtetypeve.substring(0, 1);
+                final var typeve = achvtetypeve.substring(1, 4);
 
-				if (numeve.indexOf('-') > -1) {
-					numeve = numeve.substring(0, numeve.indexOf('-'));
-				}
-				final String keydoc = achvte + typeve + String.format("%09d", Integer.valueOf(numeve));
+                if (numeve.indexOf('-') > -1) {
+                    numeve = numeve.substring(0, numeve.indexOf('-'));
+                }
+                final var keydoc = achvte + typeve + String.format("%09d", Integer.valueOf(numeve));
 
-				return new FileKey(Integer.parseInt(codsoc), "EVE", keydoc, filename);
-			} catch (final IllegalArgumentException e) {
-				throw new FileKeyProviderException(e, GedMessages.Scanner.decodingError);
-			}
-		}
+                return new FileKey(Integer.parseInt(codsoc), "EVE", keydoc, filename);
+            } catch (final IllegalArgumentException e) {
+                throw new FileKeyProviderException(e, GedMessages.Scanner.decodingError);
+            }
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	@Override
-	public boolean isRefFile() {
-		return false;
-	}
+    @Override
+    public boolean isRefFile() {
+        return false;
+    }
 }

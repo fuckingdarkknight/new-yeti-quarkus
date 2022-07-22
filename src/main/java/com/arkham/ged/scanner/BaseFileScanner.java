@@ -31,60 +31,60 @@ import com.arkham.ged.timer.MDC_KEY;
  * @since 10 févr. 2015
  */
 public class BaseFileScanner extends AbstractFileScanner {
-	private static final Logger LOGGER = LoggerFactory.getLogger(BaseFileScanner.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BaseFileScanner.class);
 
-	private final FileFilter mFileFilter;
+    private final FileFilter mFileFilter;
 
-	/**
-	 * Constructor BaseFileScanner
-	 *
-	 * @param sfd The scan file settings
-	 */
-	public BaseFileScanner(ScanFileDef sfd) {
-		super(sfd);
+    /**
+     * Constructor BaseFileScanner
+     *
+     * @param sfd The scan file settings
+     */
+    public BaseFileScanner(ScanFileDef sfd) {
+        super(sfd);
 
-		mFileFilter = new FilenameExtensionFilter("ref");
-	}
+        mFileFilter = new FilenameExtensionFilter("ref");
+    }
 
-	@Override
-	public File[] scan() {
-		final String basedir = getSFD().getDir();
+    @Override
+    public File[] scan() {
+        final var basedir = getSFD().getDir();
 
-		File[] files = null;
-		final File directory = new File(basedir);
-		// Directory does not exist : create it
-		if (!directory.exists()) {
-			LOGGER.warn(DIR_DNE_CREATE, basedir);
+        File[] files = null;
+        final var directory = new File(basedir);
+        // Directory does not exist : create it
+        if (!directory.exists()) {
+            LOGGER.warn(DIR_DNE_CREATE, basedir);
 
-			final boolean res = directory.mkdirs();
-			if (res) {
-				LOGGER.info(DIR_CREATED, basedir);
-			} else {
-				LOGGER.info(DIR_NOT_CREATED, basedir);
-			}
-		}
+            final var res = directory.mkdirs();
+            if (res) {
+                LOGGER.info(DIR_CREATED, basedir);
+            } else {
+                LOGGER.info(DIR_NOT_CREATED, basedir);
+            }
+        }
 
-		if (!directory.exists() || !directory.isDirectory()) {
-			LOGGER.warn(DIR_DNE, basedir);
-		} else {
-			final FileFilter ff = getFileFilter();
+        if (!directory.exists() || !directory.isDirectory()) {
+            LOGGER.warn(DIR_DNE, basedir);
+        } else {
+            final var ff = getFileFilter();
 
-			final Chrono chrono = Chrono.getChrono();
-			try {
-				chrono.start();
+            final var chrono = Chrono.getChrono();
+            try {
+                chrono.start();
 
-				files = directory.listFiles(ff);
-			} finally {
-				chrono.stop();
+                files = directory.listFiles(ff);
+            } finally {
+                chrono.stop();
 
-				LoggerMDC.putMDC(MDC_KEY.SCANNING, chrono.getElapsed(UNIT.MS));
-			}
-		}
+                LoggerMDC.putMDC(MDC_KEY.SCANNING, chrono.getElapsed(UNIT.MS));
+            }
+        }
 
-		return files;
-	}
+        return files;
+    }
 
-	protected FileFilter getFileFilter() {
-		return mFileFilter;
-	}
+    protected FileFilter getFileFilter() {
+        return mFileFilter;
+    }
 }

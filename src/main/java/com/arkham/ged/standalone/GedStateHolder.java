@@ -25,42 +25,42 @@ import com.arkham.common.scheduler.Scheduler.SHUTDOWN_TYPE;
  * @since 23 mars 2018
  */
 public class GedStateHolder implements IDestroyable {
-	private final Scheduler mScheduler;
-	private final List<IDestroyable> mDestroyable;
+    private final Scheduler mScheduler;
+    private final List<IDestroyable> mDestroyable;
 
-	/**
-	 * Constructor GedStateHolder
-	 *
-	 * @param scheduler The main scheduler of Ged
-	 */
-	GedStateHolder(Scheduler scheduler) {
-		mScheduler = scheduler;
-		mDestroyable = new ArrayList<>();
-	}
+    /**
+     * Constructor GedStateHolder
+     *
+     * @param scheduler The main scheduler of Ged
+     */
+    GedStateHolder(Scheduler scheduler) {
+        mScheduler = scheduler;
+        mDestroyable = new ArrayList<>();
+    }
 
-	/**
-	 * @return the scheduler
-	 */
-	public Scheduler getScheduler() {
-		return mScheduler;
-	}
+    /**
+     * @return the scheduler
+     */
+    public Scheduler getScheduler() {
+        return mScheduler;
+    }
 
-	/**
-	 * Add a new destroyable objet to the inner list
-	 *
-	 * @param destroyable Any object that implements {@link IDestroyable}
-	 */
-	void addDestroyable(IDestroyable destroyable) {
-		mDestroyable.add(destroyable);
-	}
+    /**
+     * Add a new destroyable objet to the inner list
+     *
+     * @param destroyable Any object that implements {@link IDestroyable}
+     */
+    void addDestroyable(IDestroyable destroyable) {
+        mDestroyable.add(destroyable);
+    }
 
-	@Override
-	public void destroy() {
-		for (final IDestroyable destroyable : mDestroyable) {
-			destroyable.destroy();
-		}
+    @Override
+    public void destroy() {
+        for (final IDestroyable destroyable : mDestroyable) {
+            destroyable.destroy();
+        }
 
-		// Stop scheduler
-		mScheduler.shutdown(SHUTDOWN_TYPE.ABORT);
-	}
+        // Stop scheduler
+        mScheduler.shutdown(SHUTDOWN_TYPE.ABORT);
+    }
 }

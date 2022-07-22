@@ -31,48 +31,48 @@ import com.arkham.ged.properties.PropertiesAdapter;
  * @see LockFileExecutor
  */
 public class RenameFileExecutor extends ImportFileExecutor {
-	private static final Logger LOGGER = LoggerFactory.getLogger(RenameFileExecutor.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(RenameFileExecutor.class);
 
-	/**
-	 * Constructor RenameFileExecutor
-	 *
-	 * @param connection Database connection
-	 * @param pa The properties adapter
-	 * @param sfd Scan definition
-	 * @throws ExecutorException Generic exception
-	 */
-	public RenameFileExecutor(final Connection connection, final PropertiesAdapter pa, final InputScanFileDef sfd) throws ExecutorException {
-		super(connection, pa, sfd);
-	}
+    /**
+     * Constructor RenameFileExecutor
+     *
+     * @param connection Database connection
+     * @param pa The properties adapter
+     * @param sfd Scan definition
+     * @throws ExecutorException Generic exception
+     */
+    public RenameFileExecutor(final Connection connection, final PropertiesAdapter pa, final InputScanFileDef sfd) throws ExecutorException {
+        super(connection, pa, sfd);
+    }
 
-	@Override
-	protected File beforeProcessFile(final File file) throws IOException {
-		try {
-			// On renomme le fichier ... si ça fonctionne, c'est qu'on peut traiter. Dans le cas contraire, on a un lock
-			// posé par l'OS, ce n'est pas un cas d'erreur : le fichier est en train d'être écrit par un autre process
-			// ou alors une autre JVM est en train de le lire aussi.
-			final File renamed = new File(file.getParentFile(), file.getName() + FileKeyProvider.PROCEXT);
-			if (file.renameTo(renamed)) {
-				LOGGER.info("  * file successfully renamed={}", renamed.getCanonicalPath());
-				return renamed;
-			}
+    @Override
+    protected File beforeProcessFile(final File file) throws IOException {
+        try {
+            // On renomme le fichier ... si ça fonctionne, c'est qu'on peut traiter. Dans le cas contraire, on a un lock
+            // posé par l'OS, ce n'est pas un cas d'erreur : le fichier est en train d'être écrit par un autre process
+            // ou alors une autre JVM est en train de le lire aussi.
+            final var renamed = new File(file.getParentFile(), file.getName() + FileKeyProvider.PROCEXT);
+            if (file.renameTo(renamed)) {
+                LOGGER.info("  * file successfully renamed={}", renamed.getCanonicalPath());
+                return renamed;
+            }
 
-			LOGGER.info("  * file cannot be renamed (usually locked by another process)={}", file.getCanonicalPath());
-		} catch (@SuppressWarnings("unused") final SecurityException e) { // NOSONAR
-			// Peut se produire si on ne peut pas renommer le fichier pour des problèmes de droits (RW ...).
-			LOGGER.error("beforeProcessFile(File) : file={} unable to rename because of RW rights on this file", file.getName());
-		}
+            LOGGER.info("  * file cannot be renamed (usually locked by another process)={}", file.getCanonicalPath());
+        } catch (@SuppressWarnings("unused") final SecurityException e) { // NOSONAR
+            // Peut se produire si on ne peut pas renommer le fichier pour des problèmes de droits (RW ...).
+            LOGGER.error("beforeProcessFile(File) : file={} unable to rename because of RW rights on this file", file.getName());
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	@Override
-	protected void beforeIntegrate(final File file, final FileKey fk) throws ExecutorException {
-		// Nothing to do
-	}
+    @Override
+    protected void beforeIntegrate(final File file, final FileKey fk) throws ExecutorException {
+        // Nothing to do
+    }
 
-	@Override
-	protected void afterIntegrate(final File file, final List<DocumentLinkBean> bean) throws ExecutorException {
-		// Nothing to do
-	}
+    @Override
+    protected void afterIntegrate(final File file, final List<DocumentLinkBean> bean) throws ExecutorException {
+        // Nothing to do
+    }
 }

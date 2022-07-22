@@ -28,27 +28,27 @@ import com.arkham.ged.yaml.CellValueType;
  * @since 13 févr. 2020
  */
 public class CellValueTypeDeserializer extends AbstractTypeDeserializer<CellValueType> {
-	private static final Logger LOGGER = LoggerFactory.getLogger(CellValueTypeDeserializer.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CellValueTypeDeserializer.class);
 
-	/**
-	 * Constructor ImageBehaviorTypeDeserializer
-	 *
-	 * @param ea Appender for errors
-	 */
-	public CellValueTypeDeserializer(final ErrorAppender ea) {
-		super(ea);
-	}
+    /**
+     * Constructor ImageBehaviorTypeDeserializer
+     *
+     * @param ea Appender for errors
+     */
+    public CellValueTypeDeserializer(final ErrorAppender ea) {
+        super(ea);
+    }
 
-	@Override
-	public CellValueType deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
-		final String s = p.getText();
+    @Override
+    public CellValueType deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
+        final var s = p.getText();
 
-		try {
-			return CellValueType.valueOf(s.toUpperCase());
-		} catch (@SuppressWarnings("unused") final IllegalArgumentException e) { // NOSONAR
-			addError(LOGGER, p, CellValueType.class, s);
-		}
+        try {
+            return CellValueType.valueOf(s.toUpperCase());
+        } catch (@SuppressWarnings("unused") final IllegalArgumentException e) { // NOSONAR
+            addError(LOGGER, p, CellValueType.class, s);
+        }
 
-		return CellValueType.STRING;
-	}
+        return CellValueType.STRING;
+    }
 }

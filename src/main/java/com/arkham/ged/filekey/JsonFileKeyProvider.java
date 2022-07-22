@@ -33,46 +33,46 @@ import com.arkham.ged.properties.PropertiesAdapter;
  * @since 10 nov. 2017
  */
 public class JsonFileKeyProvider extends FileKeyProvider {
-	private static final Logger LOGGER = LoggerFactory.getLogger(JsonFileKeyProvider.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(JsonFileKeyProvider.class);
 
-	@Override
-	public FileKey getKey(File file, Connection con, PropertiesAdapter pa, List<OptionalParameterType> opt) throws FileKeyProviderException {
-		try {
-			String content = new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
+    @Override
+    public FileKey getKey(File file, Connection con, PropertiesAdapter pa, List<OptionalParameterType> opt) throws FileKeyProviderException {
+        try {
+            var content = new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
 
-			content = transform(content);
+            content = transform(content);
 
-			final JSONObject o = new JSONObject(content);
-			final int codsoc = o.getInt("codsoc");
-			final String typtie = o.getString("typtie");
-			final String nomcle = o.getString("nomcle");
-			final String filename = o.getString("filename");
+            final var o = new JSONObject(content);
+            final var codsoc = o.getInt("codsoc");
+            final var typtie = o.getString("typtie");
+            final var nomcle = o.getString("nomcle");
+            final var filename = o.getString("filename");
 
-			final FileKey fk = new FileKey(codsoc, typtie, nomcle, filename);
-			fk.setJsonObject(o);
+            final var fk = new FileKey(codsoc, typtie, nomcle, filename);
+            fk.setJsonObject(o);
 
-			return fk;
-		} catch (final IOException | JSONException e) {
-			throw new FileKeyProviderException(e);
-		}
-	}
+            return fk;
+        } catch (final IOException | JSONException e) {
+            throw new FileKeyProviderException(e);
+        }
+    }
 
-	/**
-	 * Transform the input string
-	 *
-	 * @param content Content to transform
-	 * @return Transformed content
-	 * @throws IOException Generic exception
-	 */
-	@SuppressWarnings("static-method")
-	protected String transform(String content) throws IOException { // NOSONAR
-		LOGGER.info("transform() : consuming JSON message=\n{}", content);
+    /**
+     * Transform the input string
+     *
+     * @param content Content to transform
+     * @return Transformed content
+     * @throws IOException Generic exception
+     */
+    @SuppressWarnings("static-method")
+    protected String transform(String content) throws IOException { // NOSONAR
+        LOGGER.info("transform() : consuming JSON message=\n{}", content);
 
-		return content;
-	}
+        return content;
+    }
 
-	@Override
-	public boolean isRefFile() {
-		return true;
-	}
+    @Override
+    public boolean isRefFile() {
+        return true;
+    }
 }

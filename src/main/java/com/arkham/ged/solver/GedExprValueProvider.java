@@ -20,13 +20,13 @@ import com.arkham.common.solver.expr.ExprValueProvider;
  * @since 10 févr. 2015
  */
 public class GedExprValueProvider extends ExprValueProvider {
-	/**
-	 * Constructor GedExprValueProvider, register functions
-	 *
-	 * @param file Current file
-	 */
-	public GedExprValueProvider(File file) {
-		registerFunction(new FilenameFunction(file));
-		registerFunction(new FilesizeFunction(file));
-	}
+    /**
+     * Constructor GedExprValueProvider, register functions
+     *
+     * @param file Current file
+     */
+    public GedExprValueProvider(File file) {
+        registerFunction(new FilenameFunction(file));
+        registerFunction(new FilesizeFunction(file));
+    }
 }

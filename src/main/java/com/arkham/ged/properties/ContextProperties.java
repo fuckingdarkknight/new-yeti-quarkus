@@ -18,11 +18,11 @@ package com.arkham.ged.properties;
  * @since 10 févr. 2015
  */
 public interface ContextProperties {
-	/**
-	 * Get the value of contextual parameter
-	 *
-	 * @param param The parameter name
-	 * @return The value or <code>null</code> if the parameter is not defined
-	 */
-	String getLocalParameter(String param);
+    /**
+     * Get the value of contextual parameter
+     *
+     * @param param The parameter name
+     * @return The value or <code>null</code> if the parameter is not defined
+     */
+    String getLocalParameter(String param);
 }

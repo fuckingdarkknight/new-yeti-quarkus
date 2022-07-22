@@ -24,21 +24,21 @@ public class XlsgenException extends GedException {
     private static final long serialVersionUID = 1L;
 
     /**
-	 * Constructor XlsgenException
-	 *
-	 * @param cause The root cause
-	 */
-	public XlsgenException(final Throwable cause) {
-		super(cause);
-	}
+     * Constructor XlsgenException
+     *
+     * @param cause The root cause
+     */
+    public XlsgenException(final Throwable cause) {
+        super(cause);
+    }
 
-	/**
-	 * {@link GedException} constructor.
-	 *
-	 * @param message Message
-	 * @param params Parameters array
-	 */
-	public XlsgenException(final GedMessage message, final Object... params) {
-		super(message, params);
-	}
+    /**
+     * {@link GedException} constructor.
+     *
+     * @param message Message
+     * @param params Parameters array
+     */
+    public XlsgenException(final GedMessage message, final Object... params) {
+        super(message, params);
+    }
 }

@@ -18,44 +18,44 @@ package com.arkham.ged.solver;
  * @since 24 févr. 2020
  */
 public class SlfTranslator implements Translator {
-	@Override
-	public String translate(String message, Object... p) {
-		if (p != null && p.length > 0 && message != null) {
-			int pi = 0;
-			// 40 is arbitrary
-			final StringBuilder result = new StringBuilder(message.length() + 40);
-			final int len = message.length();
-			int i = 0;
-			while (i < len) {
-				final char c = message.charAt(i);
-				// Could be replaced
-				if (c == '{' && i < len - 1 && message.charAt(i + 1) == '}') {
-					if (pi < p.length) {
-						final Object o = p[pi];
-						if (o == null) {
-							result.append("null");
-						} else {
-							result.append(o);
-						}
+    @Override
+    public String translate(String message, Object... p) {
+        if (p != null && p.length > 0 && message != null) {
+            var pi = 0;
+            // 40 is arbitrary
+            final var result = new StringBuilder(message.length() + 40);
+            final var len = message.length();
+            var i = 0;
+            while (i < len) {
+                final var c = message.charAt(i);
+                // Could be replaced
+                if (c == '{' && i < len - 1 && message.charAt(i + 1) == '}') {
+                    if (pi < p.length) {
+                        final var o = p[pi];
+                        if (o == null) {
+                            result.append("null");
+                        } else {
+                            result.append(o);
+                        }
 
-						pi++;
-					} else {
-						// Could not be consumed
-						result.append("{}");
-					}
+                        pi++;
+                    } else {
+                        // Could not be consumed
+                        result.append("{}");
+                    }
 
-					// Skip '}'
-					i++;
-				} else {
-					result.append(c);
-				}
+                    // Skip '}'
+                    i++;
+                } else {
+                    result.append(c);
+                }
 
-				i++;
-			}
+                i++;
+            }
 
-			return result.toString();
-		}
+            return result.toString();
+        }
 
-		return message;
-	}
+        return message;
+    }
 }

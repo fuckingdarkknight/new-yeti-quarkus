@@ -30,45 +30,45 @@ import com.arkham.ged.util.GedUtil;
  * @since 29 nov. 2017
  */
 public class IntegFileKeyProvider extends FileKeyProvider {
-	private static final Logger LOGGER = LoggerFactory.getLogger(IntegFileKeyProvider.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(IntegFileKeyProvider.class);
 
-	@Override
-	public FileKey getKey(File file, Connection con, PropertiesAdapter pa, List<OptionalParameterType> opt) throws FileKeyProviderException {
-		String filename = file.getName();
+    @Override
+    public FileKey getKey(File file, Connection con, PropertiesAdapter pa, List<OptionalParameterType> opt) throws FileKeyProviderException {
+        var filename = file.getName();
 
-		// No others informations than primary key, so we use the "basic" constructor.
-		// Hack : the file name is ended by ".processing" so it's a rename file scanner that is used. The fk need the real and base file name !
-		if (filename.endsWith(PROCEXT)) {
-			filename = GedUtil.removeFileExtension(filename);
-		}
+        // No others informations than primary key, so we use the "basic" constructor.
+        // Hack : the file name is ended by ".processing" so it's a rename file scanner that is used. The fk need the real and base file name !
+        if (filename.endsWith(PROCEXT)) {
+            filename = GedUtil.removeFileExtension(filename);
+        }
 
-		final int dotPos = filename.lastIndexOf('.');
-		if (dotPos != -1) {
-			try {
-				final String[] s = filename.split("_");
-				if (s.length > 2) {
-					final String codsoc = s[0];
-					final String uticod = s[1];
+        final var dotPos = filename.lastIndexOf('.');
+        if (dotPos != -1) {
+            try {
+                final var s = filename.split("_");
+                if (s.length > 2) {
+                    final var codsoc = s[0];
+                    final var uticod = s[1];
 
-					final FileKey fk = new FileKey(Integer.parseInt(codsoc), "TIE", "UTI" + uticod, filename);
-					fk.setAttribute("utimod", uticod);
-					fk.setAttribute("uticod", uticod);
-					fk.setAttribute("catdoc", "INTEG");
+                    final var fk = new FileKey(Integer.parseInt(codsoc), "TIE", "UTI" + uticod, filename);
+                    fk.setAttribute("utimod", uticod);
+                    fk.setAttribute("uticod", uticod);
+                    fk.setAttribute("catdoc", "INTEG");
 
-					return fk;
-				}
+                    return fk;
+                }
 
-				LOGGER.info("getKey() : cannot parse filename {}", filename);
-			} catch (final IllegalArgumentException e) {
-				throw new FileKeyProviderException(e, GedMessages.Scanner.decodingError);
-			}
-		}
+                LOGGER.info("getKey() : cannot parse filename {}", filename);
+            } catch (final IllegalArgumentException e) {
+                throw new FileKeyProviderException(e, GedMessages.Scanner.decodingError);
+            }
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	@Override
-	public boolean isRefFile() {
-		return false;
-	}
+    @Override
+    public boolean isRefFile() {
+        return false;
+    }
 }

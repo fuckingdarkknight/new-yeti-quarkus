@@ -28,27 +28,27 @@ import com.arkham.ged.yaml.RowModeType;
  * @since 13 févr. 2020
  */
 public class RowModeTypeDeserializer extends AbstractTypeDeserializer<RowModeType> {
-	private static final Logger LOGGER = LoggerFactory.getLogger(RowModeTypeDeserializer.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(RowModeTypeDeserializer.class);
 
-	/**
-	 * Constructor ImageBehaviorTypeDeserializer
-	 *
-	 * @param ea Appender for errors
-	 */
-	public RowModeTypeDeserializer(final ErrorAppender ea) {
-		super(ea);
-	}
+    /**
+     * Constructor ImageBehaviorTypeDeserializer
+     *
+     * @param ea Appender for errors
+     */
+    public RowModeTypeDeserializer(final ErrorAppender ea) {
+        super(ea);
+    }
 
-	@Override
-	public RowModeType deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
-		final String s = p.getText();
+    @Override
+    public RowModeType deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
+        final var s = p.getText();
 
-		try {
-			return RowModeType.valueOf(s.toUpperCase());
-		} catch (@SuppressWarnings("unused") final IllegalArgumentException e) { // NOSONAR
-			addError(LOGGER, p, RowModeType.class, s);
-		}
+        try {
+            return RowModeType.valueOf(s.toUpperCase());
+        } catch (@SuppressWarnings("unused") final IllegalArgumentException e) { // NOSONAR
+            addError(LOGGER, p, RowModeType.class, s);
+        }
 
-		return RowModeType.CURRENT;
-	}
+        return RowModeType.CURRENT;
+    }
 }

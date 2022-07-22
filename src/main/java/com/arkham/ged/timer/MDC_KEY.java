@@ -16,46 +16,46 @@ package com.arkham.ged.timer;
  * @since 7 avr. 2016
  */
 public enum MDC_KEY {
-	/* @formatter:off */
-	TIMER_NAME,
-	DATE,
-	TIME,
-	ENTITY,
-	USER,
-	FILENAME,
-	FILESIZE,
-	INDSEQ,
-	AUTHENTICATION,
-	CONNECTION(true),
-	SCANNING(true),
-	IMPORT_BLOB,
-	EXPORT_BLOB,
-	IMPORT_CLOB,
-	EXPORT_CLOB,
-	EXTRACTING,
-	INDEXING,
-	COMMIT,
-	ELAPSE_TIME_EXECUTE,
-	ELAPSE_TIME_RUN(true),
-	ELAPSE_TIME_GLOBAL(true),
-	ELAPSE_TIME_LEVEL,
-	ELAPSE_TIME_UNIT,
-	// Others
-	ARKHAM_GED_NODE,
-	ARKHAM_GED_TYPE;
-	/* @formatter:on */
+    /* @formatter:off */
+    TIMER_NAME,
+    DATE,
+    TIME,
+    ENTITY,
+    USER,
+    FILENAME,
+    FILESIZE,
+    INDSEQ,
+    AUTHENTICATION,
+    CONNECTION(true),
+    SCANNING(true),
+    IMPORT_BLOB,
+    EXPORT_BLOB,
+    IMPORT_CLOB,
+    EXPORT_CLOB,
+    EXTRACTING,
+    INDEXING,
+    COMMIT,
+    ELAPSE_TIME_EXECUTE,
+    ELAPSE_TIME_RUN(true),
+    ELAPSE_TIME_GLOBAL(true),
+    ELAPSE_TIME_LEVEL,
+    ELAPSE_TIME_UNIT,
+    // Others
+    ARKHAM_GED_NODE,
+    ARKHAM_GED_TYPE;
+    /* @formatter:on */
 
-	private boolean mIsGlobal;
+    private boolean mIsGlobal;
 
-	MDC_KEY() {
-		mIsGlobal = false;
-	}
+    MDC_KEY() {
+        mIsGlobal = false;
+    }
 
-	MDC_KEY(boolean global) {
-		mIsGlobal = global;
-	}
+    MDC_KEY(boolean global) {
+        mIsGlobal = global;
+    }
 
-	boolean isGlobal() {
-		return mIsGlobal;
-	}
+    boolean isGlobal() {
+        return mIsGlobal;
+    }
 }

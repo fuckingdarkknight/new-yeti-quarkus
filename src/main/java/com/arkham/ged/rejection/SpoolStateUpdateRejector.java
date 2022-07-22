@@ -28,36 +28,36 @@ import com.arkham.ged.util.GedSpoolUtil.SpoolPkBean;
  * @since 30 janv. 2019
  */
 public class SpoolStateUpdateRejector extends AbstractSqlRejector {
-	private static final String UT_SPL_SELECT = "select nomprc from ut_spl where codsoc = ? and numero = ?";
-	private static final String UT_SPL_UPDATE = "update ut_spl set st1 = ? where codsoc = ? and numero = ?";
-	// private static final String UT_PRC_UPDATE = "update ut_prc set st1 = ? where codsoc = ? and nomprc = ?";
+    private static final String UT_SPL_SELECT = "select nomprc from ut_spl where codsoc = ? and numero = ?";
+    private static final String UT_SPL_UPDATE = "update ut_spl set st1 = ? where codsoc = ? and numero = ?";
+    // private static final String UT_PRC_UPDATE = "update ut_prc set st1 = ? where codsoc = ? and nomprc = ?";
 
-	@Override
-	public void reject(File file, FileKey fk, Throwable t, String message, Connection con, PropertiesAdapter pa) {
-		if (file != null) {
-			updateUtSpl(con, file);
-		}
-	}
+    @Override
+    public void reject(File file, FileKey fk, Throwable t, String message, Connection con, PropertiesAdapter pa) {
+        if (file != null) {
+            updateUtSpl(con, file);
+        }
+    }
 
-	private void updateUtSpl(Connection con, File file) {
-		final SpoolPkBean b = SpoolPkBean.getBean(file.getName());
-		if (b.getCodsoc() != -1 && b.getNumero() != -1) {
-			try (PreparedStatement ps = con.prepareStatement(UT_SPL_SELECT)) {
-				ps.setInt(1, b.getCodsoc());
-				ps.setInt(2, b.getNumero());
-				try (ResultSet rs = ps.executeQuery()) {
-					if (rs.next()) {
-						// final String nomprc = rs.getString(1);
-						executeQuery(con, UT_SPL_UPDATE, 5, b.getCodsoc(), b.getNumero());
-						// Don't update UT_PRC, else uexp.exe won't release batch file.
-						// executeQuery(con, UT_PRC_UPDATE, 5, b.getCodsoc(), nomprc);
+    private void updateUtSpl(Connection con, File file) {
+        final var b = SpoolPkBean.getBean(file.getName());
+        if (b.getCodsoc() != -1 && b.getNumero() != -1) {
+            try (var ps = con.prepareStatement(UT_SPL_SELECT)) {
+                ps.setInt(1, b.getCodsoc());
+                ps.setInt(2, b.getNumero());
+                try (var rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        // final String nomprc = rs.getString(1);
+                        executeQuery(con, UT_SPL_UPDATE, 5, b.getCodsoc(), b.getNumero());
+                        // Don't update UT_PRC, else uexp.exe won't release batch file.
+                        // executeQuery(con, UT_PRC_UPDATE, 5, b.getCodsoc(), nomprc);
 
-						con.commit();
-					}
-				}
-			} catch (final SQLException e) {
-				LOGGER.error("updateUtSpl() : {}", e);
-			}
-		}
-	}
+                        con.commit();
+                    }
+                }
+            } catch (final SQLException e) {
+                LOGGER.error("updateUtSpl() : {}", e);
+            }
+        }
+    }
 }

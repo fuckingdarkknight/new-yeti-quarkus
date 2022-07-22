@@ -19,69 +19,69 @@ import java.util.List;
  * @since 27 août 2018
  */
 public class ExprSplitter {
-	private final List<ExprSplitterBean> mList = new ArrayList<>();
+    private final List<ExprSplitterBean> mList = new ArrayList<>();
 
-	private final String mValue;
-	private int mIndex;
-	private int mIndexStart;
-	private boolean mIsExpr;
+    private final String mValue;
+    private int mIndex;
+    private int mIndexStart;
+    private boolean mIsExpr;
 
-	/**
-	 * Constructor ExprSplitter
-	 *
-	 * @param value The value to parse
-	 */
-	public ExprSplitter(String value) {
-		mValue = value;
+    /**
+     * Constructor ExprSplitter
+     *
+     * @param value The value to parse
+     */
+    public ExprSplitter(String value) {
+        mValue = value;
 
-		if (value != null && !"".equals(value.trim())) {
-			parse();
-		}
-	}
+        if (value != null && !"".equals(value.trim())) {
+            parse();
+        }
+    }
 
-	private void next() {
-		mIndex++;
-	}
+    private void next() {
+        mIndex++;
+    }
 
-	private void push() {
-		if (mIndexStart < mIndex) {
-			final ExprSplitterBean esb = new ExprSplitterBean(mValue.substring(mIndexStart, mIndex), mIsExpr);
-			mList.add(esb);
-		}
-		mIndexStart = mIndex;
-	}
+    private void push() {
+        if (mIndexStart < mIndex) {
+            final var esb = new ExprSplitterBean(mValue.substring(mIndexStart, mIndex), mIsExpr);
+            mList.add(esb);
+        }
+        mIndexStart = mIndex;
+    }
 
-	private void parse() {
-		while (mIndex < mValue.length()) {
-			final char c = mValue.charAt(mIndex);
-			if (c == '`') {
-				// Start or end, must push the expression to the list
-				push();
+    private void parse() {
+        while (mIndex < mValue.length()) {
+            final var c = mValue.charAt(mIndex);
+            if (c == '`') {
+                // Start or end, must push the expression to the list
+                push();
 
-				// Expression start
-				if (!mIsExpr) {
-					mIsExpr = true;
-				} else {
-					// End of expression
-					mIsExpr = false;
-				}
+                // Expression start
+                if (!mIsExpr) {
+                    mIsExpr = true;
+                } else {
+                    // End of expression
+                    mIsExpr = false;
+                }
 
-				// Restart to next char
-				mIndexStart = mIndex + 1;
-			}
+                // Restart to next char
+                mIndexStart = mIndex + 1;
+            }
 
-			next();
-		}
+            next();
+        }
 
-		push();
-	}
+        push();
+    }
 
-	/**
-	 * Get the list of {@link ExprSplitterBean}
-	 *
-	 * @return The list of splitted expressions
-	 */
-	public List<ExprSplitterBean> getSplitted() {
-		return mList;
-	}
+    /**
+     * Get the list of {@link ExprSplitterBean}
+     *
+     * @return The list of splitted expressions
+     */
+    public List<ExprSplitterBean> getSplitted() {
+        return mList;
+    }
 }

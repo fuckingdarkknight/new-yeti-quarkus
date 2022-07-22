@@ -32,56 +32,56 @@ import com.arkham.common.solver.function.FunctionExecutionException;
  * @since 28 janv. 2020
  */
 public class ImportFileFunction extends Function {
-	private static final Logger LOGGER = LoggerFactory.getLogger(ImportFileFunction.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ImportFileFunction.class);
 
-	private static final String DEFAULT_RESULT = "".intern();
+    private static final String DEFAULT_RESULT = "".intern();
 
-	@Override
-	public String getName() {
-		return "import";
-	}
+    @Override
+    public String getName() {
+        return "import";
+    }
 
-	@Override
-	protected Class<?>[] getParamsClass() {
-		return new Class[] { String.class, String.class };
-	}
+    @Override
+    protected Class<?>[] getParamsClass() {
+        return new Class[] { String.class, String.class };
+    }
 
-	@Override
-	protected int getMinParamCount() {
-		return 1;
-	}
+    @Override
+    protected int getMinParamCount() {
+        return 1;
+    }
 
-	@Override
-	public Object invoke(final Object... params) throws FunctionExecutionException {
-		final String filename = (String) params[0];
-		final Path path = Paths.get(filename.trim());
+    @Override
+    public Object invoke(final Object... params) throws FunctionExecutionException {
+        final var filename = (String) params[0];
+        final var path = Paths.get(filename.trim());
 
-		String charset = "UTF-8";
-		if (params.length > 1) {
-			charset = (String) params[1];
-		}
+        var charset = "UTF-8";
+        if (params.length > 1) {
+            charset = (String) params[1];
+        }
 
-		try {
-			final byte[] b = Files.readAllBytes(path);
+        try {
+            final var b = Files.readAllBytes(path);
 
-			return new String(b, getCharset(charset));
-		} catch (@SuppressWarnings("unused") final IOException e) { // NOSONAR : not blocking at all
-			LOGGER.debug("invoke() : file \"{}\" not found", filename);
-		}
+            return new String(b, getCharset(charset));
+        } catch (@SuppressWarnings("unused") final IOException e) { // NOSONAR : not blocking at all
+            LOGGER.debug("invoke() : file \"{}\" not found", filename);
+        }
 
-		return DEFAULT_RESULT;
-	}
+        return DEFAULT_RESULT;
+    }
 
-	private static Charset getCharset(final String charset) {
-		if (charset != null) {
-			try {
-				return Charset.forName(charset);
-			} catch (@SuppressWarnings("unused") IllegalCharsetNameException | UnsupportedCharsetException e) { // NOSONAR : au moins on sera prévenu dans le log qu'on demande n'importe quoi. Mais avec un peu de bol, le charset par défaut de la
-				// plateforme résoud le souci.
-				LOGGER.warn("getCharset() : invalid charset {}", charset);
-			}
-		}
+    private static Charset getCharset(final String charset) {
+        if (charset != null) {
+            try {
+                return Charset.forName(charset);
+            } catch (@SuppressWarnings("unused") IllegalCharsetNameException | UnsupportedCharsetException e) { // NOSONAR : au moins on sera prévenu dans le log qu'on demande n'importe quoi. Mais avec un peu de bol, le charset par défaut de la
+                // plateforme résoud le souci.
+                LOGGER.warn("getCharset() : invalid charset {}", charset);
+            }
+        }
 
-		return Charset.defaultCharset();
-	}
+        return Charset.defaultCharset();
+    }
 }

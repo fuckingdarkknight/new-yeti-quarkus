@@ -20,12 +20,12 @@ import com.arkham.ged.yaml.FillType;
  * @since 13 févr. 2020
  */
 public class FillTypeDeserializer extends AbstractTypeDeserializer<FillType> {
-	/**
-	 * Constructor ImageBehaviorTypeDeserializer
-	 *
-	 * @param ea Appender for errors
-	 */
-	public FillTypeDeserializer(ErrorAppender ea) {
-		super(ea);
-	}
+    /**
+     * Constructor ImageBehaviorTypeDeserializer
+     *
+     * @param ea Appender for errors
+     */
+    public FillTypeDeserializer(ErrorAppender ea) {
+        super(ea);
+    }
 }

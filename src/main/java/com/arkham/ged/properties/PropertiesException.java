@@ -24,23 +24,23 @@ public class PropertiesException extends GedException {
     private static final long serialVersionUID = 1L;
 
     /**
-	 * {@link PropertiesException} constructor.
-	 *
-	 * @param message Message
-	 * @param params Parameters array
-	 */
-	public PropertiesException(final GedMessage message, final Object... params) {
-		super(message, params);
-	}
+     * {@link PropertiesException} constructor.
+     *
+     * @param message Message
+     * @param params Parameters array
+     */
+    public PropertiesException(final GedMessage message, final Object... params) {
+        super(message, params);
+    }
 
-	/**
-	 * Constructor PropertiesException
-	 *
-	 * @param cause The root cause
-	 * @param message Ged message
-	 * @param params Parameters for the message
-	 */
-	public PropertiesException(final Throwable cause, final GedMessage message, final Object... params) {
-		super(cause, message, params);
-	}
+    /**
+     * Constructor PropertiesException
+     *
+     * @param cause The root cause
+     * @param message Ged message
+     * @param params Parameters for the message
+     */
+    public PropertiesException(final Throwable cause, final GedMessage message, final Object... params) {
+        super(cause, message, params);
+    }
 }

@@ -22,31 +22,31 @@ import com.arkham.ged.xlsgen.FunctionValueProvider;
  * @since 4 févr. 2020
  */
 public class PropertyFunction extends Function {
-	private final FunctionValueProvider mFvp;
+    private final FunctionValueProvider mFvp;
 
-	PropertyFunction(FunctionValueProvider fvp) {
-		mFvp = fvp;
-	}
+    PropertyFunction(FunctionValueProvider fvp) {
+        mFvp = fvp;
+    }
 
-	@Override
-	public String getName() {
-		return "property";
-	}
+    @Override
+    public String getName() {
+        return "property";
+    }
 
-	@Override
-	protected Class<?>[] getParamsClass() {
-		return new Class[] { String.class };
-	}
+    @Override
+    protected Class<?>[] getParamsClass() {
+        return new Class[] { String.class };
+    }
 
-	@Override
-	protected int getMinParamCount() {
-		return 1;
-	}
+    @Override
+    protected int getMinParamCount() {
+        return 1;
+    }
 
-	@Override
-	public Object invoke(Object... o) throws FunctionExecutionException {
-		final String name = (String) o[0];
+    @Override
+    public Object invoke(Object... o) throws FunctionExecutionException {
+        final var name = (String) o[0];
 
-		return mFvp.getProperty(name);
-	}
+        return mFvp.getProperty(name);
+    }
 }

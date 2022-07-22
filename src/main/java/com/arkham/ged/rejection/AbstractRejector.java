@@ -22,13 +22,13 @@ import com.arkham.ged.properties.OptionalParameterType;
  * @since 10 févr. 2015
  */
 public abstract class AbstractRejector implements Rejector {
-	private List<OptionalParameterType> mParams;
+    private List<OptionalParameterType> mParams;
 
-	void setParam(List<OptionalParameterType> params) {
-		mParams = params;
-	}
+    void setParam(List<OptionalParameterType> params) {
+        mParams = params;
+    }
 
-	public List<OptionalParameterType> getParam() {
-		return mParams;
-	}
+    public List<OptionalParameterType> getParam() {
+        return mParams;
+    }
 }

@@ -24,32 +24,32 @@ public class StreamProtocolException extends GedException {
     private static final long serialVersionUID = 1L;
 
     /**
-	 * Constructor StreamProtocolException
-	 *
-	 * @param message The message to translate with parameters
-	 * @param params Parameters
-	 */
-	public StreamProtocolException(final GedMessage message, final Object[] params) {
-		super(message, params);
-	}
+     * Constructor StreamProtocolException
+     *
+     * @param message The message to translate with parameters
+     * @param params Parameters
+     */
+    public StreamProtocolException(final GedMessage message, final Object[] params) {
+        super(message, params);
+    }
 
-	/**
-	 * Constructor StreamProtocolException
-	 *
-	 * @param cause The cause exception
-	 * @param message The message to translate with parameters
-	 * @param params Parameters
-	 */
-	public StreamProtocolException(final Throwable cause, final GedMessage message, final Object... params) {
-		super(cause, message, params);
-	}
+    /**
+     * Constructor StreamProtocolException
+     *
+     * @param cause The cause exception
+     * @param message The message to translate with parameters
+     * @param params Parameters
+     */
+    public StreamProtocolException(final Throwable cause, final GedMessage message, final Object... params) {
+        super(cause, message, params);
+    }
 
-	/**
-	 * Constructor StreamProtocolException
-	 *
-	 * @param cause The cause exception
-	 */
-	public StreamProtocolException(final Throwable cause) {
-		super(cause);
-	}
+    /**
+     * Constructor StreamProtocolException
+     *
+     * @param cause The cause exception
+     */
+    public StreamProtocolException(final Throwable cause) {
+        super(cause);
+    }
 }

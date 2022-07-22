@@ -28,27 +28,27 @@ import com.arkham.ged.yaml.AlignmentType;
  * @since 13 févr. 2020
  */
 public class AlignmentTypeDeserializer extends AbstractTypeDeserializer<AlignmentType> {
-	private static final Logger LOGGER = LoggerFactory.getLogger(AlignmentTypeDeserializer.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AlignmentTypeDeserializer.class);
 
-	/**
-	 * Constructor ImageBehaviorTypeDeserializer
-	 *
-	 * @param ea Appender for errors
-	 */
-	public AlignmentTypeDeserializer(final ErrorAppender ea) {
-		super(ea);
-	}
+    /**
+     * Constructor ImageBehaviorTypeDeserializer
+     *
+     * @param ea Appender for errors
+     */
+    public AlignmentTypeDeserializer(final ErrorAppender ea) {
+        super(ea);
+    }
 
-	@Override
-	public AlignmentType deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
-		final String s = p.getText();
+    @Override
+    public AlignmentType deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
+        final var s = p.getText();
 
-		try {
-			return AlignmentType.valueOf(s.toUpperCase());
-		} catch (@SuppressWarnings("unused") final IllegalArgumentException e) { // NOSONAR
-			addError(LOGGER, p, AlignmentType.class, s);
-		}
+        try {
+            return AlignmentType.valueOf(s.toUpperCase());
+        } catch (@SuppressWarnings("unused") final IllegalArgumentException e) { // NOSONAR
+            addError(LOGGER, p, AlignmentType.class, s);
+        }
 
-		return AlignmentType.GENERAL;
-	}
+        return AlignmentType.GENERAL;
+    }
 }

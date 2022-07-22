@@ -29,27 +29,27 @@ import com.arkham.ged.properties.PropertiesAdapter;
  * @since 10 févr. 2015
  */
 public class FileRejector extends AbstractRejector {
-	@Override
-	public void reject(File file, FileKey fk, Throwable t, String message, Connection con, PropertiesAdapter pa) {
-		// If the file could not be decoded, the fk may should be null and we cannot trace anything
-		if (fk != null && file != null) {
-			final Path rej = Paths.get(file.getParentFile().getAbsolutePath(), file.getName() + ".rejected");
+    @Override
+    public void reject(File file, FileKey fk, Throwable t, String message, Connection con, PropertiesAdapter pa) {
+        // If the file could not be decoded, the fk may should be null and we cannot trace anything
+        if (fk != null && file != null) {
+            final var rej = Paths.get(file.getParentFile().getAbsolutePath(), file.getName() + ".rejected");
 
-			try (OutputStream os = Files.newOutputStream(rej)) {
-				String s = "";
-				if (message != null) {
-					s = "error=" + message + "\r\n";
-				}
-				if (t != null) {
-					s = s + "throwable=" + t;
-				}
+            try (var os = Files.newOutputStream(rej)) {
+                var s = "";
+                if (message != null) {
+                    s = "error=" + message + "\r\n";
+                }
+                if (t != null) {
+                    s = s + "throwable=" + t;
+                }
 
-				fk.getProperties().store(os, s);
-			} catch (final IOException e) {
-				LOGGER.error("reject() : file={} cannot be written because of {}", file.getName(), e);
-			}
-		} else {
-			LOGGER.error("reject() : could not reject anything because file or filekey is null");
-		}
-	}
+                fk.getProperties().store(os, s);
+            } catch (final IOException e) {
+                LOGGER.error("reject() : file={} cannot be written because of {}", file.getName(), e);
+            }
+        } else {
+            LOGGER.error("reject() : could not reject anything because file or filekey is null");
+        }
+    }
 }

@@ -21,64 +21,64 @@ import java.io.InputStream;
  * @since 10 févr. 2015
  */
 public interface StreamExportHandler {
-	/**
-	 * @param charset The optional charset or <code>null</code>
-	 */
-	void handleCharset(String charset);
+    /**
+     * @param charset The optional charset or <code>null</code>
+     */
+    void handleCharset(String charset);
 
-	/**
-	 * @param contentType The content type or <code>null</code> if unknown
-	 */
-	void handleContentType(String contentType);
+    /**
+     * @param contentType The content type or <code>null</code> if unknown
+     */
+    void handleContentType(String contentType);
 
-	/**
-	 * @param is The input stream from LOB database
-	 * @param bean The document bean
-	 * @throws IOException
-	 */
-	void handleResult(InputStream is, DocumentLinkBean bean) throws IOException;
+    /**
+     * @param is The input stream from LOB database
+     * @param bean The document bean
+     * @throws IOException
+     */
+    void handleResult(InputStream is, DocumentLinkBean bean) throws IOException;
 
-	/**
-	 * If there's no result while retrieving DATA_BLOB from database, this method should be used to send a different message to output stream
-	 *
-	 * @throws IOException
-	 */
-	void handleNoResult() throws IOException;
+    /**
+     * If there's no result while retrieving DATA_BLOB from database, this method should be used to send a different message to output stream
+     *
+     * @throws IOException
+     */
+    void handleNoResult() throws IOException;
 
-	/**
-	 * If there's no result while retrieving THUMB_BLOB from database, this method should be used to send a different message to output stream
-	 *
-	 * @throws IOException
-	 */
-	void handleNoThumb() throws IOException;
+    /**
+     * If there's no result while retrieving THUMB_BLOB from database, this method should be used to send a different message to output stream
+     *
+     * @throws IOException
+     */
+    void handleNoThumb() throws IOException;
 
-	/**
-	 * Handle the bean while exporting
-	 *
-	 * @param bean The document bean
-	 */
-	void handleBean(DocumentLinkBean bean);
+    /**
+     * Handle the bean while exporting
+     *
+     * @param bean The document bean
+     */
+    void handleBean(DocumentLinkBean bean);
 
-	/**
-	 * @return The bean handled by the export
-	 */
-	DocumentLinkBean getBean();
+    /**
+     * @return The bean handled by the export
+     */
+    DocumentLinkBean getBean();
 
-	/**
-	 * Handle the LOB size before calling {@link #handleResult(InputStream, DocumentLinkBean)}
-	 *
-	 * @param filesize The stream size in bytes
-	 */
-	void handleFilesize(int filesize);
+    /**
+     * Handle the LOB size before calling {@link #handleResult(InputStream, DocumentLinkBean)}
+     *
+     * @param filesize The stream size in bytes
+     */
+    void handleFilesize(int filesize);
 
-	/**
-	 * @return the size of imported file in bytes
-	 */
-	int getFilesize();
+    /**
+     * @return the size of imported file in bytes
+     */
+    int getFilesize();
 
-	/**
-	 * @param bean The document bean
-	 * @return true if the document is authorized to access
-	 */
-	boolean isAuthorized(DocumentLinkBean bean);
+    /**
+     * @param bean The document bean
+     * @return true if the document is authorized to access
+     */
+    boolean isAuthorized(DocumentLinkBean bean);
 }

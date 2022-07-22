@@ -18,50 +18,50 @@ package com.arkham.ged.xlsgen.util;
  * @since 27 août 2018
  */
 public class ExprSplitterBean {
-	private String mExpr;
-	private boolean mIsExpr;
+    private String mExpr;
+    private boolean mIsExpr;
 
-	/**
-	 * Constructor ExprSplitterBean
-	 *
-	 * @param expr The string value
-	 * @param isExpr true if value is an expression
-	 */
-	public ExprSplitterBean(String expr, boolean isExpr) {
-		mExpr = expr;
-		mIsExpr = isExpr;
-	}
+    /**
+     * Constructor ExprSplitterBean
+     *
+     * @param expr The string value
+     * @param isExpr true if value is an expression
+     */
+    public ExprSplitterBean(String expr, boolean isExpr) {
+        mExpr = expr;
+        mIsExpr = isExpr;
+    }
 
-	/**
-	 * @return the expr
-	 */
-	public String getExpr() {
-		return mExpr;
-	}
+    /**
+     * @return the expr
+     */
+    public String getExpr() {
+        return mExpr;
+    }
 
-	/**
-	 * @param expr the expr to set
-	 */
-	public void setExpr(String expr) {
-		mExpr = expr;
-	}
+    /**
+     * @param expr the expr to set
+     */
+    public void setExpr(String expr) {
+        mExpr = expr;
+    }
 
-	/**
-	 * @return the isExpr
-	 */
-	public boolean isIsExpr() {
-		return mIsExpr;
-	}
+    /**
+     * @return the isExpr
+     */
+    public boolean isIsExpr() {
+        return mIsExpr;
+    }
 
-	/**
-	 * @param isExpr the isExpr to set
-	 */
-	public void setIsExpr(boolean isExpr) {
-		mIsExpr = isExpr;
-	}
+    /**
+     * @param isExpr the isExpr to set
+     */
+    public void setIsExpr(boolean isExpr) {
+        mIsExpr = isExpr;
+    }
 
-	@Override
-	public String toString() {
-		return "[" + mExpr + ", " + mIsExpr + "]";
-	}
+    @Override
+    public String toString() {
+        return "[" + mExpr + ", " + mIsExpr + "]";
+    }
 }

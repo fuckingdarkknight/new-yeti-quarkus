@@ -19,11 +19,11 @@ package com.arkham.ged.xlsgen.transformer;
  * @param <T> Type string forcément depuis un flux YML
  */
 public interface ITransformer<T> {
-	/**
-	 * Réalise la transformation : spool -> Excel
-	 *
-	 * @param value La valeur d'entrée
-	 * @return La valeur transformée
-	 */
-	Object transform(T value);
+    /**
+     * Réalise la transformation : spool -> Excel
+     *
+     * @param value La valeur d'entrée
+     * @return La valeur transformée
+     */
+    Object transform(T value);
 }

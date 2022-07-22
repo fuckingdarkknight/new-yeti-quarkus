@@ -18,25 +18,25 @@ import org.apache.poi.ss.usermodel.Sheet;
  * @since 27 août 2018
  */
 public interface FunctionValueProvider {
-	/**
-	 * Get the current sheet
-	 *
-	 * @return The current sheet
-	 */
-	Sheet getSheet();
+    /**
+     * Get the current sheet
+     *
+     * @return The current sheet
+     */
+    Sheet getSheet();
 
-	/**
-	 * Get the current index
-	 *
-	 * @return The current index
-	 */
-	int getIndex();
+    /**
+     * Get the current index
+     *
+     * @return The current index
+     */
+    int getIndex();
 
-	/**
-	 * Get the value of a global property. The property file is read from general/properties element
-	 *
-	 * @param name The property name
-	 * @return The value of property
-	 */
-	String getProperty(String name);
+    /**
+     * Get the value of a global property. The property file is read from general/properties element
+     *
+     * @param name The property name
+     * @return The value of property
+     */
+    String getProperty(String name);
 }

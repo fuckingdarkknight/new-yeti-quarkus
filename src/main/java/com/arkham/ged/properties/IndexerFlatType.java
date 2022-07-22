@@ -20,31 +20,31 @@ import java.util.Map;
  * @since 10 févr. 2015
  */
 public class IndexerFlatType {
-	private final IndexerType mIndexType;
-	private final Map<String, String> mParams;
+    private final IndexerType mIndexType;
+    private final Map<String, String> mParams;
 
-	IndexerFlatType(IndexerType it) {
-		mIndexType = it;
+    IndexerFlatType(IndexerType it) {
+        mIndexType = it;
 
-		// Flat parameters
-		final List<OptionalParameterType> params = mIndexType.getParam();
+        // Flat parameters
+        final var params = mIndexType.getParam();
 
-		mParams = new HashMap<>(params.size());
+        mParams = new HashMap<>(params.size());
 
-		for (final OptionalParameterType opt : params) {
-			mParams.put(opt.getName(), opt.getValue());
-		}
-	}
+        for (final OptionalParameterType opt : params) {
+            mParams.put(opt.getName(), opt.getValue());
+        }
+    }
 
-	public String getExtractor() {
-		return mIndexType.getExtractor();
-	}
+    public String getExtractor() {
+        return mIndexType.getExtractor();
+    }
 
-	public String getTarget() {
-		return mIndexType.getTarget();
-	}
+    public String getTarget() {
+        return mIndexType.getTarget();
+    }
 
-	public Map<String, String> getParams() {
-		return mParams;
-	}
+    public Map<String, String> getParams() {
+        return mParams;
+    }
 }

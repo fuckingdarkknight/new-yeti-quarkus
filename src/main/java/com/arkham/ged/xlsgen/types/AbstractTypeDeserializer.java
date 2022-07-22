@@ -41,114 +41,114 @@ import com.arkham.ged.solver.Translator;
  * @since 13 févr. 2020
  */
 public class AbstractTypeDeserializer<E extends EnumDefaultType> extends JsonDeserializer<E> {
-	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractTypeDeserializer.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractTypeDeserializer.class);
 
-	private static final Pattern TYPE_EXTRACT_PATTERN = Pattern.compile(".*<(.*)>");
+    private static final Pattern TYPE_EXTRACT_PATTERN = Pattern.compile(".*<(.*)>");
 
-	private static final String MESSAGE = "deserialize() : {} cannot be deserialized for type {} at line {} column {}";
-	private static final Translator TR = new SlfTranslator();
+    private static final String MESSAGE = "deserialize() : {} cannot be deserialized for type {} at line {} column {}";
+    private static final Translator TR = new SlfTranslator();
 
-	private final ErrorAppender mErrorAppender;
+    private final ErrorAppender mErrorAppender;
 
-	private final Map<String, Class<E>> mCache = new HashMap<>(32);
+    private final Map<String, Class<E>> mCache = new HashMap<>(32);
 
-	/**
-	 * Constructor AbstractTypeDeserializer
-	 *
-	 * @param ea Appender for errors
-	 */
-	public AbstractTypeDeserializer(final ErrorAppender ea) {
-		mErrorAppender = ea;
-	}
+    /**
+     * Constructor AbstractTypeDeserializer
+     *
+     * @param ea Appender for errors
+     */
+    public AbstractTypeDeserializer(final ErrorAppender ea) {
+        mErrorAppender = ea;
+    }
 
-	/**
-	 * Add a new error/warning to the error stack
-	 *
-	 * @param log The logger
-	 * @param p The parser
-	 * @param e The enum type
-	 * @param value The value that can't be parsed
-	 */
-	protected void addError(final Logger log, final JsonParser p, final Class<E> e, final String value) {
-		final String m = TR.translate(MESSAGE, value, e, p.getCurrentLocation().getLineNr(), p.getCurrentLocation().getColumnNr());
+    /**
+     * Add a new error/warning to the error stack
+     *
+     * @param log The logger
+     * @param p The parser
+     * @param e The enum type
+     * @param value The value that can't be parsed
+     */
+    protected void addError(final Logger log, final JsonParser p, final Class<E> e, final String value) {
+        final var m = TR.translate(MESSAGE, value, e, p.getCurrentLocation().getLineNr(), p.getCurrentLocation().getColumnNr());
 
-		log.warn(m);
+        log.warn(m);
 
-		mErrorAppender.add(m);
-	}
+        mErrorAppender.add(m);
+    }
 
-	/**
-	 * @param c The class
-	 * @return The default valeur if EnumDefault is annotated for the class
-	 * @deprecated
-	 */
-	@Deprecated
-	protected String getDefaultValue(final Class<E> c) {
-		final EnumDefault[] def = c.getAnnotationsByType(EnumDefault.class);
-		if (def.length > 0) {
-			return def[0].value();
-		}
+    /**
+     * @param c The class
+     * @return The default valeur if EnumDefault is annotated for the class
+     * @deprecated
+     */
+    @Deprecated
+    protected String getDefaultValue(final Class<E> c) {
+        final var def = c.getAnnotationsByType(EnumDefault.class);
+        if (def.length > 0) {
+            return def[0].value();
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	@Override
-	public E deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
-		final String superType = getClass().getGenericSuperclass().getTypeName();
-		Class<E> clazz = mCache.get(superType);
-		if (clazz == null) {
-			final Matcher m = TYPE_EXTRACT_PATTERN.matcher(getClass().getGenericSuperclass().getTypeName());
-			if (m.matches()) {
-				final String type = m.group(1);
+    @Override
+    public E deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
+        final var superType = getClass().getGenericSuperclass().getTypeName();
+        var clazz = mCache.get(superType);
+        if (clazz == null) {
+            final var m = TYPE_EXTRACT_PATTERN.matcher(getClass().getGenericSuperclass().getTypeName());
+            if (m.matches()) {
+                final var type = m.group(1);
 
-				try {
-					clazz = (Class<E>) Class.forName(type);
+                try {
+                    clazz = (Class<E>) Class.forName(type);
 
-					mCache.put(superType, clazz);
-				} catch (@SuppressWarnings("unused") final ClassNotFoundException e) { // NOSONAR
-					addError(LOGGER, p, (Class<E>) getClass(), p.getText());
-				}
-			} else {
-				throw new IOException("Enum cannot be deserialized by " + getClass().getCanonicalName());
-			}
-		}
+                    mCache.put(superType, clazz);
+                } catch (@SuppressWarnings("unused") final ClassNotFoundException e) { // NOSONAR
+                    addError(LOGGER, p, (Class<E>) getClass(), p.getText());
+                }
+            } else {
+                throw new IOException("Enum cannot be deserialized by " + getClass().getCanonicalName());
+            }
+        }
 
-		assert clazz != null;
-		return getWithDefault(clazz, p.getText().toUpperCase(), p);
-	}
+        assert clazz != null;
+        return getWithDefault(clazz, p.getText().toUpperCase(), p);
+    }
 
-	protected E getWithDefault(@NonNull final Class<E> clazz, final String value, final JsonParser p) {
-		if (clazz.isEnum()) {
-			try {
-				final E o = getValue(clazz, value, p);
-				if (o == null) {
-					final Field[] fields = clazz.getDeclaredFields();
-					for (final Field field : fields) {
-						final JsonEnumDefaultValue[] ann = field.getAnnotationsByType(JsonEnumDefaultValue.class);
-						if (ann.length > 0) {
-							return (E) field.get("X"); // No mind about the parameter in this case
-						}
-					}
-				}
-			} catch (@SuppressWarnings("unused") IllegalArgumentException | IllegalAccessException | SecurityException e) { // NOSONAR
-				addError(LOGGER, p, clazz, value);
-			}
-		}
+    protected E getWithDefault(@NonNull final Class<E> clazz, final String value, final JsonParser p) {
+        if (clazz.isEnum()) {
+            try {
+                final var o = getValue(clazz, value, p);
+                if (o == null) {
+                    final var fields = clazz.getDeclaredFields();
+                    for (final Field field : fields) {
+                        final var ann = field.getAnnotationsByType(JsonEnumDefaultValue.class);
+                        if (ann.length > 0) {
+                            return (E) field.get("X"); // No mind about the parameter in this case
+                        }
+                    }
+                }
+            } catch (@SuppressWarnings("unused") IllegalArgumentException | IllegalAccessException | SecurityException e) { // NOSONAR
+                addError(LOGGER, p, clazz, value);
+            }
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	private final E getValue(@NonNull final Class<E> clazz, final String value, final JsonParser p) {
-		try {
-			final Method m = clazz.getMethod("valueOf", String.class);
-			final Object o = m.invoke(clazz, value);
+    private final E getValue(@NonNull final Class<E> clazz, final String value, final JsonParser p) {
+        try {
+            final var m = clazz.getMethod("valueOf", String.class);
+            final var o = m.invoke(clazz, value);
 
-			return (E) o;
-		} catch (@SuppressWarnings("unused") final IllegalArgumentException | IllegalAccessException | SecurityException | NoSuchMethodException | InvocationTargetException e) { // NOSONAR
-			// Let's continue with default value but trace the error
-			addError(LOGGER, p, clazz, value);
-		}
+            return (E) o;
+        } catch (@SuppressWarnings("unused") final IllegalArgumentException | IllegalAccessException | SecurityException | NoSuchMethodException | InvocationTargetException e) { // NOSONAR
+            // Let's continue with default value but trace the error
+            addError(LOGGER, p, clazz, value);
+        }
 
-		return null;
-	}
+        return null;
+    }
 }

@@ -21,8 +21,8 @@ import com.arkham.ged.properties.ScanFileDef;
  * @param <T> Concrete type of {@link ScanFileDef}
  */
 public interface ISettingsJob<T extends ScanFileDef> {
-	/**
-	 * @return Settings of current consumer
-	 */
-	T getSFD();
+    /**
+     * @return Settings of current consumer
+     */
+    T getSFD();
 }

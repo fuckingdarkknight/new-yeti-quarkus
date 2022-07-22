@@ -22,87 +22,87 @@ import com.arkham.ged.util.GedUtil;
  * @since 10 févr. 2015
  */
 public abstract class AbstractFileScanner {
-	protected static final String DIR_DNE = "scan() : the specified directory does not exist={}";
-	protected static final String DIR_DNE_CREATE = DIR_DNE + " try to create it";
-	protected static final String DIR_CREATED = "scan() : directory {} have been created successfully";
-	protected static final String DIR_NOT_CREATED = "scan() : directory {} could not be created";
+    protected static final String DIR_DNE = "scan() : the specified directory does not exist={}";
+    protected static final String DIR_DNE_CREATE = DIR_DNE + " try to create it";
+    protected static final String DIR_CREATED = "scan() : directory {} have been created successfully";
+    protected static final String DIR_NOT_CREATED = "scan() : directory {} could not be created";
 
-	private final ScanFileDef mSfd;
+    private final ScanFileDef mSfd;
 
-	/**
-	 * Constructor AbstractFileScanner
-	 *
-	 * @param sfd Scanner settings
-	 */
-	public AbstractFileScanner(ScanFileDef sfd) {
-		mSfd = sfd;
-	}
+    /**
+     * Constructor AbstractFileScanner
+     *
+     * @param sfd Scanner settings
+     */
+    public AbstractFileScanner(ScanFileDef sfd) {
+        mSfd = sfd;
+    }
 
-	/**
-	 * @return The scanner
-	 */
-	protected final ScanFileDef getSFD() {
-		return mSfd;
-	}
+    /**
+     * @return The scanner
+     */
+    protected final ScanFileDef getSFD() {
+        return mSfd;
+    }
 
-	/**
-	 * @param value A value that could contains some separator chars. {@link GedUtil#splitValues(String)}
-	 * @return An array with splitted values
-	 */
-	@SuppressWarnings("static-method")
-	protected String[] splitValue(String value) {
-		return GedUtil.splitValues(value);
-	}
+    /**
+     * @param value A value that could contains some separator chars. {@link GedUtil#splitValues(String)}
+     * @return An array with splitted values
+     */
+    @SuppressWarnings("static-method")
+    protected String[] splitValue(String value) {
+        return GedUtil.splitValues(value);
+    }
 
-	/**
-	 * Launch the scanner to get the file list Process list after (sort)
-	 *
-	 * @return An array of files
-	 */
-	public File[] execute() {
-		beforeScan();
+    /**
+     * Launch the scanner to get the file list Process list after (sort)
+     *
+     * @return An array of files
+     */
+    public File[] execute() {
+        beforeScan();
 
-		final File[] files = scan();
+        final var files = scan();
 
-		return afterScan(files);
-	}
+        return afterScan(files);
+    }
 
-	/**
-	 * Launch scanning
-	 *
-	 * @return An array of files
-	 */
-	protected abstract File[] scan();
+    /**
+     * Launch scanning
+     *
+     * @return An array of files
+     */
+    protected abstract File[] scan();
 
-	/**
-	 * Executed before scan on {@link #scan()}
-	 */
-	protected void beforeScan() {
-		// By default, nothing to do before scanning
-	}
+    /**
+     * Executed before scan on {@link #scan()}
+     */
+    protected void beforeScan() {
+        // By default, nothing to do before scanning
+    }
 
-	/**
-	 * Executed after scan on {@link #scan()}, by default execute a sort on filename or file date if specified in the settings
-	 *
-	 * @param files
-	 * @return The sorted array of File
-	 */
-	protected File[] afterScan(File[] files) {
-		File[] result = files;
+    /**
+     * Executed after scan on {@link #scan()}, by default execute a sort on filename or file date if specified in the settings
+     *
+     * @param files
+     * @return The sorted array of File
+     */
+    protected File[] afterScan(File[] files) {
+        var result = files;
 
-		for (final OptionalParameterType opt : getSFD().getParam()) {
-			if ("sort".equals(opt.getName())) {
-				final String sortOrder = opt.getValue();
-				if ("byDate".equals(sortOrder)) {
-					// sortByDate
-					result = GedUtil.sortByDate(files);
-				} else if ("byName".equals(sortOrder)) {
-					// sortByName
-					result = GedUtil.sortByName(files);
-				}
-			}
-		}
+        for (final OptionalParameterType opt : getSFD().getParam()) {
+            if ("sort".equals(opt.getName())) {
+                final var sortOrder = opt.getValue();
+                if ("byDate".equals(sortOrder)) {
+                    // sortByDate
+                    result = GedUtil.sortByDate(files);
+                } else if ("byName".equals(sortOrder)) {
+                    // sortByName
+                    result = GedUtil.sortByName(files);
+                }
+            }
+        }
 
-		return result;
-	}
+        return result;
+    }
 }

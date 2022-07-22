@@ -26,18 +26,18 @@ import com.arkham.common.properties.XmlProp;
  * @since 10 févr. 2015
  */
 public class XmlFileKeyProvider extends FlatFileKeyProvider {
-	/**
-	 * Use a {@link XmlProp} reader to get the properties from an XML file content
-	 * <p>
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected FlatProp getProp(File file) throws IOException {
-		try (InputStream is = Files.newInputStream(file.toPath())) {
-			final XmlProp p = new XmlProp();
-			p.load(is);
+    /**
+     * Use a {@link XmlProp} reader to get the properties from an XML file content
+     * <p>
+     * {@inheritDoc}
+     */
+    @Override
+    protected FlatProp getProp(File file) throws IOException {
+        try (var is = Files.newInputStream(file.toPath())) {
+            final var p = new XmlProp();
+            p.load(is);
 
-			return p;
-		}
-	}
+            return p;
+        }
+    }
 }

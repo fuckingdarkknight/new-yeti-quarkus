@@ -25,38 +25,38 @@ import com.arkham.ged.properties.PropertiesAdapter;
  * @since 10 févr. 2015
  */
 public abstract class FileKeyProvider {
-	/**
-	 * Extension of file while it's processing
-	 */
-	public static final String PROCEXT = ".processing";
+    /**
+     * Extension of file while it's processing
+     */
+    public static final String PROCEXT = ".processing";
 
-	private List<OptionalParameterType> mParams;
+    private List<OptionalParameterType> mParams;
 
-	void init(List<OptionalParameterType> params) {
-		mParams = params;
-	}
+    void init(List<OptionalParameterType> params) {
+        mParams = params;
+    }
 
-	/**
-	 * @return The optional FileKeyProvider parameters
-	 */
-	public final List<OptionalParameterType> getParams() {
-		return mParams;
-	}
+    /**
+     * @return The optional FileKeyProvider parameters
+     */
+    public final List<OptionalParameterType> getParams() {
+        return mParams;
+    }
 
-	/**
-	 * Retrieve file key
-	 *
-	 * @param file A file that could not be <code>null</code> ({@link NullPointerException} otherwise)
-	 * @param con The database connection
-	 * @param pa Properties
-	 * @param opt The parameter list
-	 * @return The file key to integrate or <code>null</code> if the file is 0 length
-	 * @throws FileKeyProviderException Generic exception
-	 */
-	public abstract FileKey getKey(File file, Connection con, PropertiesAdapter pa, List<OptionalParameterType> opt) throws FileKeyProviderException;
+    /**
+     * Retrieve file key
+     *
+     * @param file A file that could not be <code>null</code> ({@link NullPointerException} otherwise)
+     * @param con The database connection
+     * @param pa Properties
+     * @param opt The parameter list
+     * @return The file key to integrate or <code>null</code> if the file is 0 length
+     * @throws FileKeyProviderException Generic exception
+     */
+    public abstract FileKey getKey(File file, Connection con, PropertiesAdapter pa, List<OptionalParameterType> opt) throws FileKeyProviderException;
 
-	/**
-	 * @return true if the file to process is a .ref file, false otherwise
-	 */
-	public abstract boolean isRefFile();
+    /**
+     * @return true if the file to process is a .ref file, false otherwise
+     */
+    public abstract boolean isRefFile();
 }

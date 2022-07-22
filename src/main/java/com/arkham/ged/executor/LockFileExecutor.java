@@ -31,64 +31,64 @@ import com.arkham.ged.properties.PropertiesAdapter;
  * @see RenameFileExecutor
  */
 public class LockFileExecutor extends ImportFileExecutor {
-	private static final Logger LOGGER = LoggerFactory.getLogger(LockFileExecutor.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(LockFileExecutor.class);
 
-	private List<File> mProcessedFiles;
+    private List<File> mProcessedFiles;
 
-	/**
-	 * Constructor LockFileExecutor
-	 *
-	 * @param connection
-	 * @param pa
-	 * @param sfd
-	 * @throws ExecutorException
-	 */
-	public LockFileExecutor(Connection connection, PropertiesAdapter pa, InputScanFileDef sfd) throws ExecutorException {
-		super(connection, pa, sfd);
-	}
+    /**
+     * Constructor LockFileExecutor
+     *
+     * @param connection
+     * @param pa
+     * @param sfd
+     * @throws ExecutorException
+     */
+    public LockFileExecutor(Connection connection, PropertiesAdapter pa, InputScanFileDef sfd) throws ExecutorException {
+        super(connection, pa, sfd);
+    }
 
-	@Override
-	protected File beforeProcessFile(File file) throws IOException {
-		mProcessedFiles.add(file);
+    @Override
+    protected File beforeProcessFile(File file) throws IOException {
+        mProcessedFiles.add(file);
 
-		return file;
-	}
+        return file;
+    }
 
-	@Override
-	protected void beforeExecute(File[] files) {
-		if (mProcessedFiles == null) {
-			mProcessedFiles = new ArrayList<>();
-		} else {
-			mProcessedFiles.clear();
-		}
-	}
+    @Override
+    protected void beforeExecute(File[] files) {
+        if (mProcessedFiles == null) {
+            mProcessedFiles = new ArrayList<>();
+        } else {
+            mProcessedFiles.clear();
+        }
+    }
 
-	@Override
-	protected void afterExecute(File[] files) {
-		if (mProcessedFiles != null && !mProcessedFiles.isEmpty()) {
-			if (getSFD().isFileDeletion()) {
-				for (final File file : mProcessedFiles) {
-					if (file.exists()) {
-						if (file.delete()) {
-							LOGGER.debug("  * {} has been deleted successfully", file.getName());
-						} else {
-							LOGGER.warn("  * {} cannot be deleted", file.getName());
-						}
-					}
-				}
-			}
+    @Override
+    protected void afterExecute(File[] files) {
+        if (mProcessedFiles != null && !mProcessedFiles.isEmpty()) {
+            if (getSFD().isFileDeletion()) {
+                for (final File file : mProcessedFiles) {
+                    if (file.exists()) {
+                        if (file.delete()) {
+                            LOGGER.debug("  * {} has been deleted successfully", file.getName());
+                        } else {
+                            LOGGER.warn("  * {} cannot be deleted", file.getName());
+                        }
+                    }
+                }
+            }
 
-			mProcessedFiles.clear();
-		}
-	}
+            mProcessedFiles.clear();
+        }
+    }
 
-	@Override
-	protected void beforeIntegrate(File file, FileKey fk) throws ExecutorException {
-		// Nothing to do
-	}
+    @Override
+    protected void beforeIntegrate(File file, FileKey fk) throws ExecutorException {
+        // Nothing to do
+    }
 
-	@Override
-	protected void afterIntegrate(File file, List<DocumentLinkBean> bean) throws ExecutorException {
-		// Nothing to do
-	}
+    @Override
+    protected void afterIntegrate(File file, List<DocumentLinkBean> bean) throws ExecutorException {
+        // Nothing to do
+    }
 }

@@ -28,27 +28,27 @@ import com.arkham.ged.yaml.UnderlineType;
  * @since 13 févr. 2020
  */
 public class UnderlineTypeDeserializer extends AbstractTypeDeserializer<UnderlineType> {
-	private static final Logger LOGGER = LoggerFactory.getLogger(UnderlineTypeDeserializer.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(UnderlineTypeDeserializer.class);
 
-	/**
-	 * Constructor ImageBehaviorTypeDeserializer
-	 *
-	 * @param ea Appender for errors
-	 */
-	public UnderlineTypeDeserializer(final ErrorAppender ea) {
-		super(ea);
-	}
+    /**
+     * Constructor ImageBehaviorTypeDeserializer
+     *
+     * @param ea Appender for errors
+     */
+    public UnderlineTypeDeserializer(final ErrorAppender ea) {
+        super(ea);
+    }
 
-	@Override
-	public UnderlineType deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
-		final String s = p.getText();
+    @Override
+    public UnderlineType deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
+        final var s = p.getText();
 
-		try {
-			return UnderlineType.valueOf(s.toUpperCase());
-		} catch (@SuppressWarnings("unused") final IllegalArgumentException e) { // NOSONAR
-			addError(LOGGER, p, UnderlineType.class, s);
-		}
+        try {
+            return UnderlineType.valueOf(s.toUpperCase());
+        } catch (@SuppressWarnings("unused") final IllegalArgumentException e) { // NOSONAR
+            addError(LOGGER, p, UnderlineType.class, s);
+        }
 
-		return UnderlineType.U_NONE;
-	}
+        return UnderlineType.U_NONE;
+    }
 }

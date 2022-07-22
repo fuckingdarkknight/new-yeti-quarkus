@@ -24,29 +24,29 @@ import javax.xml.bind.Unmarshaller;
  * @since 10 févr. 2015
  */
 public final class JaxbAdapter {
-	private JaxbAdapter() {
-		// Private because it's an utility class, so we should't get an instance of this class
-	}
+    private JaxbAdapter() {
+        // Private because it's an utility class, so we should't get an instance of this class
+    }
 
-	/**
-	 * @param is
-	 * @param contextPackage
-	 * @return The unmarshalled object
-	 * @throws JAXBException
-	 */
-	public static Object unmarshall(InputStream is, String contextPackage) throws JAXBException {
-		final Unmarshaller unmarshaller = createUnmarshaller(contextPackage);
+    /**
+     * @param is
+     * @param contextPackage
+     * @return The unmarshalled object
+     * @throws JAXBException
+     */
+    public static Object unmarshall(InputStream is, String contextPackage) throws JAXBException {
+        final var unmarshaller = createUnmarshaller(contextPackage);
 
-		return unmarshaller.unmarshal(is);
-	}
+        return unmarshaller.unmarshal(is);
+    }
 
-	private static Unmarshaller createUnmarshaller(String contextPackage) throws JAXBException {
-		final JAXBContext jc = createJaxbContext(contextPackage);
+    private static Unmarshaller createUnmarshaller(String contextPackage) throws JAXBException {
+        final var jc = createJaxbContext(contextPackage);
 
-		return jc.createUnmarshaller();
-	}
+        return jc.createUnmarshaller();
+    }
 
-	private static JAXBContext createJaxbContext(String contextPackage) throws JAXBException {
-		return JAXBContext.newInstance(contextPackage);
-	}
+    private static JAXBContext createJaxbContext(String contextPackage) throws JAXBException {
+        return JAXBContext.newInstance(contextPackage);
+    }
 }

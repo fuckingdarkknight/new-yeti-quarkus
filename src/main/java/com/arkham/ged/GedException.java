@@ -30,93 +30,93 @@ public class GedException extends Exception {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GedException.class);
 
-	/**
-	 * {@link GedException} constructor.
-	 *
-	 * @param cause Root cause
-	 */
-	public GedException(final Throwable cause) {
-		super(cause);
-	}
+    /**
+     * {@link GedException} constructor.
+     *
+     * @param cause Root cause
+     */
+    public GedException(final Throwable cause) {
+        super(cause);
+    }
 
-	/**
-	 * {@link GedException} constructor.
-	 *
-	 * @param message Message
-	 * @param params Parameters array
-	 */
-	public GedException(final GedMessage message, final Object... params) {
-		super(tr(message, params));
-		traceException(message);
-	}
+    /**
+     * {@link GedException} constructor.
+     *
+     * @param message Message
+     * @param params Parameters array
+     */
+    public GedException(final GedMessage message, final Object... params) {
+        super(tr(message, params));
+        traceException(message);
+    }
 
-	/**
-	 * {@link GedException} constructor.
-	 *
-	 * @param cause Root cause
-	 * @param message Message
-	 * @param params Parameters array
-	 */
-	public GedException(final Throwable cause, final GedMessage message, final Object... params) {
-		super(tr(message, params), cause);
-		traceException(message);
-	}
+    /**
+     * {@link GedException} constructor.
+     *
+     * @param cause Root cause
+     * @param message Message
+     * @param params Parameters array
+     */
+    public GedException(final Throwable cause, final GedMessage message, final Object... params) {
+        super(tr(message, params), cause);
+        traceException(message);
+    }
 
-	/**
-	 * Return the i18n message corresponding to the given id.
-	 *
-	 * @param message Message to translate
-	 * @param params Parameters' list
-	 * @return i18n message
-	 */
-	private static String tr(final GedMessage message, final Object... params) {
-		String label = message.getLabel();
+    /**
+     * Return the i18n message corresponding to the given id.
+     *
+     * @param message Message to translate
+     * @param params Parameters' list
+     * @return i18n message
+     */
+    private static String tr(final GedMessage message, final Object... params) {
+        var label = message.getLabel();
 
-		if (params != null && params.length > 0) {
-			label = substituteParams(label, params);
-		}
+        if (params != null && params.length > 0) {
+            label = substituteParams(label, params);
+        }
 
-		return label;
-	}
+        return label;
+    }
 
-	/**
-	 * Susbtitute the jokers contained in the given message with the provided parameters.
-	 *
-	 * @param message Message to handle
-	 * @param params List of parameters
-	 * @return Substituted message
-	 */
-	private static String substituteParams(final String message, final Object[] params) {
-		final StringBuilder sb = new StringBuilder(message.length() * 3 / 2);
-		int paramCount = 0;
-		final char joker = '@';
+    /**
+     * Susbtitute the jokers contained in the given message with the provided parameters.
+     *
+     * @param message Message to handle
+     * @param params List of parameters
+     * @return Substituted message
+     */
+    private static String substituteParams(final String message, final Object[] params) {
+        final var sb = new StringBuilder(message.length() * 3 / 2);
+        var paramCount = 0;
+        final var joker = '@';
 
-		for (int i = 0; i < message.length(); i++) {
-			final char c = message.charAt(i);
+        for (var i = 0; i < message.length(); i++) {
+            final var c = message.charAt(i);
 
-			if (c == joker) {
-				sb.append(paramCount < params.length ? params[paramCount] : joker);
-				paramCount++;
-			} else {
-				sb.append(c);
-			}
-		}
+            if (c == joker) {
+                sb.append(paramCount < params.length ? params[paramCount] : joker);
+                paramCount++;
+            } else {
+                sb.append(c);
+            }
+        }
 
-		return sb.toString();
-	}
+        return sb.toString();
+    }
 
-	private void traceException(final GedMessage message) {
-		if (!message.isTrace()) {
-			return;
-		}
+    private void traceException(final GedMessage message) {
+        if (!message.isTrace()) {
+            return;
+        }
 
-		final StringWriter sw = new StringWriter();
-		final PrintWriter pw = new PrintWriter(sw);
+        final var sw = new StringWriter();
+        final var pw = new PrintWriter(sw);
 
-		printStackTrace(pw);
+        printStackTrace(pw);
 
-		if (LOGGER.isErrorEnabled()) {
-			LOGGER.error(sw.toString());
-		}
-	}
+        if (LOGGER.isErrorEnabled()) {
+            LOGGER.error(sw.toString());
+        }
+    }
 }

@@ -24,94 +24,94 @@ import com.arkham.ged.xlsgen.FunctionValueProvider;
  * @since 24 août 2018
  */
 public class FindFunction extends Function {
-	private static final Integer DEF = Integer.valueOf(-1);
-	private static final int MAX_SCAN = 1000;
+    private static final Integer DEF = Integer.valueOf(-1);
+    private static final int MAX_SCAN = 1000;
 
-	private final FunctionValueProvider mFvp;
+    private final FunctionValueProvider mFvp;
 
-	FindFunction(FunctionValueProvider fvp) {
-		mFvp = fvp;
-	}
+    FindFunction(FunctionValueProvider fvp) {
+        mFvp = fvp;
+    }
 
-	@Override
-	public String getName() {
-		return "find";
-	}
+    @Override
+    public String getName() {
+        return "find";
+    }
 
-	@Override
-	protected Class<?>[] getParamsClass() {
-		return new Class[] { String.class, Long.class };
-	}
+    @Override
+    protected Class<?>[] getParamsClass() {
+        return new Class[] { String.class, Long.class };
+    }
 
-	@Override
-	protected int getMinParamCount() {
-		return 2;
-	}
+    @Override
+    protected int getMinParamCount() {
+        return 2;
+    }
 
-	@Override
-	public Object invoke(Object... params) throws FunctionExecutionException {
-		final String ta = (String) params[0];
-		final long indexStart = (long) params[1];
+    @Override
+    public Object invoke(Object... params) throws FunctionExecutionException {
+        final var ta = (String) params[0];
+        final var indexStart = (long) params[1];
 
-		// "A:C"
-		final String[] cols = ta.split(":");
+        // "A:C"
+        final var cols = ta.split(":");
 
-		final CellReference c1 = new CellReference(cols[0]);
-		final CellReference c2 = new CellReference(cols[1]);
+        final var c1 = new CellReference(cols[0]);
+        final var c2 = new CellReference(cols[1]);
 
-		// Ensure col1 >= col2
-		final int col1 = Math.min(c1.getCol(), c2.getCol());
-		final int col2 = Math.max(c1.getCol(), c2.getCol());
+        // Ensure col1 >= col2
+        final var col1 = Math.min(c1.getCol(), c2.getCol());
+        final var col2 = Math.max(c1.getCol(), c2.getCol());
 
-		long index = indexStart;
-		final long indexMax = indexStart + MAX_SCAN;
+        var index = indexStart;
+        final var indexMax = indexStart + MAX_SCAN;
 
-		// Security : stop scanning after index + MAX
-		while (index < indexMax) {
-			final Row row = mFvp.getSheet().getRow((int) index);
-			if (isEmpty(col1, col2, row)) {
-				return index;
-			}
+        // Security : stop scanning after index + MAX
+        while (index < indexMax) {
+            final var row = mFvp.getSheet().getRow((int) index);
+            if (isEmpty(col1, col2, row)) {
+                return index;
+            }
 
-			index++;
-		}
+            index++;
+        }
 
-		return DEF;
-	}
+        return DEF;
+    }
 
-	private static boolean isEmpty(int col1, int col2, Row row) {
-		if (row == null) {
-			return true;
-		}
+    private static boolean isEmpty(int col1, int col2, Row row) {
+        if (row == null) {
+            return true;
+        }
 
-		// Bound included
-		boolean res = true;
-		for (int i = col1; i <= col2; i++) {
-			res = res && isEmpty(row.getCell(i));
-		}
+        // Bound included
+        var res = true;
+        for (var i = col1; i <= col2; i++) {
+            res = res && isEmpty(row.getCell(i));
+        }
 
-		return res;
-	}
+        return res;
+    }
 
-	private static boolean isEmpty(Cell cell) {
-		if (cell == null) {
-			return true;
-		}
+    private static boolean isEmpty(Cell cell) {
+        if (cell == null) {
+            return true;
+        }
 
-		// final CellType ct = cell.getCellTypeEnum();
-		switch (cell.getCellType()) {
-			case BLANK:
-				return true;
+        // final CellType ct = cell.getCellTypeEnum();
+        switch (cell.getCellType()) {
+            case BLANK:
+                return true;
 
-			case NUMERIC:
-				return false;
+            case NUMERIC:
+                return false;
 
-			default:
-				break;
-		}
+            default:
+                break;
+        }
 
-		final String v = cell.getStringCellValue();
+        final var v = cell.getStringCellValue();
 
-		return v == null || "".equals(v.trim());
-	}
+        return v == null || "".equals(v.trim());
+    }
 }

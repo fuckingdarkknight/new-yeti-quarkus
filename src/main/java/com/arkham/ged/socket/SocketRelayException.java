@@ -21,11 +21,11 @@ public class SocketRelayException extends GedException {
     private static final long serialVersionUID = 1L;
 
     /**
-	 * Constructor SocketRelayException
-	 *
-	 * @param cause The root cause
-	 */
-	public SocketRelayException(final Throwable cause) {
-		super(cause);
-	}
+     * Constructor SocketRelayException
+     *
+     * @param cause The root cause
+     */
+    public SocketRelayException(final Throwable cause) {
+        super(cause);
+    }
 }

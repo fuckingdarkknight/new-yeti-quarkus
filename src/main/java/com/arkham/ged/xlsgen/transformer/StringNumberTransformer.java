@@ -24,12 +24,12 @@ import java.util.Locale;
  * @since 7 déc. 2016
  */
 public class StringNumberTransformer implements ITransformer<String> {
-	private static final Locale US = new Locale("en", "US");
+    private static final Locale US = new Locale("en", "US");
 
-	private static final NumberFormat NUM_FORMAT = new DecimalFormat("0", new DecimalFormatSymbols(US));
+    private static final NumberFormat NUM_FORMAT = new DecimalFormat("0", new DecimalFormatSymbols(US));
 
-	@Override
-	public Object transform(String value) {
-		return NUM_FORMAT.format(value);
-	}
+    @Override
+    public Object transform(String value) {
+        return NUM_FORMAT.format(value);
+    }
 }

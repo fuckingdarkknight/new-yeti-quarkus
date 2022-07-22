@@ -24,34 +24,34 @@ import org.slf4j.LoggerFactory;
  * @since 10 févr. 2015
  */
 public final class DocumentLinkBeanFactory {
-	private static final Logger LOGGER = LoggerFactory.getLogger(DocumentLinkBeanFactory.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DocumentLinkBeanFactory.class);
 
-	public static final String BEAN_FACTORY_PROPERTY = "arkham.ged.blob.beanfactory";
+    public static final String BEAN_FACTORY_PROPERTY = "arkham.ged.blob.beanfactory";
 
-	private DocumentLinkBeanFactory() {
-		// Private because it's an utility class, so we should't get an instance of this class
-	}
+    private DocumentLinkBeanFactory() {
+        // Private because it's an utility class, so we should't get an instance of this class
+    }
 
-	/**
-	 * Gets a new instance of {@link DocumentLinkBean}. Use <code>-D{@value #BEAN_FACTORY_PROPERTY}=classname</code> to create a new object. If this JVM parameter is not set, the default {@link DocumentLinkBean} class is
-	 * instancied
-	 * from its default constructor.
-	 *
-	 * @return A new {@link DocumentLinkBean} object
-	 */
-	public static DocumentLinkBean create() {
-		final String className = System.getProperty(BEAN_FACTORY_PROPERTY);
-		if (className != null) {
-			try {
-				final Class<?> clazz = Class.forName(className);
-				final Constructor<?> c = clazz.getConstructor();
+    /**
+     * Gets a new instance of {@link DocumentLinkBean}. Use <code>-D{@value #BEAN_FACTORY_PROPERTY}=classname</code> to create a new object. If this JVM parameter is not set, the default {@link DocumentLinkBean} class is
+     * instancied
+     * from its default constructor.
+     *
+     * @return A new {@link DocumentLinkBean} object
+     */
+    public static DocumentLinkBean create() {
+        final var className = System.getProperty(BEAN_FACTORY_PROPERTY);
+        if (className != null) {
+            try {
+                final Class<?> clazz = Class.forName(className);
+                final Constructor<?> c = clazz.getConstructor();
 
-				return (DocumentLinkBean) c.newInstance();
-			} catch (ClassNotFoundException | SecurityException | NoSuchMethodException | IllegalArgumentException | InstantiationException | IllegalAccessException | InvocationTargetException | ClassCastException e) {
-				LOGGER.error("createInstance() : className={} exception=", className, e);
-			}
-		}
+                return (DocumentLinkBean) c.newInstance();
+            } catch (ClassNotFoundException | SecurityException | NoSuchMethodException | IllegalArgumentException | InstantiationException | IllegalAccessException | InvocationTargetException | ClassCastException e) {
+                LOGGER.error("createInstance() : className={} exception=", className, e);
+            }
+        }
 
-		return new DocumentLinkBean();
-	}
+        return new DocumentLinkBean();
+    }
 }

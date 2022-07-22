@@ -18,12 +18,12 @@ package com.arkham.ged.solver;
  * @since 10 févr. 2015
  */
 public interface Translator {
-	/**
-	 * Translate a value to another
-	 *
-	 * @param value The value to translate
-	 * @param p Optional parameters
-	 * @return The value translated
-	 */
-	String translate(String value, Object... p);
+    /**
+     * Translate a value to another
+     *
+     * @param value The value to translate
+     * @param p Optional parameters
+     * @return The value translated
+     */
+    String translate(String value, Object... p);
 }

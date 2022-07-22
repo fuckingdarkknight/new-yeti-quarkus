@@ -20,16 +20,16 @@ import java.time.format.DateTimeFormatter;
  * @since 23 août 2018
  */
 public class DateInnerTransformer extends DateTransformer {
-	private static final DateTimeFormatter SRC_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd");
+    private static final DateTimeFormatter SRC_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd");
 
-	/**
-	 * Format "yyyyMMdd"
-	 * {@inheritDoc}
-	 *
-	 * @see com.arkham.ged.xlsgen.transformer.DateTransformer#getSourceFormatter()
-	 */
-	@Override
-	protected DateTimeFormatter getSourceFormatter() {
-		return SRC_FORMATTER;
-	}
+    /**
+     * Format "yyyyMMdd"
+     * {@inheritDoc}
+     *
+     * @see com.arkham.ged.xlsgen.transformer.DateTransformer#getSourceFormatter()
+     */
+    @Override
+    protected DateTimeFormatter getSourceFormatter() {
+        return SRC_FORMATTER;
+    }
 }

@@ -28,27 +28,27 @@ import com.arkham.ged.yaml.BorderStyleType;
  * @since 13 févr. 2020
  */
 public class BorderStyleTypeDeserializer extends AbstractTypeDeserializer<BorderStyleType> {
-	private static final Logger LOGGER = LoggerFactory.getLogger(BorderStyleTypeDeserializer.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BorderStyleTypeDeserializer.class);
 
-	/**
-	 * Constructor ImageBehaviorTypeDeserializer
-	 *
-	 * @param ea Appender for errors
-	 */
-	public BorderStyleTypeDeserializer(final ErrorAppender ea) {
-		super(ea);
-	}
+    /**
+     * Constructor ImageBehaviorTypeDeserializer
+     *
+     * @param ea Appender for errors
+     */
+    public BorderStyleTypeDeserializer(final ErrorAppender ea) {
+        super(ea);
+    }
 
-	@Override
-	public BorderStyleType deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
-		final String s = p.getText();
+    @Override
+    public BorderStyleType deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
+        final var s = p.getText();
 
-		try {
-			return BorderStyleType.valueOf(s.toUpperCase());
-		} catch (@SuppressWarnings("unused") final IllegalArgumentException e) { // NOSONAR
-			addError(LOGGER, p, BorderStyleType.class, s);
-		}
+        try {
+            return BorderStyleType.valueOf(s.toUpperCase());
+        } catch (@SuppressWarnings("unused") final IllegalArgumentException e) { // NOSONAR
+            addError(LOGGER, p, BorderStyleType.class, s);
+        }
 
-		return BorderStyleType.NONE;
-	}
+        return BorderStyleType.NONE;
+    }
 }

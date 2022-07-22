@@ -24,29 +24,29 @@ import java.util.regex.Pattern;
  * @since 10 févr. 2015
  */
 public class PatternFileFilter implements FileFilter {
-	private final Pattern mPattern;
+    private final Pattern mPattern;
 
-	/**
-	 * Constructor PatternFileFilter
-	 *
-	 * @param pattern
-	 */
-	public PatternFileFilter(String pattern) {
-		final int flags = Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE;
+    /**
+     * Constructor PatternFileFilter
+     *
+     * @param pattern
+     */
+    public PatternFileFilter(String pattern) {
+        final var flags = Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE;
 
-		final String stdFilePattern = pattern.replace(".", "\\.").replace("*", ".*");
-		mPattern = Pattern.compile(stdFilePattern, flags);
-	}
+        final var stdFilePattern = pattern.replace(".", "\\.").replace("*", ".*");
+        mPattern = Pattern.compile(stdFilePattern, flags);
+    }
 
-	@Override
-	public boolean accept(File pathname) {
-		final String filename = pathname.getName();
-		if (filename.startsWith(".")) {
-			return false;
-		}
+    @Override
+    public boolean accept(File pathname) {
+        final var filename = pathname.getName();
+        if (filename.startsWith(".")) {
+            return false;
+        }
 
-		final Matcher matcher = mPattern.matcher(filename);
+        final var matcher = mPattern.matcher(filename);
 
-		return matcher.matches();
-	}
+        return matcher.matches();
+    }
 }

@@ -16,31 +16,31 @@ package com.arkham.ged.message;
  * @since 10 févr. 2015
  */
 public class GedMessage {
-	private final boolean mTrace;
-	private final String mLabel;
+    private final boolean mTrace;
+    private final String mLabel;
 
-	/**
-	 * Constructor GedMessage
-	 *
-	 * @param trace Message to trace
-	 * @param message The message
-	 */
-	public GedMessage(boolean trace, String message) {
-		mTrace = trace;
-		mLabel = message;
-	}
+    /**
+     * Constructor GedMessage
+     *
+     * @param trace Message to trace
+     * @param message The message
+     */
+    public GedMessage(boolean trace, String message) {
+        mTrace = trace;
+        mLabel = message;
+    }
 
-	/**
-	 * @return The label of the message
-	 */
-	public String getLabel() {
-		return mLabel;
-	}
+    /**
+     * @return The label of the message
+     */
+    public String getLabel() {
+        return mLabel;
+    }
 
-	/**
-	 * @return true if it's a trace message
-	 */
-	public boolean isTrace() {
-		return mTrace;
-	}
+    /**
+     * @return true if it's a trace message
+     */
+    public boolean isTrace() {
+        return mTrace;
+    }
 }

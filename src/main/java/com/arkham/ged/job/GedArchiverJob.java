@@ -32,40 +32,40 @@ import com.arkham.ged.properties.PropertiesAdapter;
  * @since 10 févr. 2015
  */
 public class GedArchiverJob extends AbstractJob<InputScanFileDef> {
-	private static final Logger LOGGER = LoggerFactory.getLogger(GedArchiverJob.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(GedArchiverJob.class);
 
-	private static final Class[] CLASSDEF = { Connection.class, PropertiesAdapter.class, InputScanFileDef.class, };
+    private static final Class[] CLASSDEF = { Connection.class, PropertiesAdapter.class, InputScanFileDef.class, };
 
-	/**
-	 * Constructor GedArchiverJob
-	 *
-	 * @param pa Needed to get file extensions/typmed mappings
-	 * @param sfd The directory definition to scan
-	 */
-	public GedArchiverJob(PropertiesAdapter pa, InputScanFileDef sfd) {
-		super("GedArchiverJob", pa, sfd);
-	}
+    /**
+     * Constructor GedArchiverJob
+     *
+     * @param pa Needed to get file extensions/typmed mappings
+     * @param sfd The directory definition to scan
+     */
+    public GedArchiverJob(PropertiesAdapter pa, InputScanFileDef sfd) {
+        super("GedArchiverJob", pa, sfd);
+    }
 
-	@Override
-	protected AbstractScanFileExecutor<InputScanFileDef> createExecutorInstance(Connection con) throws ExecutorException {
-		AbstractScanFileExecutor<InputScanFileDef> result = null;
-		final String className = getSFD().getExecutor();
-		// By default, use input file renaming in order to process scalable integrations
-		if (className == null || className.trim().length() == 0 || "rename".equals(className)) {
-			result = new RenameFileExecutor(con, getPA(), getSFD());
-		} else if ("lock".equals(className)) {
-			result = new LockFileExecutor(con, getPA(), getSFD());
-		} else {
-			try {
-				final Class<AbstractScanFileExecutor<InputScanFileDef>> clazz = (Class<AbstractScanFileExecutor<InputScanFileDef>>) Class.forName(className);
-				final Constructor<AbstractScanFileExecutor<InputScanFileDef>> c = clazz.getConstructor(CLASSDEF);
+    @Override
+    protected AbstractScanFileExecutor<InputScanFileDef> createExecutorInstance(Connection con) throws ExecutorException {
+        AbstractScanFileExecutor<InputScanFileDef> result = null;
+        final var className = getSFD().getExecutor();
+        // By default, use input file renaming in order to process scalable integrations
+        if (className == null || className.trim().length() == 0 || "rename".equals(className)) {
+            result = new RenameFileExecutor(con, getPA(), getSFD());
+        } else if ("lock".equals(className)) {
+            result = new LockFileExecutor(con, getPA(), getSFD());
+        } else {
+            try {
+                final var clazz = (Class<AbstractScanFileExecutor<InputScanFileDef>>) Class.forName(className);
+                final var c = clazz.getConstructor(CLASSDEF);
 
-				result = c.newInstance(con, getPA(), getSFD());
-			} catch (NoSuchMethodException | SecurityException | ClassNotFoundException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | ClassCastException e) {
-				LOGGER.error("createInstance() : className={} exception={}", className, e);
-			}
-		}
+                result = c.newInstance(con, getPA(), getSFD());
+            } catch (NoSuchMethodException | SecurityException | ClassNotFoundException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | ClassCastException e) {
+                LOGGER.error("createInstance() : className={} exception={}", className, e);
+            }
+        }
 
-		return result;
-	}
+        return result;
+    }
 }

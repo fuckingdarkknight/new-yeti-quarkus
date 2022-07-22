@@ -21,17 +21,17 @@ import com.arkham.ged.xlsgen.FunctionValueProvider;
  * @since 24 août 2018
  */
 public class XlsgenExprValueProvider extends ExprValueProvider {
-	/**
-	 * Constructor XlsgenExprValueProvider
-	 *
-	 * @param fvp The provider used to solve values
-	 */
-	public XlsgenExprValueProvider(FunctionValueProvider fvp) {
-		registerFunction(new FindFunction(fvp));
-		registerFunction(new CurrentIndexFunction(fvp));
+    /**
+     * Constructor XlsgenExprValueProvider
+     *
+     * @param fvp The provider used to solve values
+     */
+    public XlsgenExprValueProvider(FunctionValueProvider fvp) {
+        registerFunction(new FindFunction(fvp));
+        registerFunction(new CurrentIndexFunction(fvp));
 
-		// Global
-		registerFunction(new ImportFileFunction());
-		registerFunction(new PropertyFunction(fvp));
-	}
+        // Global
+        registerFunction(new ImportFileFunction());
+        registerFunction(new PropertyFunction(fvp));
+    }
 }

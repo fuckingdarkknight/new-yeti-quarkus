@@ -28,27 +28,27 @@ import com.arkham.ged.yaml.ModeBehaviorType;
  * @since 13 févr. 2020
  */
 public class ModeBehaviorTypeDeserializer extends AbstractTypeDeserializer<ModeBehaviorType> {
-	private static final Logger LOGGER = LoggerFactory.getLogger(ModeBehaviorTypeDeserializer.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ModeBehaviorTypeDeserializer.class);
 
-	/**
-	 * Constructor ImageBehaviorTypeDeserializer
-	 *
-	 * @param ea Appender for errors
-	 */
-	public ModeBehaviorTypeDeserializer(final ErrorAppender ea) {
-		super(ea);
-	}
+    /**
+     * Constructor ImageBehaviorTypeDeserializer
+     *
+     * @param ea Appender for errors
+     */
+    public ModeBehaviorTypeDeserializer(final ErrorAppender ea) {
+        super(ea);
+    }
 
-	@Override
-	public ModeBehaviorType deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
-		final String s = p.getText();
+    @Override
+    public ModeBehaviorType deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
+        final var s = p.getText();
 
-		try {
-			return ModeBehaviorType.valueOf(s.toUpperCase());
-		} catch (@SuppressWarnings("unused") final IllegalArgumentException e) { // NOSONAR
-			addError(LOGGER, p, ModeBehaviorType.class, s);
-		}
+        try {
+            return ModeBehaviorType.valueOf(s.toUpperCase());
+        } catch (@SuppressWarnings("unused") final IllegalArgumentException e) { // NOSONAR
+            addError(LOGGER, p, ModeBehaviorType.class, s);
+        }
 
-		return ModeBehaviorType.REPORT;
-	}
+        return ModeBehaviorType.REPORT;
+    }
 }

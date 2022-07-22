@@ -22,41 +22,41 @@ public class ExecutorException extends GedException {
     private static final long serialVersionUID = 1L;
 
     /**
-	 * {@link ExecutorException} constructor.
-	 *
-	 * @param message Message
-	 * @param params Parameters array
-	 */
-	public ExecutorException(final GedMessage message, final Object... params) {
-		super(message, params);
-	}
+     * {@link ExecutorException} constructor.
+     *
+     * @param message Message
+     * @param params Parameters array
+     */
+    public ExecutorException(final GedMessage message, final Object... params) {
+        super(message, params);
+    }
 
-	/**
-	 * {@link ExecutorException} constructor.
-	 *
-	 * @param cause Root cause
-	 * @param message Message
-	 * @param params Parameters array
-	 */
-	public ExecutorException(final Throwable cause, final GedMessage message, final Object... params) {
-		super(cause, message, params);
-	}
+    /**
+     * {@link ExecutorException} constructor.
+     *
+     * @param cause Root cause
+     * @param message Message
+     * @param params Parameters array
+     */
+    public ExecutorException(final Throwable cause, final GedMessage message, final Object... params) {
+        super(cause, message, params);
+    }
 
-	/**
-	 * {@link ExecutorException} constructor.
-	 *
-	 * @param cause Root cause
-	 */
-	public ExecutorException(final Throwable cause) {
-		super(cause);
-	}
+    /**
+     * {@link ExecutorException} constructor.
+     *
+     * @param cause Root cause
+     */
+    public ExecutorException(final Throwable cause) {
+        super(cause);
+    }
 
-	@Override
-	public String toString() {
-		if (getCause() != null) {
-			return getMessage() + "\r\n" + getCause();
-		}
+    @Override
+    public String toString() {
+        if (getCause() != null) {
+            return getMessage() + "\r\n" + getCause();
+        }
 
-		return getMessage();
-	}
+        return getMessage();
+    }
 }

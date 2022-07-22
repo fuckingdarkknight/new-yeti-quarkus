@@ -28,90 +28,90 @@ import com.arkham.ged.timer.TIMERDEF;
  * @param <T> The bus/scanner
  */
 public abstract class AbstractExecutor<T extends AbstractScanDef> {
-	/* @formatter:off */
-	protected enum COMMIT_MODE {
-		/**
-		 * Commit only if all integrate actions suceed
-		 */
-		GLOBAL,
-		/**
-		 * Commit if integration in database succeed. Even if other actions fails
-		 */
-		INTEGRATE_ONLY
-	}
-	/* @formatter:on */
+    /* @formatter:off */
+    protected enum COMMIT_MODE {
+        /**
+         * Commit only if all integrate actions suceed
+         */
+        GLOBAL,
+        /**
+         * Commit if integration in database succeed. Even if other actions fails
+         */
+        INTEGRATE_ONLY
+    }
+    /* @formatter:on */
 
-	private final Connection mConnection;
-	private final PropertiesAdapter mPa;
+    private final Connection mConnection;
+    private final PropertiesAdapter mPa;
 
-	/**
-	 * Constructor AbstractExecutor
-	 *
-	 * @param pa The properties adapter
-	 */
-	public AbstractExecutor(PropertiesAdapter pa) {
-		mConnection = null;
-		mPa = pa;
-	}
+    /**
+     * Constructor AbstractExecutor
+     *
+     * @param pa The properties adapter
+     */
+    public AbstractExecutor(PropertiesAdapter pa) {
+        mConnection = null;
+        mPa = pa;
+    }
 
-	/**
-	 * Constructor AbstractExecutor
-	 *
-	 * @param connection Database connection
-	 * @param pa The properties adapter
-	 */
-	public AbstractExecutor(Connection connection, PropertiesAdapter pa) {
-		mConnection = connection;
-		mPa = pa;
-	}
+    /**
+     * Constructor AbstractExecutor
+     *
+     * @param connection Database connection
+     * @param pa The properties adapter
+     */
+    public AbstractExecutor(Connection connection, PropertiesAdapter pa) {
+        mConnection = connection;
+        mPa = pa;
+    }
 
-	/**
-	 * @return The database {@link Connection}
-	 */
-	protected final Connection getConnection() {
-		return mConnection;
-	}
+    /**
+     * @return The database {@link Connection}
+     */
+    protected final Connection getConnection() {
+        return mConnection;
+    }
 
-	/**
-	 * @return The properties adapter
-	 */
-	protected final PropertiesAdapter getPA() {
-		return mPa;
-	}
+    /**
+     * @return The properties adapter
+     */
+    protected final PropertiesAdapter getPA() {
+        return mPa;
+    }
 
-	/**
-	 * Commit SQL transaction. Could be overloaded in case of executor that does not use a SGBD
-	 *
-	 * @throws SQLException
-	 */
-	protected final void commit() throws SQLException {
-		final Timer<TIMERDEF> timer = GedTimerManager.getProvider().create(TIMERDEF.COMMIT);
-		try {
-			timer.start();
+    /**
+     * Commit SQL transaction. Could be overloaded in case of executor that does not use a SGBD
+     *
+     * @throws SQLException
+     */
+    protected final void commit() throws SQLException {
+        final var timer = GedTimerManager.getProvider().create(TIMERDEF.COMMIT);
+        try {
+            timer.start();
 
-			if (mConnection != null) {
-				mConnection.commit();
-			}
-		} finally {
-			timer.stopAndPublish();
-		}
-	}
+            if (mConnection != null) {
+                mConnection.commit();
+            }
+        } finally {
+            timer.stopAndPublish();
+        }
+    }
 
-	/**
-	 * Rollback SQL transaction. Could be overloaded in case of executor that does not use a SGBD
-	 *
-	 * @throws SQLException
-	 */
-	protected final void rollback() throws SQLException {
-		if (mConnection != null) {
-			mConnection.rollback();
-		}
-	}
+    /**
+     * Rollback SQL transaction. Could be overloaded in case of executor that does not use a SGBD
+     *
+     * @throws SQLException
+     */
+    protected final void rollback() throws SQLException {
+        if (mConnection != null) {
+            mConnection.rollback();
+        }
+    }
 
-	/**
-	 * Runs the executor
-	 *
-	 * @throws ExecutorException Generic package exception
-	 */
-	public abstract void run() throws ExecutorException;
+    /**
+     * Runs the executor
+     *
+     * @throws ExecutorException Generic package exception
+     */
+    public abstract void run() throws ExecutorException;
 }

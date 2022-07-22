@@ -23,26 +23,26 @@ import com.arkham.common.timer.TimerProvider;
  * @since 29 mai 2015
  */
 public final class GedTimerManager {
-	private static Lock mLock = new ReentrantLock();
+    private static Lock mLock = new ReentrantLock();
 
-	private static GedTimerProvider mTimerProvider;
+    private static GedTimerProvider mTimerProvider;
 
-	static {
-		try {
-			mLock.lock();
-			if (mTimerProvider == null) {
-				mTimerProvider = new GedTimerProvider((TimerProvider<TIMERDEF>) null, new GedTimerPublisher());
-			}
-		} finally {
-			mLock.unlock();
-		}
-	}
+    static {
+        try {
+            mLock.lock();
+            if (mTimerProvider == null) {
+                mTimerProvider = new GedTimerProvider((TimerProvider<TIMERDEF>) null, new GedTimerPublisher());
+            }
+        } finally {
+            mLock.unlock();
+        }
+    }
 
-	private GedTimerManager() {
-		// Private and nothing to do
-	}
+    private GedTimerManager() {
+        // Private and nothing to do
+    }
 
-	public static GedTimerProvider getProvider() {
-		return mTimerProvider;
-	}
+    public static GedTimerProvider getProvider() {
+        return mTimerProvider;
+    }
 }

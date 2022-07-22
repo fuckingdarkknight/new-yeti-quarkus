@@ -42,274 +42,274 @@ import com.arkham.ged.yaml.UnderlineType;
  * @since 2 août 2018
  */
 public final class ExcelStyleBuilder {
-	private static final Logger LOGGER = LoggerFactory.getLogger(ExcelStyleBuilder.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExcelStyleBuilder.class);
 
-	private final Map<String, CellStyle> mCellStyles = new HashMap<>();
-	private final Map<String, FormatType> mDataFormats = new HashMap<>();
-	private final Map<String, ColorType> mColorTypes = new HashMap<>();
-	private final Map<String, FontType> mFontTypes = new HashMap<>();
-	private final Map<String, BorderType> mBorderTypes = new HashMap<>();
+    private final Map<String, CellStyle> mCellStyles = new HashMap<>();
+    private final Map<String, FormatType> mDataFormats = new HashMap<>();
+    private final Map<String, ColorType> mColorTypes = new HashMap<>();
+    private final Map<String, FontType> mFontTypes = new HashMap<>();
+    private final Map<String, BorderType> mBorderTypes = new HashMap<>();
 
-	private final RootExcel mRe;
-	private final Workbook mWb;
-	private final CreationHelper mHelper;
+    private final RootExcel mRe;
+    private final Workbook mWb;
+    private final CreationHelper mHelper;
 
-	/**
-	 * Constructor ExcelStyleBuilder
-	 *
-	 * @param re The root JAXB
-	 * @param wb The current workbook used to create new styles
-	 */
-	public ExcelStyleBuilder(final RootExcel re, final Workbook wb) {
-		mRe = re;
-		mWb = wb;
+    /**
+     * Constructor ExcelStyleBuilder
+     *
+     * @param re The root JAXB
+     * @param wb The current workbook used to create new styles
+     */
+    public ExcelStyleBuilder(final RootExcel re, final Workbook wb) {
+        mRe = re;
+        mWb = wb;
 
-		// Keep reference helper
-		mHelper = wb.getCreationHelper();
+        // Keep reference helper
+        mHelper = wb.getCreationHelper();
 
-		// Now can create styles
-		createStyles();
-	}
+        // Now can create styles
+        createStyles();
+    }
 
-	/**
-	 * Get a predefined style, return <code>null</code> if style is <code>null</code> or style is not defined
-	 *
-	 * @param style The predefined style
-	 * @return The POI cell style
-	 */
-	public CellStyle getCellStyle(final String style) {
-		if (style != null) {
-			return mCellStyles.get(style);
-		}
+    /**
+     * Get a predefined style, return <code>null</code> if style is <code>null</code> or style is not defined
+     *
+     * @param style The predefined style
+     * @return The POI cell style
+     */
+    public CellStyle getCellStyle(final String style) {
+        if (style != null) {
+            return mCellStyles.get(style);
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	/**
-	 * Get the workbook helper
-	 *
-	 * @return The helper of the workbook
-	 */
-	public CreationHelper getHelper() {
-		return mHelper;
-	}
+    /**
+     * Get the workbook helper
+     *
+     * @return The helper of the workbook
+     */
+    public CreationHelper getHelper() {
+        return mHelper;
+    }
 
-	private void createColors() {
-		if (mRe.getColor() != null) {
-			for (final ColorType ct : mRe.getColor()) {
-				if (ct.getColor() != null) {
-					try {
-						final HSSFColorPredefined color = HSSFColorPredefined.valueOf(ct.getColor());
-						ct.setIndex(color.getIndex());
-						mColorTypes.put(ct.getName(), ct);
+    private void createColors() {
+        if (mRe.getColor() != null) {
+            for (final ColorType ct : mRe.getColor()) {
+                if (ct.getColor() != null) {
+                    try {
+                        final var color = HSSFColorPredefined.valueOf(ct.getColor());
+                        ct.setIndex(color.getIndex());
+                        mColorTypes.put(ct.getName(), ct);
 
-						LOGGER.info("createColors() : color added \"{}\" for index={}", ct.getName(), ct.getIndex());
-					} catch (@SuppressWarnings("unused") final IllegalArgumentException e) { // NOSONAR : not a blocking problem
-						LOGGER.error("createColors() : bad color name \"{}\"", ct.getColor());
-					}
-				} else {
-					LOGGER.warn("createColors() : color badly defined \"{}\"", ct.getName());
-				}
-			}
-		}
-	}
+                        LOGGER.info("createColors() : color added \"{}\" for index={}", ct.getName(), ct.getIndex());
+                    } catch (@SuppressWarnings("unused") final IllegalArgumentException e) { // NOSONAR : not a blocking problem
+                        LOGGER.error("createColors() : bad color name \"{}\"", ct.getColor());
+                    }
+                } else {
+                    LOGGER.warn("createColors() : color badly defined \"{}\"", ct.getName());
+                }
+            }
+        }
+    }
 
-	private void createFonts() {
-		if (mRe.getFont() != null) {
-			for (final FontType ft : mRe.getFont()) {
-				mFontTypes.put(ft.getName(), ft);
+    private void createFonts() {
+        if (mRe.getFont() != null) {
+            for (final FontType ft : mRe.getFont()) {
+                mFontTypes.put(ft.getName(), ft);
 
-				LOGGER.info("createFonts() : font added \"{}\"", ft.getName());
-			}
-		}
-	}
+                LOGGER.info("createFonts() : font added \"{}\"", ft.getName());
+            }
+        }
+    }
 
-	private void createBorders() {
-		if (mRe.getBorder() != null) {
-			for (final BorderType bt : mRe.getBorder()) {
-				mBorderTypes.put(bt.getName(), bt);
+    private void createBorders() {
+        if (mRe.getBorder() != null) {
+            for (final BorderType bt : mRe.getBorder()) {
+                mBorderTypes.put(bt.getName(), bt);
 
-				LOGGER.info("createBorders() : border definition added \"{}\"", bt.getName());
-			}
-		}
-	}
+                LOGGER.info("createBorders() : border definition added \"{}\"", bt.getName());
+            }
+        }
+    }
 
-	private void createFormats() {
-		if (mRe.getFormat() != null) {
-			for (final FormatType ft : mRe.getFormat()) {
-				if (ft.getValue() != null) {
-					final DataFormat format = mWb.createDataFormat();
-					final short idx = format.getFormat(ft.getValue());
-					ft.setIndex(idx);
+    private void createFormats() {
+        if (mRe.getFormat() != null) {
+            for (final FormatType ft : mRe.getFormat()) {
+                if (ft.getValue() != null) {
+                    final var format = mWb.createDataFormat();
+                    final var idx = format.getFormat(ft.getValue());
+                    ft.setIndex(idx);
 
-					mDataFormats.put(ft.getName(), ft);
+                    mDataFormats.put(ft.getName(), ft);
 
-					LOGGER.info("createFormats() : format added \"{}\" ({}) = {}", ft.getName(), idx, ft.getValue());
-				} else {
-					LOGGER.error("createFormats() : bad format \"{}\" ({})", ft.getName(), ft.getValue());
-				}
-			}
-		}
-	}
+                    LOGGER.info("createFormats() : format added \"{}\" ({}) = {}", ft.getName(), idx, ft.getValue());
+                } else {
+                    LOGGER.error("createFormats() : bad format \"{}\" ({})", ft.getName(), ft.getValue());
+                }
+            }
+        }
+    }
 
-	private short getColorIndex(final String color) {
-		if (color != null && !"".equals(color.trim())) {
-			final ColorType ct = mColorTypes.get(color);
-			if (ct != null) {
-				short index = ct.getIndex();
-				if (index == -1) { // Color is not defined
-					index = 0x40; // default predifined value
+    private short getColorIndex(final String color) {
+        if (color != null && !"".equals(color.trim())) {
+            final var ct = mColorTypes.get(color);
+            if (ct != null) {
+                var index = ct.getIndex();
+                if (index == -1) { // Color is not defined
+                    index = 0x40; // default predifined value
 
-					LOGGER.warn("getColorIndex() : color \"{}\" is not defined, using default value", color);
-				}
+                    LOGGER.warn("getColorIndex() : color \"{}\" is not defined, using default value", color);
+                }
 
-				return index;
-			}
-		}
+                return index;
+            }
+        }
 
-		return -1;
-	}
+        return -1;
+    }
 
-	private void adoptFormat(final StyleType st, final CellStyle cs) {
-		if (st.getFormat() != null) {
-			final FormatType ft = mDataFormats.get(st.getFormat());
-			if (ft != null) {
-				cs.setDataFormat(ft.getIndex());
+    private void adoptFormat(final StyleType st, final CellStyle cs) {
+        if (st.getFormat() != null) {
+            final var ft = mDataFormats.get(st.getFormat());
+            if (ft != null) {
+                cs.setDataFormat(ft.getIndex());
 
-				if (ft.getAlign() != null) {
-					final HorizontalAlignment ha = PoiTypeConverter.convert(ft.getAlign());
-					if (ha != null) {
-						cs.setAlignment(ha);
-					}
-				}
+                if (ft.getAlign() != null) {
+                    final var ha = PoiTypeConverter.convert(ft.getAlign());
+                    if (ha != null) {
+                        cs.setAlignment(ha);
+                    }
+                }
 
-				if (ft.getValign() != null) {
-					final VerticalAlignment va = PoiTypeConverter.convert(ft.getValign());
-					if (va != null) {
-						cs.setVerticalAlignment(va);
-					}
-				}
+                if (ft.getValign() != null) {
+                    final var va = PoiTypeConverter.convert(ft.getValign());
+                    if (va != null) {
+                        cs.setVerticalAlignment(va);
+                    }
+                }
 
-				cs.setWrapText(Boolean.TRUE.equals(ft.isWrap()));
-			} else {
-				LOGGER.warn("createStyles() : try to use format \"{}\" which is not defined in format section", st.getFormat());
-			}
-		}
-	}
+                cs.setWrapText(Boolean.TRUE.equals(ft.isWrap()));
+            } else {
+                LOGGER.warn("createStyles() : try to use format \"{}\" which is not defined in format section", st.getFormat());
+            }
+        }
+    }
 
-	private void adoptFont(final StyleType st, final CellStyle cs) {
-		if (st.getFont() != null) {
-			final FontType ft = mFontTypes.get(st.getFont());
-			if (ft != null) {
-				final Font f = mWb.createFont();
-				f.setFontName(ft.getPolice());
-				if (ft.getHeight() != null) {
-					f.setFontHeightInPoints(ft.getHeight());
-				}
-				if (ft.isBold() != null) {
-					f.setBold(ft.isBold());
-				}
-				if (ft.isItalic() != null) {
-					f.setItalic(ft.isItalic());
-				}
-				if (ft.isStrikeout() != null) {
-					f.setStrikeout(ft.isStrikeout());
-				}
-				final UnderlineType ut = ft.getUnderline();
-				if (ut != null) {
-					f.setUnderline(PoiTypeConverter.convert(ut));
-				}
+    private void adoptFont(final StyleType st, final CellStyle cs) {
+        if (st.getFont() != null) {
+            final var ft = mFontTypes.get(st.getFont());
+            if (ft != null) {
+                final var f = mWb.createFont();
+                f.setFontName(ft.getPolice());
+                if (ft.getHeight() != null) {
+                    f.setFontHeightInPoints(ft.getHeight());
+                }
+                if (ft.isBold() != null) {
+                    f.setBold(ft.isBold());
+                }
+                if (ft.isItalic() != null) {
+                    f.setItalic(ft.isItalic());
+                }
+                if (ft.isStrikeout() != null) {
+                    f.setStrikeout(ft.isStrikeout());
+                }
+                final var ut = ft.getUnderline();
+                if (ut != null) {
+                    f.setUnderline(PoiTypeConverter.convert(ut));
+                }
 
-				cs.setFont(f);
+                cs.setFont(f);
 
-				final short color = getColorIndex(ft.getColor());
-				if (color > -1) {
-					f.setColor(color);
-				}
-			} else {
-				LOGGER.warn("createStyles() : reference to font \"{}\" which is not defined", st.getFont());
-			}
-		}
-	}
+                final var color = getColorIndex(ft.getColor());
+                if (color > -1) {
+                    f.setColor(color);
+                }
+            } else {
+                LOGGER.warn("createStyles() : reference to font \"{}\" which is not defined", st.getFont());
+            }
+        }
+    }
 
-	private void adoptBorder(final StyleType st, final CellStyle cs) {
-		if (st.getBorder() != null) {
-			final BorderType bt = mBorderTypes.get(st.getBorder());
-			if (bt != null) {
-				// Couleur de bordure (-1 si pas précisé, donc ne rien appliquer dans le cas)
-				final short bColor = getColorIndex(bt.getBcolor());
-				if (bColor != -1) {
-					cs.setBottomBorderColor(bColor);
-					cs.setTopBorderColor(bColor);
-					cs.setLeftBorderColor(bColor);
-					cs.setRightBorderColor(bColor);
-				}
+    private void adoptBorder(final StyleType st, final CellStyle cs) {
+        if (st.getBorder() != null) {
+            final var bt = mBorderTypes.get(st.getBorder());
+            if (bt != null) {
+                // Couleur de bordure (-1 si pas précisé, donc ne rien appliquer dans le cas)
+                final var bColor = getColorIndex(bt.getBcolor());
+                if (bColor != -1) {
+                    cs.setBottomBorderColor(bColor);
+                    cs.setTopBorderColor(bColor);
+                    cs.setLeftBorderColor(bColor);
+                    cs.setRightBorderColor(bColor);
+                }
 
-				// Méga casse-noix : NPE si on passe null, ça aurait été plus simple de ne rien faire
-				BorderStyle bs = PoiTypeConverter.convert(bt.getBottom());
-				if (bs != null) {
-					cs.setBorderBottom(bs);
-				}
-				bs = PoiTypeConverter.convert(bt.getTop());
-				if (bs != null) {
-					cs.setBorderTop(bs);
-				}
-				bs = PoiTypeConverter.convert(bt.getLeft());
-				if (bs != null) {
-					cs.setBorderLeft(bs);
-				}
-				bs = PoiTypeConverter.convert(bt.getRight());
-				if (bs != null) {
-					cs.setBorderRight(bs);
-				}
+                // Méga casse-noix : NPE si on passe null, ça aurait été plus simple de ne rien faire
+                var bs = PoiTypeConverter.convert(bt.getBottom());
+                if (bs != null) {
+                    cs.setBorderBottom(bs);
+                }
+                bs = PoiTypeConverter.convert(bt.getTop());
+                if (bs != null) {
+                    cs.setBorderTop(bs);
+                }
+                bs = PoiTypeConverter.convert(bt.getLeft());
+                if (bs != null) {
+                    cs.setBorderLeft(bs);
+                }
+                bs = PoiTypeConverter.convert(bt.getRight());
+                if (bs != null) {
+                    cs.setBorderRight(bs);
+                }
 
-				// Traitement de la couleur de fond
-				final short color = getColorIndex(bt.getBgcolor());
-				cs.setFillForegroundColor(color);
-				// Le fond
-				final FillPatternType fpt = PoiTypeConverter.convert(bt.getFill());
-				if (fpt != null) {
-					cs.setFillPattern(fpt);
-				}
-			} else {
-				LOGGER.info("createStyles() : try to use border \"{}\" which is not defined", st.getBorder());
-			}
-		}
-	}
+                // Traitement de la couleur de fond
+                final var color = getColorIndex(bt.getBgcolor());
+                cs.setFillForegroundColor(color);
+                // Le fond
+                final var fpt = PoiTypeConverter.convert(bt.getFill());
+                if (fpt != null) {
+                    cs.setFillPattern(fpt);
+                }
+            } else {
+                LOGGER.info("createStyles() : try to use border \"{}\" which is not defined", st.getBorder());
+            }
+        }
+    }
 
-	private void createStyles() {
-		// First create colors, fonts and borders
-		createColors();
-		createFonts();
-		createBorders();
+    private void createStyles() {
+        // First create colors, fonts and borders
+        createColors();
+        createFonts();
+        createBorders();
 
-		// Secondly create formats
-		createFormats();
+        // Secondly create formats
+        createFormats();
 
-		if (mRe.getStyle() != null) {
-			for (final StyleType st : mRe.getStyle()) {
-				// On loggue la création du style
-				LOGGER.info("createStyles() : create new style \"{}\"", st.getName());
+        if (mRe.getStyle() != null) {
+            for (final StyleType st : mRe.getStyle()) {
+                // On loggue la création du style
+                LOGGER.info("createStyles() : create new style \"{}\"", st.getName());
 
-				final CellStyle cs = mWb.createCellStyle();
-				if (st.isLock() != null) {
-					cs.setLocked(st.isLock());
-				} else {
-					cs.setLocked(false);
-				}
+                final var cs = mWb.createCellStyle();
+                if (st.isLock() != null) {
+                    cs.setLocked(st.isLock());
+                } else {
+                    cs.setLocked(false);
+                }
 
-				// On positionne d'abord le format
-				adoptFormat(st, cs);
+                // On positionne d'abord le format
+                adoptFormat(st, cs);
 
-				// Puis la police
-				adoptFont(st, cs);
+                // Puis la police
+                adoptFont(st, cs);
 
-				// Et enfin les bordures
-				adoptBorder(st, cs);
+                // Et enfin les bordures
+                adoptBorder(st, cs);
 
-				// On ajoute à la map des styles prédéfinis
-				mCellStyles.put(st.getName(), cs);
-			}
-		}
-	}
+                // On ajoute à la map des styles prédéfinis
+                mCellStyles.put(st.getName(), cs);
+            }
+        }
+    }
 }

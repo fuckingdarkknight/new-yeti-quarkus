@@ -16,10 +16,10 @@ package com.arkham.ged.annotation;
  * @since 2 mars 2020
  */
 public interface EnumDefaultType<E extends Enum<E>> {
-	/**
-	 * @return Default value for enum
-	 */
-	default String getDefault() {
-		return "__";
-	}
+    /**
+     * @return Default value for enum
+     */
+    default String getDefault() {
+        return "__";
+    }
 }

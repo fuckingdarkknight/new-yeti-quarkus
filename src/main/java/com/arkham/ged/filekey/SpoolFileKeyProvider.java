@@ -33,88 +33,88 @@ import com.arkham.ged.util.GedUtil;
  * @since 3 août 2018
  */
 public class SpoolFileKeyProvider extends FileKeyProvider {
-	private static final Logger LOGGER = LoggerFactory.getLogger(SpoolFileKeyProvider.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SpoolFileKeyProvider.class);
 
-	/**
-	 * Define if user should be used as target or entity. NOMCLE=UTIxxx or NOMCLE=SOCxxx
-	 */
-	private static final String SOC_QUERY = "select sigtie from v_infsoc where codsoc = ?";
+    /**
+     * Define if user should be used as target or entity. NOMCLE=UTIxxx or NOMCLE=SOCxxx
+     */
+    private static final String SOC_QUERY = "select sigtie from v_infsoc where codsoc = ?";
 
-	private static final String SPL_QUERY = "select tfc, uti from ut_spl where codsoc = ? and numero = ?";
+    private static final String SPL_QUERY = "select tfc, uti from ut_spl where codsoc = ? and numero = ?";
 
-	@Override
-	public FileKey getKey(File file, Connection con, PropertiesAdapter pa, List<OptionalParameterType> opt) throws FileKeyProviderException {
-		String filename = file.getName();
-		if (filename.endsWith(PROCEXT)) {
-			filename = GedUtil.removeFileExtension(filename);
-		}
+    @Override
+    public FileKey getKey(File file, Connection con, PropertiesAdapter pa, List<OptionalParameterType> opt) throws FileKeyProviderException {
+        var filename = file.getName();
+        if (filename.endsWith(PROCEXT)) {
+            filename = GedUtil.removeFileExtension(filename);
+        }
 
-		final int dotPos = filename.lastIndexOf('.');
-		if (dotPos != -1 && filename.length() > 3) {
-			try {
-				final String prefix = filename.substring(0, 3);
-				final boolean userMode = "UTI".equalsIgnoreCase(prefix);
+        final var dotPos = filename.lastIndexOf('.');
+        if (dotPos != -1 && filename.length() > 3) {
+            try {
+                final var prefix = filename.substring(0, 3);
+                final var userMode = "UTI".equalsIgnoreCase(prefix);
 
-				// Remove prefix SOC and extension
-				final String fn = filename.substring(3, dotPos);
-				final String[] x = fn.split("_");
-				final int codsoc = Integer.parseInt(x[0]);
-				final int numedi = Integer.parseInt(x[1]);
+                // Remove prefix SOC and extension
+                final var fn = filename.substring(3, dotPos);
+                final var x = fn.split("_");
+                final var codsoc = Integer.parseInt(x[0]);
+                final var numedi = Integer.parseInt(x[1]);
 
-				final FileKey fk = new FileKey(codsoc, "xxx", "xxx", filename);
-				fk.setAttribute("numedi", numedi);
+                final var fk = new FileKey(codsoc, "xxx", "xxx", filename);
+                fk.setAttribute("numedi", numedi);
 
-				adapt(con, fk, codsoc, numedi, userMode);
+                adapt(con, fk, codsoc, numedi, userMode);
 
-				return fk;
-			} catch (final SQLException | NumberFormatException e) {
-				LOGGER.info("getKey() : {} cannot be parsed", filename);
+                return fk;
+            } catch (final SQLException | NumberFormatException e) {
+                LOGGER.info("getKey() : {} cannot be parsed", filename);
 
-				throw new FileKeyProviderException(e, GedMessages.Scanner.decodingError);
-			}
-		}
+                throw new FileKeyProviderException(e, GedMessages.Scanner.decodingError);
+            }
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	@Override
-	public boolean isRefFile() {
-		return false;
-	}
+    @Override
+    public boolean isRefFile() {
+        return false;
+    }
 
-	private static void adapt(Connection con, FileKey fk, int codsoc, int numedi, boolean userMode) throws SQLException {
-		try (PreparedStatement ps = con.prepareStatement(SOC_QUERY)) {
-			ps.setInt(1, codsoc);
-			try (ResultSet rs = ps.executeQuery()) {
-				if (rs.next()) {
-					// Private publication
-					fk.setAttribute(FileKey.TYPTIE, "TIE");
-					fk.setAttribute(FileKey.NOMCLE, "SOC" + rs.getString(1));
-					fk.setAttribute(FileKey.INDPUB, "1");
-					fk.setAttribute(FileKey.TYPDOC, "PUB");
-				} else {
-					LOGGER.error("adapt() : row not found for codsoc={} query={}", codsoc, SOC_QUERY);
-				}
-			}
-		}
+    private static void adapt(Connection con, FileKey fk, int codsoc, int numedi, boolean userMode) throws SQLException {
+        try (var ps = con.prepareStatement(SOC_QUERY)) {
+            ps.setInt(1, codsoc);
+            try (var rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    // Private publication
+                    fk.setAttribute(FileKey.TYPTIE, "TIE");
+                    fk.setAttribute(FileKey.NOMCLE, "SOC" + rs.getString(1));
+                    fk.setAttribute(FileKey.INDPUB, "1");
+                    fk.setAttribute(FileKey.TYPDOC, "PUB");
+                } else {
+                    LOGGER.error("adapt() : row not found for codsoc={} query={}", codsoc, SOC_QUERY);
+                }
+            }
+        }
 
-		try (PreparedStatement ps = con.prepareStatement(SPL_QUERY)) {
-			ps.setInt(1, codsoc);
-			ps.setInt(2, numedi);
-			try (ResultSet rs = ps.executeQuery()) {
-				if (rs.next()) {
-					// Private publication
-					fk.setAttribute(FileKey.LIB256, rs.getString(1));
-					fk.setAttribute(FileKey.UTIMOD, rs.getString(2));
-					if (userMode) {
-						fk.setAttribute(FileKey.NOMCLE, "UTI" + rs.getString(2));
-						fk.setAttribute(FileKey.INDPUB, "0");
-						fk.setAttribute(FileKey.TYPDOC, " ");
-					}
-				} else {
-					LOGGER.error("adapt() : row not found for codsoc/numero={}/{} query={}", codsoc, numedi, SPL_QUERY);
-				}
-			}
-		}
-	}
+        try (var ps = con.prepareStatement(SPL_QUERY)) {
+            ps.setInt(1, codsoc);
+            ps.setInt(2, numedi);
+            try (var rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    // Private publication
+                    fk.setAttribute(FileKey.LIB256, rs.getString(1));
+                    fk.setAttribute(FileKey.UTIMOD, rs.getString(2));
+                    if (userMode) {
+                        fk.setAttribute(FileKey.NOMCLE, "UTI" + rs.getString(2));
+                        fk.setAttribute(FileKey.INDPUB, "0");
+                        fk.setAttribute(FileKey.TYPDOC, " ");
+                    }
+                } else {
+                    LOGGER.error("adapt() : row not found for codsoc/numero={}/{} query={}", codsoc, numedi, SPL_QUERY);
+                }
+            }
+        }
+    }
 }

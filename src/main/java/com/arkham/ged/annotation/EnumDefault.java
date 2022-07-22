@@ -24,5 +24,5 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 @Target({ TYPE })
 public @interface EnumDefault {
-	String value() default "__";
+    String value() default "__";
 }

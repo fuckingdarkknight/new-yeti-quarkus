@@ -22,23 +22,23 @@ import java.sql.SQLException;
  * @since 30 janv. 2019
  */
 public abstract class AbstractSqlRejector extends AbstractRejector {
-	/**
-	 * Execute an update query
-	 *
-	 * @param con Database connection
-	 * @param query The query, assume that is not <code>null</code>
-	 * @param p Optionnals parameters
-	 * @throws SQLException
-	 */
-	@SuppressWarnings("static-method")
-	protected void executeQuery(Connection con, String query, Object... p) throws SQLException {
-		try (PreparedStatement ps = con.prepareStatement(query)) {
-			int i = 1;
-			for (final Object o : p) {
-				ps.setObject(i++, o);
-			}
+    /**
+     * Execute an update query
+     *
+     * @param con Database connection
+     * @param query The query, assume that is not <code>null</code>
+     * @param p Optionnals parameters
+     * @throws SQLException
+     */
+    @SuppressWarnings("static-method")
+    protected void executeQuery(Connection con, String query, Object... p) throws SQLException {
+        try (var ps = con.prepareStatement(query)) {
+            var i = 1;
+            for (final Object o : p) {
+                ps.setObject(i++, o);
+            }
 
-			ps.executeUpdate();
-		}
-	}
+            ps.executeUpdate();
+        }
+    }
 }

@@ -35,40 +35,40 @@ import com.arkham.ged.util.GedUtil;
  * @since 29 déc. 2015
  */
 public class CopyFileAction extends AbstractAction<InputScanFileDef, File> {
-	private static final Logger LOGGER = LoggerFactory.getLogger(CopyFileAction.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CopyFileAction.class);
 
-	private static final String TARGET = "target";
+    private static final String TARGET = "target";
 
-	@Override
-	public List<DocumentLinkBean> execute(File file, FileKey fk, Connection con, PropertiesAdapter pa, List<DocumentLinkBean> bean, InputScanFileDef sfd) throws ActionException {
-		final Translator translator = new LikeAntPropertiesTranslator();
-		final String targetDir = translator.translate(getParamStringValue(pa, TARGET, null));
+    @Override
+    public List<DocumentLinkBean> execute(File file, FileKey fk, Connection con, PropertiesAdapter pa, List<DocumentLinkBean> bean, InputScanFileDef sfd) throws ActionException {
+        final Translator translator = new LikeAntPropertiesTranslator();
+        final var targetDir = translator.translate(getParamStringValue(pa, TARGET, null));
 
-		if (targetDir == null) {
-			throw new ActionException(GedMessages.Action.actionParameter, TARGET);
-		}
+        if (targetDir == null) {
+            throw new ActionException(GedMessages.Action.actionParameter, TARGET);
+        }
 
-		final File dir = new File(targetDir);
-		if (dir.isDirectory()) {
-			// Nothing to do, everything is OK
-		} else if (!dir.exists()) {
-			if (!dir.mkdirs()) {
-				throw new ActionException(GedMessages.Action.cannotCreateDirectory, dir.getAbsolutePath());
-			}
-		} else {
-			throw new ActionException(GedMessages.Action.actionTargetFile, dir.getAbsolutePath());
-		}
+        final var dir = new File(targetDir);
+        if (dir.isDirectory()) {
+            // Nothing to do, everything is OK
+        } else if (!dir.exists()) {
+            if (!dir.mkdirs()) {
+                throw new ActionException(GedMessages.Action.cannotCreateDirectory, dir.getAbsolutePath());
+            }
+        } else {
+            throw new ActionException(GedMessages.Action.actionTargetFile, dir.getAbsolutePath());
+        }
 
-		final File target = new File(targetDir, fk.getFilename());
+        final var target = new File(targetDir, fk.getFilename());
 
-		try {
-			LOGGER.info("execute() : copy file {} to path {}", file.getAbsolutePath(), target.getAbsolutePath());
+        try {
+            LOGGER.info("execute() : copy file {} to path {}", file.getAbsolutePath(), target.getAbsolutePath());
 
-			GedUtil.copyFile(file, target);
-		} catch (final IOException e) {
-			throw new ActionException(e);
-		}
+            GedUtil.copyFile(file, target);
+        } catch (final IOException e) {
+            throw new ActionException(e);
+        }
 
-		return bean;
-	}
+        return bean;
+    }
 }

@@ -23,58 +23,58 @@ import org.slf4j.LoggerFactory;
  * @since 19 mai 2016
  */
 public abstract class BasicStreamExportHandler implements StreamExportHandler {
-	private static final Logger LOGGER = LoggerFactory.getLogger(BasicStreamExportHandler.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BasicStreamExportHandler.class);
 
-	private DocumentLinkBean mBean;
+    private DocumentLinkBean mBean;
 
-	@Override
-	public void handleCharset(String charset) {
-		// Nothing to do
-	}
+    @Override
+    public void handleCharset(String charset) {
+        // Nothing to do
+    }
 
-	@Override
-	public void handleContentType(String contentType) {
-		// Nothing to do
-	}
+    @Override
+    public void handleContentType(String contentType) {
+        // Nothing to do
+    }
 
-	@Override
-	public void handleNoResult() throws IOException {
-		LOGGER.info("handleNoResult() : no result for bean={}", mBean);
-	}
+    @Override
+    public void handleNoResult() throws IOException {
+        LOGGER.info("handleNoResult() : no result for bean={}", mBean);
+    }
 
-	@Override
-	public void handleNoThumb() throws IOException {
-		// Nothing to do
-	}
+    @Override
+    public void handleNoThumb() throws IOException {
+        // Nothing to do
+    }
 
-	@Override
-	public void handleFilesize(int filesize) {
-		// Nothing to do
-	}
+    @Override
+    public void handleFilesize(int filesize) {
+        // Nothing to do
+    }
 
-	@Override
-	public int getFilesize() {
-		return 0;
-	}
+    @Override
+    public int getFilesize() {
+        return 0;
+    }
 
-	@Override
-	public void handleBean(DocumentLinkBean bean) {
-		mBean = bean;
-	}
+    @Override
+    public void handleBean(DocumentLinkBean bean) {
+        mBean = bean;
+    }
 
-	@Override
-	public DocumentLinkBean getBean() {
-		return mBean;
-	}
+    @Override
+    public DocumentLinkBean getBean() {
+        return mBean;
+    }
 
-	/**
-	 * By default, all documents are authorized
-	 * {@inheritDoc}
-	 *
-	 * @see com.arkham.ged.blob.StreamExportHandler#isAuthorized(com.arkham.ged.blob.DocumentLinkBean)
-	 */
-	@Override
-	public boolean isAuthorized(DocumentLinkBean bean) {
-		return true;
-	}
+    /**
+     * By default, all documents are authorized
+     * {@inheritDoc}
+     *
+     * @see com.arkham.ged.blob.StreamExportHandler#isAuthorized(com.arkham.ged.blob.DocumentLinkBean)
+     */
+    @Override
+    public boolean isAuthorized(DocumentLinkBean bean) {
+        return true;
+    }
 }

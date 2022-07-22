@@ -24,32 +24,31 @@ import com.arkham.common.jdbc.DatabaseConnectionManagerException;
  * @since 28 janv. 2020
  */
 public class DatabaseConnectionManagerProxy extends DatabaseConnectionManager {
-	public DatabaseConnectionManagerProxy(final DatabaseConnectionDefinition dcd) throws DatabaseConnectionManagerException {
-		super(dcd);
-	}
+    public DatabaseConnectionManagerProxy(final DatabaseConnectionDefinition dcd) throws DatabaseConnectionManagerException {
+        super(dcd);
+    }
 
-	@Override
-	public Connection getConnection() throws DatabaseConnectionManagerException {
-		return new ConnectionProxy(this);
-	}
-
-	/**
-	 * @return The real Connection to database
-	 * @throws DatabaseConnectionManagerException
-	 */
-	Connection getInnerConnection() throws DatabaseConnectionManagerException {
-		return super.getConnection();
-	}
-
-	@SuppressWarnings("resource")
     @Override
-	public void releaseConnection(final Connection con) throws DatabaseConnectionManagerException {
-		// Connection have to be released only if it has been created
-		if (con instanceof ConnectionProxy) {
-			final ConnectionProxy cp = (ConnectionProxy) con;
-			if (cp.isInnerConnected()) {
-				super.releaseConnection(cp.getInnerConnection());
-			}
-		}
-	}
+    public Connection getConnection() throws DatabaseConnectionManagerException {
+        return new ConnectionProxy(this);
+    }
+
+    /**
+     * @return The real Connection to database
+     * @throws DatabaseConnectionManagerException
+     */
+    Connection getInnerConnection() throws DatabaseConnectionManagerException {
+        return super.getConnection();
+    }
+
+    @SuppressWarnings("resource")
+    @Override
+    public void releaseConnection(final Connection con) throws DatabaseConnectionManagerException {
+        // Connection have to be released only if it has been created
+        if (con instanceof ConnectionProxy cp) {
+            if (cp.isInnerConnected()) {
+                super.releaseConnection(cp.getInnerConnection());
+            }
+        }
+    }
 }

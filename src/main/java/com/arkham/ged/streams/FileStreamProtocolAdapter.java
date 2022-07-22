@@ -25,31 +25,31 @@ import java.nio.file.Paths;
  * @since 13 nov. 2017
  */
 public class FileStreamProtocolAdapter extends AbstractStreamProtocolAdapter<String, Object> {
-	/**
-	 * Constructor FileStreamProtocolAdapter
-	 *
-	 * @param value
-	 */
-	FileStreamProtocolAdapter(final String value) {
-		super(value);
-	}
+    /**
+     * Constructor FileStreamProtocolAdapter
+     *
+     * @param value
+     */
+    FileStreamProtocolAdapter(final String value) {
+        super(value);
+    }
 
-	@SuppressWarnings("resource")
+    @SuppressWarnings("resource")
     @Override
-	public InputStream getStream() throws StreamProtocolException {
-		final Path path = Paths.get(getValue());
-		final File file = path.toFile();
-		if (file.exists() && file.isFile()) {
-			try {
-				setStream(Files.newInputStream(path));
-				setStreamName(file.getName());
+    public InputStream getStream() throws StreamProtocolException {
+        final var path = Paths.get(getValue());
+        final var file = path.toFile();
+        if (file.exists() && file.isFile()) {
+            try {
+                setStream(Files.newInputStream(path));
+                setStreamName(file.getName());
 
-				return super.getStream();
-			} catch (final IOException e) {
-				throw new StreamProtocolException(e);
-			}
-		}
+                return super.getStream();
+            } catch (final IOException e) {
+                throw new StreamProtocolException(e);
+            }
+        }
 
-		return null;
-	}
+        return null;
+    }
 }

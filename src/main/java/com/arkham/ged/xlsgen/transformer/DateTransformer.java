@@ -27,39 +27,39 @@ import org.slf4j.LoggerFactory;
  * @since 19 juil. 2018
  */
 public class DateTransformer implements ITransformer<String> {
-	private static final Logger LOG = LoggerFactory.getLogger(DateTransformer.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DateTransformer.class);
 
-	private static final DateTimeFormatter SRC_FORMATTER = DateTimeFormatter.ofPattern("d/M/yyyy");
-	private static final DateTimeFormatter POI_FORMATTER = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+    private static final DateTimeFormatter SRC_FORMATTER = DateTimeFormatter.ofPattern("d/M/yyyy");
+    private static final DateTimeFormatter POI_FORMATTER = DateTimeFormatter.ofPattern("yyyy/MM/dd");
 
-	@Override
-	public Object transform(final String value) {
-		if (value == null) {
-			return "";
-		}
+    @Override
+    public Object transform(final String value) {
+        if (value == null) {
+            return "";
+        }
 
-		try {
-			final LocalDate parsedDate = LocalDate.parse(value, getSourceFormatter());
+        try {
+            final var parsedDate = LocalDate.parse(value, getSourceFormatter());
 
-			// Format attendu par la méthode utilitaire de POI
-			final String d = POI_FORMATTER.format(parsedDate);
-			final Date datum = DateUtil.parseYYYYMMDDDate(d); // NOSONAR
+            // Format attendu par la méthode utilitaire de POI
+            final var d = POI_FORMATTER.format(parsedDate);
+            final var datum = DateUtil.parseYYYYMMDDDate(d); // NOSONAR
 
-			return datum;
-		} catch (@SuppressWarnings("unused") final DateTimeParseException e) { // NOSONAR
-			LOG.error("transform() : unable to convert date format, value=\"{}\"", value);
-		}
+            return datum;
+        } catch (@SuppressWarnings("unused") final DateTimeParseException e) { // NOSONAR
+            LOG.error("transform() : unable to convert date format, value=\"{}\"", value);
+        }
 
-		return "";
-	}
+        return "";
+    }
 
-	/**
-	 * Méthode surchargeable afin de spécifier le format date en entrée
-	 *
-	 * @return Le transformer de date au format d'entrée
-	 */
-	@SuppressWarnings("static-method")
-	protected DateTimeFormatter getSourceFormatter() {
-		return SRC_FORMATTER;
-	}
+    /**
+     * Méthode surchargeable afin de spécifier le format date en entrée
+     *
+     * @return Le transformer de date au format d'entrée
+     */
+    @SuppressWarnings("static-method")
+    protected DateTimeFormatter getSourceFormatter() {
+        return SRC_FORMATTER;
+    }
 }

@@ -57,359 +57,359 @@ import com.arkham.ged.util.GedUtil;
  * @param <T> ScanFileDef extension
  */
 public abstract class AbstractScanFileExecutor<T extends ScanFileDef> extends AbstractExecutor<T> implements Rejector {
-	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractScanFileExecutor.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractScanFileExecutor.class);
 
-	/**
-	 * Constant that defines the file name that prevent directory scanning
-	 */
-	protected static final String NO_SCAN = "noscan";
-	protected static final String LINUX_NO_SCAN = ".noscan";
+    /**
+     * Constant that defines the file name that prevent directory scanning
+     */
+    protected static final String NO_SCAN = "noscan";
+    protected static final String LINUX_NO_SCAN = ".noscan";
 
-	private final T mSfd;
-	private final AbstractFileScanner mAfs;
-	private final List<FileKeyProvider> mFkpList;
-	private final List<AbstractRejector> mRejector;
-	private final List<AbstractAction> mActionList;
+    private final T mSfd;
+    private final AbstractFileScanner mAfs;
+    private final List<FileKeyProvider> mFkpList;
+    private final List<AbstractRejector> mRejector;
+    private final List<AbstractAction> mActionList;
 
-	/**
-	 * Constructor AbstractExecutor
-	 *
-	 * @param connection Database connection
-	 * @param pa Adapter to properties
-	 * @param sfd type T extends ScanFileDef
-	 * @throws ExecutorException Should occurs if dynamic instanciation of classes fail
-	 */
-	public AbstractScanFileExecutor(final Connection connection, final PropertiesAdapter pa, final T sfd) throws ExecutorException {
-		super(connection, pa);
+    /**
+     * Constructor AbstractExecutor
+     *
+     * @param connection Database connection
+     * @param pa Adapter to properties
+     * @param sfd type T extends ScanFileDef
+     * @throws ExecutorException Should occurs if dynamic instanciation of classes fail
+     */
+    public AbstractScanFileExecutor(final Connection connection, final PropertiesAdapter pa, final T sfd) throws ExecutorException {
+        super(connection, pa);
 
-		mSfd = sfd;
-		mAfs = createScanner(sfd.getScanner(), sfd);
-		mFkpList = createFileKeyProvider(pa, sfd.getFileKeyProvider());
-		mRejector = Rejector.createRejector(sfd.getRejector());
-		mActionList = createActions(sfd.getAction());
-	}
+        mSfd = sfd;
+        mAfs = createScanner(sfd.getScanner(), sfd);
+        mFkpList = createFileKeyProvider(pa, sfd.getFileKeyProvider());
+        mRejector = Rejector.createRejector(sfd.getRejector());
+        mActionList = createActions(sfd.getAction());
+    }
 
-	/**
-	 * @return The directory scan definition
-	 */
-	protected final T getSFD() {
-		return mSfd;
-	}
+    /**
+     * @return The directory scan definition
+     */
+    protected final T getSFD() {
+        return mSfd;
+    }
 
-	/**
-	 * @return The file scanner that will be used to scan directories using the SFT definition
-	 */
-	protected final AbstractFileScanner getAFS() {
-		return mAfs;
-	}
+    /**
+     * @return The file scanner that will be used to scan directories using the SFT definition
+     */
+    protected final AbstractFileScanner getAFS() {
+        return mAfs;
+    }
 
-	/**
-	 * @return The rejectors list that will be used in case of exception or error
-	 */
-	protected final List<AbstractRejector> getRejectors() {
-		return mRejector;
-	}
+    /**
+     * @return The rejectors list that will be used in case of exception or error
+     */
+    protected final List<AbstractRejector> getRejectors() {
+        return mRejector;
+    }
 
-	/**
-	 * @return The order list of actions to execute by executor
-	 */
-	protected final List<AbstractAction> getActionList() {
-		return mActionList;
-	}
+    /**
+     * @return The order list of actions to execute by executor
+     */
+    protected final List<AbstractAction> getActionList() {
+        return mActionList;
+    }
 
-	/**
-	 * @param file The file to process
-	 * @param pa Properties
-	 * @return The IntFileKey
-	 * @throws FileKeyProviderException
-	 */
-	@SuppressWarnings("resource")
+    /**
+     * @param file The file to process
+     * @param pa Properties
+     * @return The IntFileKey
+     * @throws FileKeyProviderException
+     */
+    @SuppressWarnings("resource")
     protected final FileKey getFileKey(final File file, final PropertiesAdapter pa) throws FileKeyProviderException {
-		FileKey fk = null;
-		for (int i = 0; i < mFkpList.size(); i++) {
-			final FileKeyProvider fkp = mFkpList.get(i);
-			try {
-				fk = fkp.getKey(file, getConnection(), pa, getSFD().getParam());
-			} catch (final FileKeyProviderException e) {
-				// If its the last FKP defined, rethrow the exception, otherwise try the next one
-				if (i == mFkpList.size() - 1) {
-					throw e;
-				}
-			}
-			if (fk != null) {
-				break;
-			}
+        FileKey fk = null;
+        for (var i = 0; i < mFkpList.size(); i++) {
+            final var fkp = mFkpList.get(i);
+            try {
+                fk = fkp.getKey(file, getConnection(), pa, getSFD().getParam());
+            } catch (final FileKeyProviderException e) {
+                // If its the last FKP defined, rethrow the exception, otherwise try the next one
+                if (i == mFkpList.size() - 1) {
+                    throw e;
+                }
+            }
+            if (fk != null) {
+                break;
+            }
 
-			LOGGER.info("getActionList() : {} cannot be decoded by {}", file.getName(), fkp.getClass().getCanonicalName());
-		}
+            LOGGER.info("getActionList() : {} cannot be decoded by {}", file.getName(), fkp.getClass().getCanonicalName());
+        }
 
-		return fk;
-	}
+        return fk;
+    }
 
-	/**
-	 * Execute action for the given file.
-	 *
-	 * @param file The file to process
-	 */
-	public abstract void execute(File file);
+    /**
+     * Execute action for the given file.
+     *
+     * @param file The file to process
+     */
+    public abstract void execute(File file);
 
-	/**
-	 * <p>
-	 * The main method that launch the scanner to get the file list, then process each file
-	 * </p>
-	 * <em>If a file named {@value #NO_SCAN} or {@value #LINUX_NO_SCAN} is found in the current directory, this method won't do anything</em>
-	 *
-	 * @throws ExecutorException
-	 * @see #execute(File)
-	 */
-	@Override
-	public final void run() throws ExecutorException {
-		// If we find a file named NO_SCAN at the scan root directory, don't process
-		if (isFileExists(NO_SCAN) || isFileExists(LINUX_NO_SCAN)) {
-			return;
-		}
+    /**
+     * <p>
+     * The main method that launch the scanner to get the file list, then process each file
+     * </p>
+     * <em>If a file named {@value #NO_SCAN} or {@value #LINUX_NO_SCAN} is found in the current directory, this method won't do anything</em>
+     *
+     * @throws ExecutorException
+     * @see #execute(File)
+     */
+    @Override
+    public final void run() throws ExecutorException {
+        // If we find a file named NO_SCAN at the scan root directory, don't process
+        if (isFileExists(NO_SCAN) || isFileExists(LINUX_NO_SCAN)) {
+            return;
+        }
 
-		final Timer<TIMERDEF> timerGlobal = GedTimerManager.getProvider().create(TIMERDEF.GLOBAL_ELAPSED);
-		timerGlobal.start();
+        final var timerGlobal = GedTimerManager.getProvider().create(TIMERDEF.GLOBAL_ELAPSED);
+        timerGlobal.start();
 
-		Timer<TIMERDEF> timer = GedTimerManager.getProvider().create(TIMERDEF.SCANNING);
-		File[] files = null;
-		try {
-			timer.start();
-			files = getAFS().execute();
-		} finally {
-			timer.stopAndPublish();
-		}
+        var timer = GedTimerManager.getProvider().create(TIMERDEF.SCANNING);
+        File[] files = null;
+        try {
+            timer.start();
+            files = getAFS().execute();
+        } finally {
+            timer.stopAndPublish();
+        }
 
-		boolean toPublish = false;
-		timer = GedTimerManager.getProvider().create(TIMERDEF.ELAPSED_RUN);
-		try {
-			timer.start();
-			if (files != null && files.length > 0) {
-				toPublish = true;
-				final Chrono chrono = Chrono.getChrono();
-				chrono.start();
+        var toPublish = false;
+        timer = GedTimerManager.getProvider().create(TIMERDEF.ELAPSED_RUN);
+        try {
+            timer.start();
+            if (files != null && files.length > 0) {
+                toPublish = true;
+                final var chrono = Chrono.getChrono();
+                chrono.start();
 
-				LOGGER.info("run() : start periodic job, files scanned={}", files.length);
+                LOGGER.info("run() : start periodic job, files scanned={}", files.length);
 
-				boolean considerZeroLengthFile = false;
-				final OptionalParameterType zeroLength = GedProperties.getOptionalParameters(getSFD().getParam(), "empty");
-				if (zeroLength != null) {
-					considerZeroLengthFile = GedUtil.getBoolean(zeroLength.getValue(), false);
-				}
+                var considerZeroLengthFile = false;
+                final var zeroLength = GedProperties.getOptionalParameters(getSFD().getParam(), "empty");
+                if (zeroLength != null) {
+                    considerZeroLengthFile = GedUtil.getBoolean(zeroLength.getValue(), false);
+                }
 
-				// If set in properties, limit the files processed by executor
-				files = limitFileProcessing(files);
+                // If set in properties, limit the files processed by executor
+                files = limitFileProcessing(files);
 
-				beforeExecute(files);
+                beforeExecute(files);
 
-				for (final File file : files) {
-					// Purge local MDC values
-					LoggerMDC.purgeMDC(false);
+                for (final File file : files) {
+                    // Purge local MDC values
+                    LoggerMDC.purgeMDC(false);
 
-					// Dont't process a 0 length file
-					final long filesize = file.length();
-					if (filesize > 0 || considerZeroLengthFile) {
-						final Timer<TIMERDEF> timerExecute = GedTimerManager.getProvider().create(TIMERDEF.ELAPSED_EXECUTE);
-						try {
-							timerExecute.start();
+                    // Dont't process a 0 length file
+                    final var filesize = file.length();
+                    if (filesize > 0 || considerZeroLengthFile) {
+                        final var timerExecute = GedTimerManager.getProvider().create(TIMERDEF.ELAPSED_EXECUTE);
+                        try {
+                            timerExecute.start();
 
-							execute(file);
-						} finally {
-							timerExecute.stopAndPublish();
+                            execute(file);
+                        } finally {
+                            timerExecute.stopAndPublish();
 
-							// Publish all the timers
-							GedTimerManager.getProvider().publishDetail();
-						}
-					}
-				}
+                            // Publish all the timers
+                            GedTimerManager.getProvider().publishDetail();
+                        }
+                    }
+                }
 
-				afterExecute(files);
+                afterExecute(files);
 
-				chrono.stop();
-				LOGGER.info("run() : end of periodic job, files scanned={} processed in {}", files.length, chrono.getFormattedElapsed(UNIT.MS));
-			}
-		} finally {
-			timer.stopAndPublish();
-			timerGlobal.stopAndPublish();
+                chrono.stop();
+                LOGGER.info("run() : end of periodic job, files scanned={} processed in {}", files.length, chrono.getFormattedElapsed(UNIT.MS));
+            }
+        } finally {
+            timer.stopAndPublish();
+            timerGlobal.stopAndPublish();
 
-			if (toPublish) {
-				GedTimerManager.getProvider().publishRun();
-			}
+            if (toPublish) {
+                GedTimerManager.getProvider().publishRun();
+            }
 
-			LoggerMDC.purgeMDC(true);
-		}
-	}
+            LoggerMDC.purgeMDC(true);
+        }
+    }
 
-	/**
-	 * Executed before loop on {@link #execute(File)}
-	 *
-	 * @param files
-	 * @throws ExecutorException
-	 */
-	protected abstract void beforeExecute(File[] files) throws ExecutorException;
+    /**
+     * Executed before loop on {@link #execute(File)}
+     *
+     * @param files
+     * @throws ExecutorException
+     */
+    protected abstract void beforeExecute(File[] files) throws ExecutorException;
 
-	/**
-	 * Executed after loop on {@link #execute(File)}
-	 *
-	 * @param files
-	 * @throws ExecutorException
-	 */
-	protected abstract void afterExecute(File[] files) throws ExecutorException;
+    /**
+     * Executed after loop on {@link #execute(File)}
+     *
+     * @param files
+     * @throws ExecutorException
+     */
+    protected abstract void afterExecute(File[] files) throws ExecutorException;
 
-	/**
-	 * @param filename A file name that is relative to getScan().getDir() definition
-	 * @return true is the file exists
-	 */
-	private boolean isFileExists(final String filename) {
-		final File file = new File(new File(getSFD().getDir()), filename);
+    /**
+     * @param filename A file name that is relative to getScan().getDir() definition
+     * @return true is the file exists
+     */
+    private boolean isFileExists(final String filename) {
+        final var file = new File(new File(getSFD().getDir()), filename);
 
-		return file.exists();
-	}
+        return file.exists();
+    }
 
-	/**
-	 * @param files The source files array that shouldn't be <code>null</code>
-	 * @return A new array limited by <code>maxFileProcessing</code> parameter if set
-	 */
-	protected File[] limitFileProcessing(final File[] files) {
-		final OptionalParameterType opt = getPA().getOptionalParameter(getSFD().getParam(), "maxFileProcessing");
-		if (opt != null) {
-			final String mfp = opt.getValue();
-			if (mfp != null && mfp.trim().length() > 0) {
-				try {
-					final int size = Integer.parseInt(mfp);
-					if (size > 0 && size < files.length) {
-						final File[] result = new File[size];
-						System.arraycopy(files, 0, result, 0, size);
+    /**
+     * @param files The source files array that shouldn't be <code>null</code>
+     * @return A new array limited by <code>maxFileProcessing</code> parameter if set
+     */
+    protected File[] limitFileProcessing(final File[] files) {
+        final var opt = getPA().getOptionalParameter(getSFD().getParam(), "maxFileProcessing");
+        if (opt != null) {
+            final var mfp = opt.getValue();
+            if (mfp != null && mfp.trim().length() > 0) {
+                try {
+                    final var size = Integer.parseInt(mfp);
+                    if (size > 0 && size < files.length) {
+                        final var result = new File[size];
+                        System.arraycopy(files, 0, result, 0, size);
 
-						return result;
-					}
-				} catch (@SuppressWarnings("unused") final NumberFormatException e) {
-					LOGGER.error("limitFileProcessing() : maxFileProcessing is set but the value={} is invalid ==> all the filenames will be processed", mfp);
-				}
-			}
-		}
+                        return result;
+                    }
+                } catch (@SuppressWarnings("unused") final NumberFormatException e) {
+                    LOGGER.error("limitFileProcessing() : maxFileProcessing is set but the value={} is invalid ==> all the filenames will be processed", mfp);
+                }
+            }
+        }
 
-		return files;
-	}
+        return files;
+    }
 
-	protected static final class FileAttributes {
-		private static final String ALL = "rwha";
+    protected static final class FileAttributes {
+        private static final String ALL = "rwha";
 
-		private FileAttributes() {
-			// Private because it's an utility class, so we should't get an instance of this class
-		}
+        private FileAttributes() {
+            // Private because it's an utility class, so we should't get an instance of this class
+        }
 
-		static String getPermission(final boolean canRead, final boolean canWrite, final boolean isHidden, final boolean isArchivable) {
-			final StringBuilder result = new StringBuilder(4);
-			if (canRead) {
-				result.append(ALL.charAt(0));
-			} else {
-				result.append(' ');
-			}
-			if (canWrite) {
-				result.append(ALL.charAt(1));
-			} else {
-				result.append(' ');
-			}
-			if (isHidden) {
-				result.append(ALL.charAt(2));
-			} else {
-				result.append(' ');
-			}
-			if (isArchivable) {
-				result.append(ALL.charAt(3));
-			} else {
-				result.append(' ');
-			}
+        static String getPermission(final boolean canRead, final boolean canWrite, final boolean isHidden, final boolean isArchivable) {
+            final var result = new StringBuilder(4);
+            if (canRead) {
+                result.append(ALL.charAt(0));
+            } else {
+                result.append(' ');
+            }
+            if (canWrite) {
+                result.append(ALL.charAt(1));
+            } else {
+                result.append(' ');
+            }
+            if (isHidden) {
+                result.append(ALL.charAt(2));
+            } else {
+                result.append(' ');
+            }
+            if (isArchivable) {
+                result.append(ALL.charAt(3));
+            } else {
+                result.append(' ');
+            }
 
-			return result.toString();
-		}
-	}
+            return result.toString();
+        }
+    }
 
-	private static List<FileKeyProvider> createFileKeyProvider(final PropertiesAdapter pa, final List<FileKeyProviderRefType> fkprtl) throws ExecutorException {
-		final List<FileKeyProvider> fkpList = new ArrayList<>();
-		for (final FileKeyProviderRefType fkprt : fkprtl) {
-			final String name = fkprt.getName();
-			final FileKeyProviderType fkpt = pa.getFKPType(name);
-			if (fkpt == null) {
-				throw new ExecutorException(GedMessages.Executor.GED_0106, name);
-			}
+    private static List<FileKeyProvider> createFileKeyProvider(final PropertiesAdapter pa, final List<FileKeyProviderRefType> fkprtl) throws ExecutorException {
+        final List<FileKeyProvider> fkpList = new ArrayList<>();
+        for (final FileKeyProviderRefType fkprt : fkprtl) {
+            final var name = fkprt.getName();
+            final var fkpt = pa.getFKPType(name);
+            if (fkpt == null) {
+                throw new ExecutorException(GedMessages.Executor.GED_0106, name);
+            }
 
-			final String classref = fkpt.getClassref();
-			final List<OptionalParameterType> params = fkpt.getParam();
+            final var classref = fkpt.getClassref();
+            final var params = fkpt.getParam();
 
-			final FileKeyProvider fkp;
-			try {
-				fkp = FileKeyProviderFactory.create(classref, params);
-				fkpList.add(fkp);
-			} catch (final FileKeyProviderException e) {
-				throw new ExecutorException(e);
-			}
-		}
+            final FileKeyProvider fkp;
+            try {
+                fkp = FileKeyProviderFactory.create(classref, params);
+                fkpList.add(fkp);
+            } catch (final FileKeyProviderException e) {
+                throw new ExecutorException(e);
+            }
+        }
 
-		return fkpList;
-	}
+        return fkpList;
+    }
 
-	private AbstractFileScanner createScanner(final String className, final T sfd) {
-		AbstractFileScanner result = null;
-		// By default, we use ant capabilities to scan directories
-		if (className == null || className.trim().length() == 0 || "ant".equals(className)) {
-			result = new BasicFileScanner(sfd);
-		} else if ("base_filter".equals(className)) {
-			result = new BaseFileScanner(sfd);
-		} else {
-			try {
-				final Class<?> clazz = Class.forName(className);
-				final Constructor<?> c = clazz.getConstructor(ScanFileDef.class);
+    private AbstractFileScanner createScanner(final String className, final T sfd) {
+        AbstractFileScanner result = null;
+        // By default, we use ant capabilities to scan directories
+        if (className == null || className.trim().length() == 0 || "ant".equals(className)) {
+            result = new BasicFileScanner(sfd);
+        } else if ("base_filter".equals(className)) {
+            result = new BaseFileScanner(sfd);
+        } else {
+            try {
+                final Class<?> clazz = Class.forName(className);
+                final Constructor<?> c = clazz.getConstructor(ScanFileDef.class);
 
-				result = (AbstractFileScanner) c.newInstance(sfd);
-			} catch (NoSuchMethodException | SecurityException | ClassNotFoundException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | ClassCastException e) {
-				LOGGER.error("createScanner() : className={} exception=", className, e);
-			}
-		}
+                result = (AbstractFileScanner) c.newInstance(sfd);
+            } catch (NoSuchMethodException | SecurityException | ClassNotFoundException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | ClassCastException e) {
+                LOGGER.error("createScanner() : className={} exception=", className, e);
+            }
+        }
 
-		return result;
-	}
+        return result;
+    }
 
-	/**
-	 * @return The action list to be executed by this executor
-	 * @throws ExecutorException
-	 */
-	private static List<AbstractAction> createActions(final List<ActionType> atl) throws ExecutorException {
-		final List<AbstractAction> aaList = new ArrayList<>();
-		for (final ActionType at : atl) {
-			final AbstractAction aa;
-			try {
-				aa = ActionFactory.create(at);
-				aaList.add(aa);
-			} catch (final ActionException e) {
-				throw new ExecutorException(e);
-			}
-		}
+    /**
+     * @return The action list to be executed by this executor
+     * @throws ExecutorException
+     */
+    private static List<AbstractAction> createActions(final List<ActionType> atl) throws ExecutorException {
+        final List<AbstractAction> aaList = new ArrayList<>();
+        for (final ActionType at : atl) {
+            final AbstractAction aa;
+            try {
+                aa = ActionFactory.create(at);
+                aaList.add(aa);
+            } catch (final ActionException e) {
+                throw new ExecutorException(e);
+            }
+        }
 
-		return aaList;
-	}
+        return aaList;
+    }
 
-	protected COMMIT_MODE getCommitMode() {
-		COMMIT_MODE result = COMMIT_MODE.GLOBAL;
+    protected COMMIT_MODE getCommitMode() {
+        var result = COMMIT_MODE.GLOBAL;
 
-		final OptionalParameterType opt = getPA().getOptionalParameter(getSFD().getParam(), "commit");
-		if (opt != null) {
-			try {
-				result = COMMIT_MODE.valueOf(opt.getValue());
-			} catch (@SuppressWarnings("unused") final IllegalArgumentException e) { // NOSONAR
-				LOGGER.error("getCommitMode() : the commit mode is badly defined, correct values are global and integrateOnly ==> set default value to global");
-			}
-		}
+        final var opt = getPA().getOptionalParameter(getSFD().getParam(), "commit");
+        if (opt != null) {
+            try {
+                result = COMMIT_MODE.valueOf(opt.getValue());
+            } catch (@SuppressWarnings("unused") final IllegalArgumentException e) { // NOSONAR
+                LOGGER.error("getCommitMode() : the commit mode is badly defined, correct values are global and integrateOnly ==> set default value to global");
+            }
+        }
 
-		return result;
-	}
+        return result;
+    }
 
-	@Override
-	public void reject(final File file, final FileKey fk, final Throwable t, final String message, final Connection con, final PropertiesAdapter pa) {
-		for (final AbstractRejector rejector : mRejector) {
-			rejector.reject(file, fk, t, message, con, pa);
-		}
-	}
+    @Override
+    public void reject(final File file, final FileKey fk, final Throwable t, final String message, final Connection con, final PropertiesAdapter pa) {
+        for (final AbstractRejector rejector : mRejector) {
+            rejector.reject(file, fk, t, message, con, pa);
+        }
+    }
 }
