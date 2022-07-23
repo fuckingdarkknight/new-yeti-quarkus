@@ -35,12 +35,12 @@ public final class StreamProtocolFactory {
      * @return The adapter choosed from filepath scheme {@link GED_PROTOCOL}
      * @throws StreamProtocolException Occurs when scheme is invalid or filepath is invalid
      */
-    public static StreamProtocolAdapter create(String filepath, Connection con, Object o) throws StreamProtocolException {
+    public static StreamProtocolAdapter create(final String filepath, final Connection con, final Object o) throws StreamProtocolException {
         final var scheme = GED_PROTOCOL.getScheme(filepath);
         final var value = getValue(filepath);
-        AbstractStreamProtocolAdapter result = switch (scheme) {
+        final AbstractStreamProtocolAdapter result = switch (scheme) {
             case FILE -> new FileStreamProtocolAdapter(value);
-            case URL -> new HttpStreamProtocolAdapter(value);
+            case URL -> new NewHttpStreamProtocolAdapter(value);
             default -> null;
         };
 
@@ -59,7 +59,7 @@ public final class StreamProtocolFactory {
      * @return The adapter choosed from filepath scheme {@link GED_PROTOCOL}
      * @throws StreamProtocolException Occurs when scheme is invalid or filepath is invalid
      */
-    public static StreamProtocolAdapter create(String filepath, Connection con) throws StreamProtocolException {
+    public static StreamProtocolAdapter create(final String filepath, final Connection con) throws StreamProtocolException {
         return create(filepath, con, null);
     }
 
@@ -67,7 +67,7 @@ public final class StreamProtocolFactory {
      * @param filepath The filepath with scheme
      * @return The real file path
      */
-    private static String getValue(String filepath) {
+    private static String getValue(final String filepath) {
         final var i = filepath.indexOf(':');
         if (i > 0) {
             return filepath.substring(i + 1);
