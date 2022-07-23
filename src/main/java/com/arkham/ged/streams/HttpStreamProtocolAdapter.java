@@ -23,8 +23,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
 
-import javax.net.ssl.SSLContext;
-
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -64,7 +62,7 @@ public class HttpStreamProtocolAdapter extends AbstractStreamProtocolAdapter<Str
      *
      * @param value
      */
-    HttpStreamProtocolAdapter(String value) {
+    HttpStreamProtocolAdapter(final String value) {
         super(value);
     }
 
@@ -102,7 +100,7 @@ public class HttpStreamProtocolAdapter extends AbstractStreamProtocolAdapter<Str
      * @param client Current http client
      * @throws StreamProtocolException
      */
-    protected void beforeExecute(CloseableHttpClient client) throws StreamProtocolException {
+    protected void beforeExecute(final CloseableHttpClient client) throws StreamProtocolException {
         //
     }
 
@@ -112,12 +110,12 @@ public class HttpStreamProtocolAdapter extends AbstractStreamProtocolAdapter<Str
      * @param client Current http client
      * @throws StreamProtocolException
      */
-    protected void afterExecute(CloseableHttpClient client) throws StreamProtocolException {
+    protected void afterExecute(final CloseableHttpClient client) throws StreamProtocolException {
         //
     }
 
     @SuppressWarnings("static-method")
-    protected void closeSilently(CloseableHttpClient client) {
+    protected void closeSilently(final CloseableHttpClient client) {
         if (client != null) {
             try {
                 client.close();
@@ -144,7 +142,7 @@ public class HttpStreamProtocolAdapter extends AbstractStreamProtocolAdapter<Str
         }
     }
 
-    protected byte[] execute(CloseableHttpClient client, HttpPost post, boolean updateHeader) throws StreamProtocolException {
+    protected byte[] execute(final CloseableHttpClient client, final HttpPost post, final boolean updateHeader) throws StreamProtocolException {
         try {
             final HttpResponse response = client.execute(post);
 
@@ -169,11 +167,11 @@ public class HttpStreamProtocolAdapter extends AbstractStreamProtocolAdapter<Str
         }
     }
 
-    protected byte[] execute(CloseableHttpClient client, HttpPost post) throws StreamProtocolException {
+    protected byte[] execute(final CloseableHttpClient client, final HttpPost post) throws StreamProtocolException {
         return execute(client, post, false);
     }
 
-    private static String getHeaderValue(HttpResponse response, String headerKey) {
+    private static String getHeaderValue(final HttpResponse response, final String headerKey) {
         if (headerKey == null) {
             return null;
         }
@@ -189,7 +187,7 @@ public class HttpStreamProtocolAdapter extends AbstractStreamProtocolAdapter<Str
         return null;
     }
 
-    private static String getContentType(String contentType) {
+    private static String getContentType(final String contentType) {
         if (contentType == null) {
             return "";
         }
@@ -202,7 +200,7 @@ public class HttpStreamProtocolAdapter extends AbstractStreamProtocolAdapter<Str
         return contentType;
     }
 
-    private static String getCharset(String contentType) {
+    private static String getCharset(final String contentType) {
         if (contentType == null) {
             return DEFAULT_CHARSET;
         }
@@ -215,7 +213,7 @@ public class HttpStreamProtocolAdapter extends AbstractStreamProtocolAdapter<Str
         return DEFAULT_CHARSET;
     }
 
-    private static String getFilename(String contentDisposition) {
+    private static String getFilename(final String contentDisposition) {
         if (contentDisposition == null) {
             return null;
         }

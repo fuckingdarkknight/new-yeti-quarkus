@@ -12,7 +12,6 @@ package com.arkham.ged.filekey;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 
 import com.arkham.common.properties.FlatProp;

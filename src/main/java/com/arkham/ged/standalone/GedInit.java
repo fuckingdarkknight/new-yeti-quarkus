@@ -14,10 +14,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
@@ -35,7 +32,6 @@ import com.arkham.ged.message.GedMessages;
 import com.arkham.ged.properties.GedProperties;
 import com.arkham.ged.properties.InputScanFileDef;
 import com.arkham.ged.properties.PropertiesException;
-import com.arkham.ged.properties.SocketType;
 import com.arkham.ged.streams.StreamProtocolFactory;
 
 /**

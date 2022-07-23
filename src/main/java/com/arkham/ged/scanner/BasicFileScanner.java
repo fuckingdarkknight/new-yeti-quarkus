@@ -20,17 +20,13 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Stream;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.arkham.common.timer.Chrono;
 import com.arkham.common.timer.common.ChronoDef.UNIT;
 import com.arkham.ged.properties.GedProperties;
-import com.arkham.ged.properties.OptionalParameterType;
 import com.arkham.ged.properties.ScanFileDef;
 import com.arkham.ged.timer.LoggerMDC;
 import com.arkham.ged.timer.MDC_KEY;

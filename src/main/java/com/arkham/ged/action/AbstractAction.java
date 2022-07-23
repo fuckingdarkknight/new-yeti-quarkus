@@ -25,7 +25,6 @@ import com.arkham.ged.blob.DocumentLinkBean;
 import com.arkham.ged.filekey.FileKey;
 import com.arkham.ged.properties.AbstractScanDef;
 import com.arkham.ged.properties.ActionType;
-import com.arkham.ged.properties.OptionalParameterType;
 import com.arkham.ged.properties.PropertiesAdapter;
 import com.arkham.ged.util.GedUtil;
 

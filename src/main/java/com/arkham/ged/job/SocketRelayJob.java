@@ -20,7 +20,6 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -33,7 +32,6 @@ import com.arkham.common.pattern.destroy.IDestroyable;
 import com.arkham.common.pattern.listener.BasicEvent;
 import com.arkham.ged.properties.PropertiesAdapter;
 import com.arkham.ged.properties.PropertiesAdapter.GLOBAL_EVENTS;
-import com.arkham.ged.properties.SocketType;
 import com.arkham.ged.socket.SocketRelayException;
 import com.arkham.ged.util.GedUtil;
 

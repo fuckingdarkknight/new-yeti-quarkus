@@ -10,7 +10,6 @@
  */
 package com.arkham.ged.job;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 

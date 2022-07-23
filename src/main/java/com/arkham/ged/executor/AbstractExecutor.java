@@ -13,7 +13,6 @@ package com.arkham.ged.executor;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import com.arkham.common.timer.Timer;
 import com.arkham.ged.properties.AbstractScanDef;
 import com.arkham.ged.properties.PropertiesAdapter;
 import com.arkham.ged.timer.GedTimerManager;

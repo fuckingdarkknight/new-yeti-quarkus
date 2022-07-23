@@ -29,7 +29,6 @@ import com.arkham.ged.filekey.FileKeyProviderException;
 import com.arkham.ged.properties.GedProperties;
 import com.arkham.ged.properties.InputScanFileDef;
 import com.arkham.ged.properties.OnErrorType;
-import com.arkham.ged.properties.OptionalParameterType;
 import com.arkham.ged.properties.PropertiesAdapter;
 import com.arkham.ged.timer.LoggerMDC;
 import com.arkham.ged.timer.MDC_KEY;

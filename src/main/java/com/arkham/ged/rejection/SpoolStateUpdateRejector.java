@@ -12,8 +12,6 @@ package com.arkham.ged.rejection;
 
 import java.io.File;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.arkham.ged.filekey.FileKey;

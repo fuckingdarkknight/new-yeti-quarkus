@@ -10,11 +10,9 @@
  */
 package com.arkham.ged.xlsgen.builder;
 
-import org.apache.poi.hpsf.SummaryInformation;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Workbook;
 
-import com.arkham.ged.yaml.GeneralType;
 import com.arkham.ged.yaml.RootExcel;
 
 /**

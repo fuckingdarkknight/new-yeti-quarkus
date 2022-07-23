@@ -20,7 +20,6 @@ import com.arkham.common.jdbc.DatabaseConnectionManagerException;
 import com.arkham.common.pattern.listener.BasicEvent;
 import com.arkham.common.scheduler.Job;
 import com.arkham.common.scheduler.JobException;
-import com.arkham.common.timer.Timer;
 import com.arkham.ged.executor.AbstractExecutor;
 import com.arkham.ged.executor.ExecutorException;
 import com.arkham.ged.properties.PropertiesAdapter;

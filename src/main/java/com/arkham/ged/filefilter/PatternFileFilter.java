@@ -12,7 +12,6 @@ package com.arkham.ged.filefilter;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**

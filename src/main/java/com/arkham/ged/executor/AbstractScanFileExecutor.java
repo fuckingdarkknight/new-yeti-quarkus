@@ -21,7 +21,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.arkham.common.timer.Chrono;
-import com.arkham.common.timer.Timer;
 import com.arkham.common.timer.common.ChronoDef.UNIT;
 import com.arkham.ged.action.AbstractAction;
 import com.arkham.ged.action.ActionException;
@@ -33,9 +32,7 @@ import com.arkham.ged.filekey.FileKeyProviderFactory;
 import com.arkham.ged.message.GedMessages;
 import com.arkham.ged.properties.ActionType;
 import com.arkham.ged.properties.FileKeyProviderRefType;
-import com.arkham.ged.properties.FileKeyProviderType;
 import com.arkham.ged.properties.GedProperties;
-import com.arkham.ged.properties.OptionalParameterType;
 import com.arkham.ged.properties.PropertiesAdapter;
 import com.arkham.ged.properties.ScanFileDef;
 import com.arkham.ged.rejection.AbstractRejector;

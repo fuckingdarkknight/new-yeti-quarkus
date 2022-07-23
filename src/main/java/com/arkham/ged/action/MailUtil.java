@@ -12,9 +12,7 @@ package com.arkham.ged.action;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.sql.Connection;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -25,7 +23,6 @@ import java.util.zip.ZipOutputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.arkham.ged.streams.StreamProtocolAdapter;
 import com.arkham.ged.streams.StreamProtocolException;
 import com.arkham.ged.streams.StreamProtocolFactory;
 import com.arkham.ged.util.GedUtil;

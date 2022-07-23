@@ -14,14 +14,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.poi.hssf.util.HSSFColor.HSSFColorPredefined;
-import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CreationHelper;
-import org.apache.poi.ss.usermodel.DataFormat;
-import org.apache.poi.ss.usermodel.FillPatternType;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.HorizontalAlignment;
-import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +26,6 @@ import com.arkham.ged.yaml.FontType;
 import com.arkham.ged.yaml.FormatType;
 import com.arkham.ged.yaml.RootExcel;
 import com.arkham.ged.yaml.StyleType;
-import com.arkham.ged.yaml.UnderlineType;
 
 /**
  * Définition des formats, polices etc ... depuis RootExcel. Cette classe est responsable du maintient des styles créés.
