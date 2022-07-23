@@ -22,7 +22,6 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
-import org.apache.logging.log4j.LogManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,7 +57,7 @@ public final class StandaloneScanner {
     @CommandLineArguments
     String[] mArgs;
 
-    private StandaloneScanner() {
+    StandaloneScanner() {
         // Standalone launcher
     }
 
@@ -142,8 +141,6 @@ public final class StandaloneScanner {
             @Override
             public void run() {
                 System.out.println("GedInit : shutdown in progress ..."); // NOSONAR
-
-                LogManager.shutdown();
             }
         });
 

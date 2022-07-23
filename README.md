@@ -2,11 +2,12 @@
 
 ```bash
 cd standalone
+\cp -f ../target/yeti-runner.jar .
 
 # 15s (300s par défaut)
-java -Xms128m -Xmx512m -XX:+UseZGC -XX:ZUncommitDelay=15 -XX:ZCollectionInterval=5 -jar yeti-0.1-runner.jar
+java -Xms128m -Xmx512m -XX:+UseZGC -XX:ZUncommitDelay=15 -XX:ZCollectionInterval=5 -jar yeti-runner.jar
 
-curl -sX POST http://localhost:8080/excel/stream --data-binary @spl/SOC800_36370.yaml.processed -o spl/test.xls -H 'Content-Type: application/yaml'
+curl -sX POST http://localhost:8080/api/v1/stream --data-binary @spl/SOC800_36370.yaml.processed -o spl/test.xls -H 'Content-Type: application/yaml'
 ```
 
 # new-yeti-quarkus Project

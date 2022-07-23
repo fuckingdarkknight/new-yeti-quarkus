@@ -18,6 +18,7 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.file.Files;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -28,6 +29,7 @@ import javax.ws.rs.core.MediaType;
 import org.eclipse.microprofile.metrics.MetricUnits;
 import org.eclipse.microprofile.metrics.annotation.Counted;
 import org.eclipse.microprofile.metrics.annotation.Timed;
+import org.jboss.resteasy.reactive.NoCache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,6 +37,7 @@ import com.arkham.ged.util.GedUtil;
 import com.arkham.ged.xlsgen.ExcelGenerator;
 import com.arkham.ged.xlsgen.XlsgenException;
 
+import io.quarkus.runtime.annotations.RegisterForReflection;
 import io.vertx.core.http.HttpServerRequest;
 
 /**
@@ -44,7 +47,9 @@ import io.vertx.core.http.HttpServerRequest;
  * @version 1.0
  * @since 27 fév 2020
  */
-@Path("/excel")
+@RegisterForReflection
+@ApplicationScoped
+@Path("")
 public class ExcelGeneratorRest {
     private static final Logger LOGGER = LoggerFactory.getLogger(ExcelGeneratorRest.class);
 
@@ -65,10 +70,11 @@ public class ExcelGeneratorRest {
      * @param message The JSON message to unserialize
      * @return The JSON message serialized
      */
+    @Path("file")
     @POST
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     @Consumes({ CT_YAML_1, CT_YAML_2, CT_YAML_3, CT_YAML_4 })
-    @Path("/file")
+    @NoCache
     @Counted(name = "performedChecks", description = "How many primality checks have been performed.")
     @Timed(name = "checksTimer", description = "A measure of how long it takes to perform the primality test.", unit = MetricUnits.MILLISECONDS)
     public byte[] generate(@Context final HttpServerRequest req, final String message) {
@@ -100,10 +106,11 @@ public class ExcelGeneratorRest {
         return new byte[] {};
     }
 
+    @Path("direct")
     @POST
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     @Consumes({ CT_YAML_1, CT_YAML_2, CT_YAML_3, CT_YAML_4 })
-    @Path("/direct")
+    @NoCache
     @Counted(name = "performedChecks", description = "How many primality checks have been performed.")
     @Timed(name = "checksTimer", description = "A measure of how long it takes to perform the primality test.", unit = MetricUnits.MILLISECONDS)
     public byte[] generateDirect(final String message) {
@@ -126,13 +133,14 @@ public class ExcelGeneratorRest {
         return new byte[] {};
     }
 
-    @SuppressWarnings("static-method")
+    @Path("stream")
     @POST
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     @Consumes({ CT_YAML_1, CT_YAML_2, CT_YAML_3, CT_YAML_4 })
-    @Path("/stream")
+    @NoCache
     @Counted(name = "performedChecks", description = "How many primality checks have been performed.")
     @Timed(name = "checksTimer", description = "A measure of how long it takes to perform the primality test.", unit = MetricUnits.MILLISECONDS)
+    @SuppressWarnings("static-method")
     public InputStream generateDirectStream(final String message) {
         try {
             final var eg = new ExcelGenerator(message);
