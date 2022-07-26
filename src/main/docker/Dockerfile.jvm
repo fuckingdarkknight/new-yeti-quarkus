@@ -81,13 +81,18 @@ ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en'
 
 
 # We make four distinct layers so if there are application changes the library layers can be re-used
-COPY --chown=185 target/quarkus-app/lib/ /deployments/lib/
-COPY --chown=185 target/quarkus-app/*.jar /deployments/
-COPY --chown=185 target/quarkus-app/app/ /deployments/app/
-COPY --chown=185 target/quarkus-app/quarkus/ /deployments/quarkus/
+# COPY --chown=185 target/quarkus-app/lib/ /deployments/lib/
+# COPY --chown=185 target/quarkus-app/*.jar /deployments/
+# COPY --chown=185 target/quarkus-app/app/ /deployments/app/
+# COPY --chown=185 target/quarkus-app/quarkus/ /deployments/quarkus/
+COPY --chown=185 target/yeti-runner.jar /deployments/quarkus-run.jar
+COPY --chown=185 standalone/ged* /deployments/
+RUN mkdir /deployments/model && mkdir /deployments/spl && chown 185 /deployments/*
+COPY --chown=185 standalone/model/ /deployments/model/
 
-EXPOSE 8080
+EXPOSE 8080 5005
 USER 185
 ENV JAVA_OPTS="-Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager"
 ENV JAVA_APP_JAR="/deployments/quarkus-run.jar"
-
+ENV GC_CONTAINER_OPTIONS="-XX:+UseZGC -XX:ZUncommitDelay=15 -XX:ZCollectionInterval=5"
+ENV JAVA_OPTS="-Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager -Xms128m -Xmx512m"

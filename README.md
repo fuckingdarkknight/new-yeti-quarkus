@@ -10,6 +10,23 @@ java -Xms128m -Xmx512m -XX:+UseZGC -XX:ZUncommitDelay=15 -XX:ZCollectionInterval
 curl -sX POST http://localhost:8080/api/v1/stream --data-binary @spl/SOC800_36370.yaml.processed -o spl/test.xls -H 'Content-Type: application/yaml'
 ```
 
+**Docker**
+```bash
+docker build -f src/main/docker/Dockerfile.jvm -t yeti-quarkus:latest .
+
+cd standalone
+
+docker run -i --rm -p 8080:8080 yeti-quarkus:latest
+
+curl -sX POST http://172.17.0.2:8080/api/v1/stream --data-binary @spl/SOC800_36370.yaml.processed -o spl/test.xls -H 'Content-Type: application/yaml'
+```
+
+
+
+
+
+
+
 # new-yeti-quarkus Project
 
 This project uses Quarkus, the Supersonic Subatomic Java Framework.
