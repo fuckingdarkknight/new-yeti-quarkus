@@ -1,3 +1,12 @@
+# Pré-requis compilation
+
+```bash
+mvn install:install-file -Dfile=libext/yeti-annotations.jar -DgroupId=com.arkham -DartifactId=annotations -Dversion=1.0 -Dpackaging=jar
+mvn install:install-file -Dfile=libext/ojdbc-12.2.jar -DgroupId=com.oracle -DartifactId=driver -Dversion=12.2 -Dpackaging=jar
+mvn install:install-file -Dfile=libext/orai18n-12.2.jar -DgroupId=com.oracle -DartifactId=i18n -Dversion=12.2 -Dpackaging=jar
+mvn install:install-file -Dfile=libext/arkham-common-1.1.jar -DgroupId=com.arkham -DartifactId=common -Dversion=1.1 -Dpackaging=jar
+```
+
 # Post file
 
 ```bash
