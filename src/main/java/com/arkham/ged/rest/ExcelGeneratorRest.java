@@ -73,7 +73,7 @@ public class ExcelGeneratorRest {
     @Path("file")
     @POST
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    @Consumes({ CT_YAML_1, CT_YAML_2, CT_YAML_3, CT_YAML_4 })
+    @Consumes({ CT_YAML_1, CT_YAML_2, CT_YAML_3, CT_YAML_4, MediaType.APPLICATION_JSON })
     @NoCache
     @Counted(name = "performedChecks", description = "How many primality checks have been performed.")
     @Timed(name = "checksTimer", description = "A measure of how long it takes to perform the primality test.", unit = MetricUnits.MILLISECONDS)
@@ -109,7 +109,7 @@ public class ExcelGeneratorRest {
     @Path("direct")
     @POST
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    @Consumes({ CT_YAML_1, CT_YAML_2, CT_YAML_3, CT_YAML_4 })
+    @Consumes({ CT_YAML_1, CT_YAML_2, CT_YAML_3, CT_YAML_4, MediaType.APPLICATION_JSON })
     @NoCache
     @Counted(name = "performedChecks", description = "How many primality checks have been performed.")
     @Timed(name = "checksTimer", description = "A measure of how long it takes to perform the primality test.", unit = MetricUnits.MILLISECONDS)
@@ -136,7 +136,7 @@ public class ExcelGeneratorRest {
     @Path("stream")
     @POST
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    @Consumes({ CT_YAML_1, CT_YAML_2, CT_YAML_3, CT_YAML_4 })
+    @Consumes({ CT_YAML_1, CT_YAML_2, CT_YAML_3, CT_YAML_4, MediaType.APPLICATION_JSON })
     @NoCache
     @Counted(name = "performedChecks", description = "How many primality checks have been performed.")
     @Timed(name = "checksTimer", description = "A measure of how long it takes to perform the primality test.", unit = MetricUnits.MILLISECONDS)

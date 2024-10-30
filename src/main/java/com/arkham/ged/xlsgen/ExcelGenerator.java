@@ -459,7 +459,7 @@ public class ExcelGenerator implements FunctionValueProvider {
             final var r = new CellRangeAddress(row, row, col, coltarget);
 
             if (LOGGER.isInfoEnabled()) {
-                LOGGER.info("applyColspan() : merging region {} => {}, {}, {}, {}", r.formatAsString(sheet.getSheetName(), false), row, row, col, coltarget);
+                LOGGER.info("applyColspan() : merging region {} => {}, {}, {}, {}", r.formatAsString(sheet.getSheetName(), false), Integer.valueOf(row), Integer.valueOf(row), Integer.valueOf(col), Integer.valueOf(coltarget));
             }
 
             sheet.addMergedRegion(new CellRangeAddress(row, row, col, coltarget));
@@ -537,7 +537,7 @@ public class ExcelGenerator implements FunctionValueProvider {
             for (var i = 0; i < last; i++) {
                 final var c = new CellReference(0, i);
                 if (LOGGER.isInfoEnabled()) {
-                    LOGGER.info("generate() : adjusting width of column {} => {}", c.formatAsString(), i);
+                    LOGGER.info("generate() : adjusting width of column {} => {}", c.formatAsString(), Integer.valueOf(i));
                 }
 
                 sheet.autoSizeColumn(i);
@@ -656,7 +656,7 @@ public class ExcelGenerator implements FunctionValueProvider {
             mIndex = bt.getIndex();
 
             final Deque<Integer> stack = new ArrayDeque<>();
-            stack.push(mIndex);
+            stack.push(Integer.valueOf(mIndex));
 
             // Loop for each row to process
             for (final RowType rt : bt.getRow()) {
@@ -664,41 +664,41 @@ public class ExcelGenerator implements FunctionValueProvider {
                 switch (rt.getMode()) {
                     // On pousse l'index courant sur la pile pour pouvoir le réutiliser plus tard
                     case PUSH:
-                        stack.push(mIndex);
-                        LOGGER.debug("applyBody() : push index {} to stack", mIndex);
+                        stack.push(Integer.valueOf(mIndex));
+                        LOGGER.debug("applyBody() : push index {} to stack", Integer.valueOf(mIndex));
                         break;
 
                     case POP:
                         mIndex = stack.pop();
-                        LOGGER.debug("applyBody() : pop index {} from stack", mIndex);
+                        LOGGER.debug("applyBody() : pop index {} from stack", Integer.valueOf(mIndex));
                         break;
 
                     case INDEX:
                         mIndex = rt.getIndex();
-                        LOGGER.debug("applyBody() : set row index at {}", mIndex);
+                        LOGGER.debug("applyBody() : set row index at {}", Integer.valueOf(mIndex));
                         break;
 
                     case CURRENT:
-                        LOGGER.debug("applyBody() : set row index at current {}", mIndex);
+                        LOGGER.debug("applyBody() : set row index at current {}", Integer.valueOf(mIndex));
                         break;
 
                     case SOLVED:
                         mIndex = getIntSolved(rt.getExpr());
-                        LOGGER.debug("applyBody() : set calculated row index at current {} for expression={}", mIndex, rt.getExpr());
+                        LOGGER.debug("applyBody() : set calculated row index at current {} for expression={}", Integer.valueOf(mIndex), rt.getExpr());
                         break;
 
                     case COPYFROM:
                         // O based index
                         copyFromRow = rt.getIndex();
                         ExcelUtil.copyRow(mWorkbook, mSheet, copyFromRow, mIndex);
-                        LOGGER.debug("applyBody() : copy from row={} to row={}", copyFromRow, mIndex);
+                        LOGGER.debug("applyBody() : copy from row={} to row={}", Integer.valueOf(copyFromRow), Integer.valueOf(mIndex));
                         break;
 
                     case COPYFROMCURRENT:
                         // O based index : previous index
                         copyFromRow = mIndex - 1;
                         ExcelUtil.copyRow(mWorkbook, mSheet, copyFromRow, mIndex);
-                        LOGGER.debug("applyBody() : copy from row={} to row={}", copyFromRow, mIndex);
+                        LOGGER.debug("applyBody() : copy from row={} to row={}", Integer.valueOf(copyFromRow), Integer.valueOf(mIndex));
                         break;
 
                     case INSERTAT:
@@ -706,7 +706,7 @@ public class ExcelGenerator implements FunctionValueProvider {
                             // Pas la peine de décaler si on se positionne après le dernier row de la feuille.
                             // (en l'occurence ça lève même une exception, pas choquant)
                             mSheet.shiftRows(rt.getIndex(), mSheet.getLastRowNum(), 1);
-                            LOGGER.debug("applyBody() : insert row at index={} (shifting down)", mIndex);
+                            LOGGER.debug("applyBody() : insert row at index={} (shifting down)", Integer.valueOf(mIndex));
                         }
                         break;
 
@@ -718,7 +718,7 @@ public class ExcelGenerator implements FunctionValueProvider {
                 // Pour les mode PUSH et POP, il ne faut pas faire de traitement supplémentaire
                 if (mIndex < 0 || rt.getMode() == RowModeType.PUSH || rt.getMode() == RowModeType.POP) {
                     if (mIndex < 0) {
-                        LOGGER.warn("applyBody() : skipping row for mode={} because of bad row index={}", rt.getMode(), mIndex);
+                        LOGGER.warn("applyBody() : skipping row for mode={} because of bad row index={}", rt.getMode(), Integer.valueOf(mIndex));
                     }
 
                     continue;
@@ -762,13 +762,13 @@ public class ExcelGenerator implements FunctionValueProvider {
                 if (ct.getAdjustment() != null) {
                     mSheet.autoSizeColumn(cr.getCol());
 
-                    LOGGER.info("applyPostProcessing() : adjusting width of column {}", cr.getCol());
+                    LOGGER.info("applyPostProcessing() : adjusting width of column {}", Integer.valueOf(cr.getCol()));
                 }
 
                 if ("hidden".equalsIgnoreCase(ct.getVisibility())) {
                     mSheet.setColumnHidden(cr.getCol(), true);
 
-                    LOGGER.info("applyPostProcessing() : hide column {}", cr.getCol());
+                    LOGGER.info("applyPostProcessing() : hide column {}", Integer.valueOf(cr.getCol()));
                 }
             }
 
@@ -787,7 +787,7 @@ public class ExcelGenerator implements FunctionValueProvider {
                 } else {
                     mSheet.createFreezePane(fcol, frow);
 
-                    LOGGER.info("applyPostProcessing({}) : freeze pane for col {} row {}", getSheetName(), fcol, frow);
+                    LOGGER.info("applyPostProcessing({}) : freeze pane for col {} row {}", getSheetName(), Integer.valueOf(fcol), Integer.valueOf(frow));
                 }
             }
 
