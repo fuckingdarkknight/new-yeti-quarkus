@@ -94,6 +94,7 @@ import com.arkham.ged.yaml.RowType;
 import com.arkham.ged.yaml.TabType;
 import com.arkham.ged.yaml.UnderlineType;
 import com.arkham.ged.yaml.VerticalAlignmentType;
+import org.yaml.snakeyaml.LoaderOptions;
 
 /**
  * Generate XLS file from YAML flow
@@ -489,6 +490,9 @@ public class ExcelGenerator implements FunctionValueProvider {
         // d'intervenir sur la gravité du truc (change caractère de remplacement, ce qui m'irait très très bien).
         // org.yaml.snakeyaml.reader.StreamReader
         final var builder = YAMLFactory.builder();
+        LoaderOptions loaderOptions = new LoaderOptions();
+        loaderOptions.setCodePointLimit(50 * 1024 * 1024); // 50 MB
+        builder.loaderOptions(loaderOptions);
         // builder.enable(JsonReadFeature.ALLOW_UNESCAPED_CONTROL_CHARS); // NOSONAR
         // builder.enable(JsonReadFeature.ALLOW_UNQUOTED_FIELD_NAMES); // NOSONAR
         // builder.enable(JsonReadFeature.ALLOW_YAML_COMMENTS); // NOSONAR
