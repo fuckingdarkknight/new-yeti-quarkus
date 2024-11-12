@@ -34,7 +34,7 @@ public class ExprSplitter {
     public ExprSplitter(String value) {
         mValue = value;
 
-        if (value != null && !"".equals(value.trim())) {
+        if (value != null && !value.trim().isEmpty()) {
             parse();
         }
     }

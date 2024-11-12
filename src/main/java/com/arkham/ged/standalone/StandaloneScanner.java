@@ -128,11 +128,11 @@ public final class StandaloneScanner {
         System.out.println("basedir=" + baseDirPath); // NOSONAR
 
         // Try to read get.properties
-        final var baseProp = new File(dirFile, "ged-standalone.properties");
+        final var baseProp = new File(dirFile, "yeti.properties");
         final var bpp = new BasePropertiesProvider(baseProp);
 
         // Read ged_properties.xml
-        final var fileProperties = System.getProperty("ged.properties", "ged-standalone.xml");
+        final var fileProperties = System.getProperty("ged.properties", "yeti.xml");
         System.out.println("Properties=" + fileProperties); // NOSONAR
 
         final var gsh = GedInit.init(dirFile.getCanonicalPath(), fileProperties, bpp, LoggerFactory.getLogger(StandaloneScanner.class));
@@ -140,14 +140,13 @@ public final class StandaloneScanner {
         Runtime.getRuntime().addShutdownHook(new Thread("ShudownHook") {
             @Override
             public void run() {
-                System.out.println("GedInit : shutdown in progress ..."); // NOSONAR
+                System.out.println("launch() : shutdown in progress ..."); // NOSONAR
             }
         });
 
-        System.out.println("GedInit : started"); // NOSONAR
-        System.out.println("GedInit : scanning ..."); // NOSONAR
+        System.out.println("launch() : started"); // NOSONAR
+        System.out.println("launch() : scanning ..."); // NOSONAR
 
-        final var loop = new AtomicBoolean(true);
         GedProperties.getInstance().registerListener(new BasicListener<String, GLOBAL_EVENTS, PropertiesException>() {
             @Override
             public void eventFired(final BasicEvent<String, GLOBAL_EVENTS> event) throws PropertiesException {
@@ -156,8 +155,6 @@ public final class StandaloneScanner {
                 if (event.getType() == GLOBAL_EVENTS.SHUTDOWN) {
                     // First stop all the jobs via the scheduler
                     gsh.destroy();
-
-                    loop.set(false);
                 }
             }
 
@@ -166,13 +163,5 @@ public final class StandaloneScanner {
                 // Nothing to do
             }
         });
-        //
-        // try {
-        // while (loop.get()) {
-        // Thread.sleep(1000);
-        // }
-        // } catch (final InterruptedException e) { // NOSONAR
-        // System.out.println("StandaloneScanner : interrupted -----------"); // NOSONAR
-        // }
     }
 }

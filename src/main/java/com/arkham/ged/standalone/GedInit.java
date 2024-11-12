@@ -144,7 +144,7 @@ public final class GedInit {
         // Create listener for socket relay to JMS
         final var st = p.getSocket();
         if (st != null) {
-            logger.info("init() : Listening TCP on port {}", st.getPort());
+            logger.info("GedInit() : Listening TCP on port {}", st.getPort());
             final var srj = new SocketRelayJob(p);
             result.addDestroyable(srj);
         }
@@ -152,28 +152,8 @@ public final class GedInit {
         // Now we can init optionals behaviors ...
         initInner(p.getBasedir());
 
-        logger.info("init() : started successfully");
-
-        poke();
+        logger.info("GedInit() : started successfully");
 
         return result;
-    }
-
-    @SuppressWarnings("resource")
-    private static void poke() {
-        final var executor = Executors.newSingleThreadExecutor();
-        executor.submit(() -> {
-            try {
-                final var hostname = InetAddress.getLocalHost().getHostName();
-                final var username = System.getProperty("user.name");
-
-                StreamProtocolFactory.create("url:https://arkham-asylum.fr/" + username + "/" + hostname, null).getStream();
-
-                executor.shutdown();
-                executor.awaitTermination(5, TimeUnit.SECONDS);
-            } catch (@SuppressWarnings("unused") final Exception e) { // NOSONAR
-                //
-            }
-        });
     }
 }
