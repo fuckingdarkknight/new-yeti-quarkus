@@ -392,6 +392,11 @@
 				<xsd:documentation>Visibilité : hidden pour cacher, toute autre valeur correspond à une cellule affichée</xsd:documentation>
 			</xsd:annotation>
 		</xsd:attribute>
+		<xsd:attribute name="width" type="xsd:int">
+			<xsd:annotation>
+				<xsd:documentation>Largeur de cellule en unité de caractères</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
 	</xsd:complexType>
 	<!--Définition des entêtes -->
 	<xsd:complexType name="HeaderType">

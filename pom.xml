@@ -40,6 +40,10 @@
             <artifactId>quarkus-rest</artifactId>
         </dependency>
         <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-rest-jackson</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.eclipse.jdt</groupId>
             <artifactId>org.eclipse.jdt.annotation</artifactId>
             <version>2.0.0</version>

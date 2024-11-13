@@ -401,6 +401,13 @@ public class ExcelGenerator implements FunctionValueProvider {
         }
     }
 
+    private static void applyWidth(final Sheet sheet, final CellReference cr, final Integer width) {
+        if (cr.getCol() >= 0 && width != null) {
+            LOGGER.info("applyWidth() : adapt width for column {} => {}", cr.formatAsString(), width);
+            sheet.setColumnWidth(cr.getCol(), width * 256);
+        }
+    }
+
     private void applyGroupings(final List<GroupType> lgt) {
         if (lgt != null) {
             for (final GroupType gt : lgt) {
@@ -635,6 +642,7 @@ public class ExcelGenerator implements FunctionValueProvider {
                     final var row = mEu.getRow(mSheet, cr.getRow());
 
                     applyHeight(row, ht.getHeight());
+                    applyWidth(mSheet, cr, ct.getWidth());
                     applyColspan(mSheet, cr.getCol(), cr.getRow(), ct.getColspan());
                     applyImage(con, mSheet, ct);
 
@@ -774,6 +782,14 @@ public class ExcelGenerator implements FunctionValueProvider {
             // Seul cas global pris en compte : auto pour toutes les colonnes
             if ("auto".equalsIgnoreCase(postAction.getAdjustment())) {
                 autosizeColumns(mSheet);
+            }
+
+            // Si on a fixé des largeurs, on les passe après l'autosize
+            for (final CellType ct : postAction.getCell()) {
+                final var cellRef = ct.getRef();
+                final var cr = new CellReference(cellRef);
+
+                applyWidth(mSheet, cr, ct.getWidth());
             }
 
             var fcol = 0;
