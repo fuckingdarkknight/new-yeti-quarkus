@@ -754,11 +754,6 @@ public class ExcelGenerator implements FunctionValueProvider {
 
     private void applyPostProcessing(final PostType postAction) {
         if (postAction != null) {
-            // Seul cas global pris en compte : auto pour toutes les colonnes
-            if ("auto".equalsIgnoreCase(postAction.getAdjustment())) {
-                autosizeColumns(mSheet);
-            }
-
             for (final CellType ct : postAction.getCell()) {
                 final var cellRef = ct.getRef();
                 final var cr = new CellReference(cellRef);
@@ -776,6 +771,11 @@ public class ExcelGenerator implements FunctionValueProvider {
                 }
             }
 
+            // Seul cas global pris en compte : auto pour toutes les colonnes
+            if ("auto".equalsIgnoreCase(postAction.getAdjustment())) {
+                autosizeColumns(mSheet);
+            }
+
             var fcol = 0;
             if (postAction.getFreezecol() != null) {
                 fcol = postAction.getFreezecol();
@@ -786,13 +786,9 @@ public class ExcelGenerator implements FunctionValueProvider {
             }
 
             if (frow != 0 || fcol != 0) {
-                if (mSheet instanceof XSSFSheet) {
-                    processException(null, "applyPostProcessing({}) : cannot freeze pane because it seems that corrupt worksheet.xml", getSheetName());
-                } else {
-                    mSheet.createFreezePane(fcol, frow);
+                mSheet.createFreezePane(fcol, frow);
 
-                    LOGGER.info("applyPostProcessing({}) : freeze pane for col {} row {}", getSheetName(), Integer.valueOf(fcol), Integer.valueOf(frow));
-                }
+                LOGGER.info("applyPostProcessing({}) : freeze pane for col {} row {}", getSheetName(), Integer.valueOf(fcol), Integer.valueOf(frow));
             }
 
             if (postAction.getProtect() != null) {
